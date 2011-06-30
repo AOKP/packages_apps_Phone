@@ -2040,7 +2040,9 @@ public class InCallScreen extends Activity
         // gets dismissed.  So let's forcibly bail out right now.
         if (DBG) log("onMMICancel: finishing InCallScreen...");
         dismissAllDialogs();
-        endInCallScreenSession();
+        if (mCM.getState() == PhoneConstants.State.IDLE) {
+            endInCallScreenSession();
+        }
     }
 
     /**
@@ -2060,7 +2062,9 @@ public class InCallScreen extends Activity
             if (mmiCode.getState() != MmiCode.State.PENDING) {
                 if (DBG) log("Got MMI_COMPLETE, finishing InCallScreen...");
                 dismissAllDialogs();
-                endInCallScreenSession();
+                if (mCM.getState() == PhoneConstants.State.IDLE) {
+                    endInCallScreenSession();
+                }
             }
         }
     }
