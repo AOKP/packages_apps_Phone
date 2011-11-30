@@ -173,4 +173,15 @@
             android:targetPackage="com.android.phone"
             android:targetClass="com.android.phone.CdmaCallOptions"/>
     </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="@string/dialer_ui_settings_title"
+        android:summary="@string/dialer_ui_settings_summary"
+        android:persistent="false">
+
+        <intent android:action="android.intent.action.MAIN"
+            android:targetPackage="com.android.contacts"
+            android:targetClass="com.android.contacts.preference.DialpadPreferenceActivity"/>
+    </PreferenceScreen>
+
 </PreferenceScreen>

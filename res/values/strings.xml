@@ -1061,6 +1061,10 @@
     <!-- Title displayed above settings coming after voicemail in the call features screen -->
     <string name="other_settings">Other call settings</string>
 
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Dialpad settings</string>
+    <string name="dialer_ui_settings_summary">Settings for the dialpad</string>
+
     <!-- Title displayed in the overlay when a call is placed using a 3rd party provider.
          [CHAR LIMIT=40] -->
     <string name="calling_via_template">Calling via <xliff:g id="provider_name">%s</xliff:g></string>
