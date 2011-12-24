@@ -50,11 +50,15 @@ public class PhoneToggler extends BroadcastReceiver {
             }
             if (intent.getExtras() != null) {
                 int networkMode = intent.getExtras().getInt(NETWORK_MODE);
-                if (networkMode == Phone.NT_MODE_GSM_ONLY
-                        || networkMode == Phone.NT_MODE_WCDMA_PREF
-                        || networkMode == Phone.NT_MODE_WCDMA_ONLY
-                        || networkMode == Phone.NT_MODE_GLOBAL
-                        || networkMode == Phone.NT_MODE_GSM_UMTS) {
+                if (networkMode == Phone.NT_MODE_WCDMA_PREF ||
+                        networkMode == Phone.NT_MODE_GSM_ONLY ||
+                        networkMode == Phone.NT_MODE_WCDMA_ONLY ||
+                        networkMode == Phone.NT_MODE_GSM_UMTS ||
+                        networkMode == Phone.NT_MODE_CDMA ||
+                        networkMode == Phone.NT_MODE_CDMA_NO_EVDO ||
+                        networkMode == Phone.NT_MODE_EVDO_NO_CDMA ||
+                        networkMode == Phone.NT_MODE_GLOBAL ||
+                        networkMode == Phone.NT_MODE_LTE_ONLY) {
                     if (DBG) {
                         Log.d(LOG_TAG, "Will modify it to: " + networkMode);
                     }
