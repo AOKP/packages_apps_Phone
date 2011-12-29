@@ -50,15 +50,8 @@ public class PhoneToggler extends BroadcastReceiver {
             }
             if (intent.getExtras() != null) {
                 int networkMode = intent.getExtras().getInt(NETWORK_MODE);
-                if (networkMode == Phone.NT_MODE_WCDMA_PREF ||
-                        networkMode == Phone.NT_MODE_GSM_ONLY ||
-                        networkMode == Phone.NT_MODE_WCDMA_ONLY ||
-                        networkMode == Phone.NT_MODE_GSM_UMTS ||
-                        networkMode == Phone.NT_MODE_CDMA ||
-                        networkMode == Phone.NT_MODE_CDMA_NO_EVDO ||
-                        networkMode == Phone.NT_MODE_EVDO_NO_CDMA ||
-                        networkMode == Phone.NT_MODE_GLOBAL ||
-                        networkMode == Phone.NT_MODE_LTE_ONLY) {
+
+                if (isValidNetwork(networkMode)) {
                     if (DBG) {
                         Log.d(LOG_TAG, "Will modify it to: " + networkMode);
                     }
@@ -90,6 +83,25 @@ public class PhoneToggler extends BroadcastReceiver {
     private void triggerIntent() {
         getPhone().getPreferredNetworkType(getHandler()
                 .obtainMessage(MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
+    }
+
+    private boolean isValidNetwork(int networkType) {
+        boolean isCdma = (getPhone().getPhoneType() == Phone.PHONE_TYPE_CDMA);
+
+        switch (networkType) {
+            case Phone.NT_MODE_CDMA:
+            case Phone.NT_MODE_CDMA_NO_EVDO:
+            case Phone.NT_MODE_EVDO_NO_CDMA:
+            case Phone.NT_MODE_GLOBAL:
+            case Phone.NT_MODE_LTE_ONLY:
+                return (isCdma);
+            case Phone.NT_MODE_GSM_ONLY:
+            case Phone.NT_MODE_GSM_UMTS:
+            case Phone.NT_MODE_WCDMA_ONLY:
+            case Phone.NT_MODE_WCDMA_PREF:
+                return (!isCdma);
+        }
+        return false;
     }
 
     private class MyHandler extends Handler {
