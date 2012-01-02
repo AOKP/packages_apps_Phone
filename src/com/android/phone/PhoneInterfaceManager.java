@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
@@ -57,6 +58,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     private static final int CMD_ANSWER_RINGING_CALL = 4;
     private static final int CMD_END_CALL = 5;  // not used yet
     private static final int CMD_SILENCE_RINGER = 6;
+    private static final int CMD_TOGGLE_LTE = 7; // not used yet
 
     /** The singleton instance. */
     private static PhoneInterfaceManager sInstance;
@@ -277,6 +279,19 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mApp.startActivity(intent);
+    }
+
+    public void toggleLTE(boolean on) {
+        int network = -1;
+        if (on) {
+            network = Phone.NT_MODE_GLOBAL;
+        } else {
+            network = Phone.NT_MODE_CDMA;
+        }
+        mPhone.setPreferredNetworkType(network,
+                mMainThreadHandler.obtainMessage(CMD_TOGGLE_LTE));
+        Settings.Secure.putInt(mApp.getContentResolver(),
+                Settings.Secure.PREFERRED_NETWORK_MODE, network);
     }
 
     private boolean showCallScreenInternal(boolean specifyInitialDialpadState,
