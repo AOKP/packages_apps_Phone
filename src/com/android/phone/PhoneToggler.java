@@ -45,31 +45,22 @@ public class PhoneToggler extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(MODIFY_NETWORK_MODE)) {
-            if (DBG) {
-                Log.d(LOG_TAG, "Got modify intent");
-            }
+            log("Got modify intent");
             if (intent.getExtras() != null) {
                 int networkMode = intent.getExtras().getInt(NETWORK_MODE);
 
                 if (isValidNetwork(networkMode)) {
-                    if (DBG) {
-                        Log.d(LOG_TAG, "Will modify it to: " + networkMode);
-                    }
+                    log("Intent received with valid network mode: " + networkMode);
                     changeNetworkMode(networkMode);
-                    if (DBG) {
-                        log("Accepted modification of network mode to :" + networkMode);
-                    }
                 } else {
-                    Log.e(LOG_TAG, "Not accepted network mode: " + networkMode);
+                    log("Not accepted network mode: " + networkMode);
                 }
             }
         } else if (intent.getAction().equals(REQUEST_NETWORK_MODE)) {
-            if (DBG) {
-                Log.d(LOG_TAG, "Sending Intent with current phone network mode");
-            }
+            log("Sending Intent with current phone network mode");
             triggerIntent();
         } else {
-            Log.e(LOG_TAG, "Not accepted intent: " + intent.getAction());
+            log("Not accepted intent: " + intent.getAction());
         }
 
     }
@@ -128,48 +119,26 @@ public class PhoneToggler extends BroadcastReceiver {
             if (ar.exception == null) {
                 int modemNetworkMode = ((int[]) ar.result)[0];
 
-                if (DBG) {
-                    log("handleGetPreferredNetworkTypeResponse: modemNetworkMode = " +
-                            modemNetworkMode);
-                }
-
                 int settingsNetworkMode = android.provider.Settings.Secure.getInt(
                         mPhone.getContext().getContentResolver(),
                         android.provider.Settings.Secure.PREFERRED_NETWORK_MODE,
-                        Settings.preferredNetworkMode);
+                        -1);
 
-                if (DBG) {
-                    log("handleGetPreferredNetworkTypeReponse: settingsNetworkMode = " +
-                            settingsNetworkMode);
-                }
+                log("handleGetPreferredNetworkTypeResponse: modemNetworkMode = " +
+                        modemNetworkMode);
+                log("handleGetPreferredNetworkTypeReponse: settingsNetworkMode = " +
+                        settingsNetworkMode);
 
                 // check that modemNetworkMode is from an accepted value
-                if (modemNetworkMode == Phone.NT_MODE_WCDMA_PREF ||
-                        modemNetworkMode == Phone.NT_MODE_GSM_ONLY ||
-                        modemNetworkMode == Phone.NT_MODE_WCDMA_ONLY ||
-                        modemNetworkMode == Phone.NT_MODE_GSM_UMTS ||
-                        modemNetworkMode == Phone.NT_MODE_CDMA ||
-                        modemNetworkMode == Phone.NT_MODE_CDMA_NO_EVDO ||
-                        modemNetworkMode == Phone.NT_MODE_EVDO_NO_CDMA ||
-                        modemNetworkMode == Phone.NT_MODE_GLOBAL) {
-                    if (DBG) {
-                        log("handleGetPreferredNetworkTypeResponse: if 1: modemNetworkMode = " +
-                                modemNetworkMode);
-                    }
+                if (isValidNetwork(modemNetworkMode)) {
+                    log("New modem mode is valid, of type: " + modemNetworkMode);
 
                     // check changes in modemNetworkMode and updates settingsNetworkMode
                     if (modemNetworkMode != settingsNetworkMode) {
-                        if (DBG) {
-                            log("handleGetPreferredNetworkTypeResponse: if 2: " +
-                                    "modemNetworkMode != settingsNetworkMode");
-                        }
+                        log("requested modem mode and current setting modes mismatch, setting setting mode to: "
+                                + modemNetworkMode);
 
                         settingsNetworkMode = modemNetworkMode;
-
-                        if (DBG) {
-                            log("handleGetPreferredNetworkTypeResponse: if 2: " +
-                                    "settingsNetworkMode = " + settingsNetworkMode);
-                        }
 
                         // changes the Settings.System accordingly to modemNetworkMode
                         android.provider.Settings.Secure.putInt(
@@ -188,12 +157,10 @@ public class PhoneToggler extends BroadcastReceiver {
 
                 } else if (modemNetworkMode == Phone.NT_MODE_LTE_ONLY) {
                     // LTE Only mode not yet supported on UI, but could be used for testing
-                    if (DBG)
-                        log("handleGetPreferredNetworkTypeResponse: lte only: no action");
+                    log("handleGetPreferredNetworkTypeResponse: lte only: no action");
                 } else {
-                    if (DBG)
-                        log("handleGetPreferredNetworkTypeResponse: else: reset to default");
-                    resetNetworkModeToDefault();
+                    log("Some weird setting, don't touch anything!");
+                    // resetNetworkModeToDefault();
                 }
             }
         }
@@ -202,34 +169,23 @@ public class PhoneToggler extends BroadcastReceiver {
             AsyncResult ar = (AsyncResult) msg.obj;
 
             if (ar.exception == null) {
-                android.provider.Settings.Secure.putInt(mPhone.getContext().getContentResolver(),
-                        android.provider.Settings.Secure.PREFERRED_NETWORK_MODE,
-                        mLocalPreferredNetwork);
-
+                // android.provider.Settings.Secure.putInt(mPhone.getContext().getContentResolver(),
+                // android.provider.Settings.Secure.PREFERRED_NETWORK_MODE,
+                // mLocalPreferredNetwork);
+                log("Modem mode should have been successfully set now.");
                 Intent intent = new Intent(PhoneToggler.NETWORK_MODE_CHANGED);
                 intent.putExtra(PhoneToggler.NETWORK_MODE, mLocalPreferredNetwork);
                 mPhone.getContext().sendBroadcast(intent, PhoneToggler.CHANGE_NETWORK_MODE_PERM);
             } else {
-                mPhone.getPreferredNetworkType(obtainMessage(MESSAGE_GET_PREFERRED_NETWORK_TYPE));
+                // mPhone.getPreferredNetworkType(obtainMessage(MESSAGE_GET_PREFERRED_NETWORK_TYPE));
             }
-        }
-
-        private void resetNetworkModeToDefault() {
-            // set the mButtonPreferredNetworkMode
-            mLocalPreferredNetwork = Settings.preferredNetworkMode;
-            // set the Settings.System
-            android.provider.Settings.Secure.putInt(mPhone.getContext().getContentResolver(),
-                    android.provider.Settings.Secure.PREFERRED_NETWORK_MODE,
-                    Settings.preferredNetworkMode);
-            // Set the Modem
-            mPhone.setPreferredNetworkType(Settings.preferredNetworkMode,
-                    this.obtainMessage(MyHandler.MESSAGE_SET_PREFERRED_NETWORK_TYPE));
         }
 
     }
 
     private static void log(String msg) {
-        Log.d(LOG_TAG, msg);
+        if (DBG)
+            Log.d(LOG_TAG, msg);
     }
 
 }
