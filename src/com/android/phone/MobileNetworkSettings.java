@@ -465,6 +465,8 @@ public class MobileNetworkSettings extends PreferenceActivity
                     if (DBG) log("handleGetPreferredNetworkTypeResponse: else: reset to default");
                     resetNetworkModeToDefault();
                 }
+                //Update '2GOnly checkbox' based on recent preferred network type selection.
+                Use2GOnlyCheckBoxPreference.updateCheckBox(mPhone);
             }
         }
 
@@ -477,6 +479,8 @@ public class MobileNetworkSettings extends PreferenceActivity
                 android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
                         android.provider.Settings.Global.PREFERRED_NETWORK_MODE,
                         networkMode );
+                //Update '2GOnly checkbox' based on recent preferred network type selection.
+                Use2GOnlyCheckBoxPreference.updateCheckBox(mPhone);
             } else {
                 mPhone.getPreferredNetworkType(obtainMessage(MESSAGE_GET_PREFERRED_NETWORK_TYPE));
             }

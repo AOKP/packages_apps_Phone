@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
+import android.provider.Settings.SettingNotFoundException;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -77,10 +78,18 @@ public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
                  mHandler.obtainMessage(MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
     }
 
+    public static void updateCheckBox(Phone phone) {
+        Log.i(LOG_TAG, "updateCheckBox subscription :" + phone.getSubscription());
+        mPhone = phone;
+        mHandler.sendEmptyMessage(MyHandler.MESSAGE_UPDATE_CHECK_BOX_STATE);
+    }
+
+
     private class MyHandler extends Handler {
 
         static final int MESSAGE_GET_PREFERRED_NETWORK_TYPE = 0;
         static final int MESSAGE_SET_PREFERRED_NETWORK_TYPE = 1;
+        static final int MESSAGE_UPDATE_CHECK_BOX_STATE = 2;
 
         @Override
         public void handleMessage(Message msg) {
@@ -91,6 +100,10 @@ public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
 
                 case MESSAGE_SET_PREFERRED_NETWORK_TYPE:
                     handleSetPreferredNetworkTypeResponse(msg);
+                    break;
+
+                case MESSAGE_UPDATE_CHECK_BOX_STATE:
+                    handleUpdateCheckBoxState();
                     break;
             }
         }
@@ -125,6 +138,19 @@ public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
             } else {
                 Log.i(LOG_TAG, "set preferred network type done");
             }
+        }
+
+        private void handleUpdateCheckBoxState() {
+            try{
+                int nwMode = android.telephony.MSimTelephonyManager.getIntAtIndex(
+                             mPhone.getContext().getContentResolver(),
+                             android.provider.Settings.Global.PREFERRED_NETWORK_MODE,
+                             mPhone.getSubscription());
+                Log.i(LOG_TAG, "handleUpdateCheckBoxState network type="+nwMode);
+                setChecked(nwMode == Phone.NT_MODE_GSM_ONLY);
+              }catch(SettingNotFoundException ex){
+                 Log.e(LOG_TAG, "SettingNotFoundException = "+ex);
+             }
         }
     }
 }
