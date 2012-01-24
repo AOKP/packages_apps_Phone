@@ -322,8 +322,8 @@ public class OtaUtils {
         if (DBG) log("otaShowActivationScreen: " + otaShowActivationScreen);
 
         // Run the OTASP call in "interactive" mode only if
-        // this is a non-LTE "voice capable" device.
-        if (PhoneApp.sVoiceCapable && getLteOnCdmaMode(context) == Phone.LTE_ON_CDMA_FALSE) {
+        // this is a "voice capable" CDMA device in NV mode.
+        if (PhoneApp.sVoiceCapable) {
             if (phoneNeedsActivation
                     && (otaShowActivationScreen == OTA_SHOW_ACTIVATION_SCREEN_ON)) {
                 app.cdmaOtaProvisionData.isOtaCallIntentProcessed = false;
