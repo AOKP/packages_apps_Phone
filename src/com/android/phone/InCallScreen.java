@@ -32,6 +32,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -121,6 +122,7 @@ public class InCallScreen extends Activity
             "com.android.phone.extra.GATEWAY_URI";
 
     private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
+    private static final String BUTTON_LANDSCAPE_KEY = "button_landscape_key";
 
     // Amount of time (in msec) that we display the "Call ended" state.
     // The "short" value is for calls ended by the local user, and the
@@ -249,6 +251,7 @@ public class InCallScreen extends Activity
     private PowerManager mPowerManager;
 
     public boolean Exit_To_Home_Screen = false;
+    private boolean Enable_Landscape_In_Call = false;
 
     // For use with Pause/Wait dialogs
     private String mPostDialStrAfterPause;
@@ -267,6 +270,7 @@ public class InCallScreen extends Activity
         EARPIECE,   // Handset earpiece (or wired headset, if connected)
     }
 
+    
 
     private Handler mHandler = new Handler() {
         @Override
@@ -559,6 +563,11 @@ public class InCallScreen extends Activity
 
         updateSettings();
 
+        if (Enable_Landscape_In_Call) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        }
         mIsForegroundActivity = true;
         mIsForegroundActivityForProximity = true;
 
@@ -2254,7 +2263,8 @@ public class InCallScreen extends Activity
 
     private View createWildPromptView() {
         LinearLayout result = new LinearLayout(this);
-        result.setOrientation(LinearLayout.VERTICAL);
+        //result.setOrientation(LinearLayout.VERTICAL);
+        // Let the Manfiest determine Layout.
         result.setPadding(5, 5, 5, 5);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -4572,11 +4582,21 @@ public class InCallScreen extends Activity
         // android:screenOrientation="portrait" in our manifest, and we don't
         // change our UI at all based on newConfig.keyboardHidden or
         // newConfig.uiMode.)
+        
+        // removed android:screenOrientation="portrait" from manifest.  Need to respond to
+        // orientation changes
 
         // TODO: we do eventually want to handle at least some config changes, such as:
         boolean isKeyboardOpen = (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO);
         if (DBG) log("  - isKeyboardOpen = " + isKeyboardOpen);
         boolean isLandscape = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
+        if  (!Enable_Landscape_In_Call) 
+            // Landscape is disabled - let's try to go back to portrait;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // if we are here, there must have been a change that justifies redrawing the screen...  
+        setContentView(R.layout.incall_screen);
+        initInCallScreen(); 
+        updateScreen();
         if (DBG) log("  - isLandscape = " + isLandscape);
         if (DBG) log("  - uiMode = " + newConfig.uiMode);
         // See bug 2089513.
@@ -4653,6 +4673,7 @@ public class InCallScreen extends Activity
        SharedPreferences callsettings = PreferenceManager.getDefaultSharedPreferences(this);
 
        Exit_To_Home_Screen = (callsettings.getBoolean(BUTTON_EXIT_TO_HOMESCREEN_KEY,false));
+       Enable_Landscape_In_Call = callsettings.getBoolean(BUTTON_LANDSCAPE_KEY,false);
 
       }
 

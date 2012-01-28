@@ -108,6 +108,13 @@
         <item name="android:layout_weight">1</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
+    
+    <style name="InCallButtonLand">
+        <item name="android:layout_width">@dimen/in_call_button_height</item>
+        <item name="android:layout_height">0px</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
 
     <!-- "Compound button" variation of InCallButton.
          These buttons have the concept of two states: checked and unchecked.
@@ -119,9 +126,20 @@
         <item name="android:textOff">@null</item>
     </style>
 
+    <style name="InCallCompoundButtonLand" parent="InCallButtonLand">
+        <item name="android:textOn">@null</item>
+        <item name="android:textOff">@null</item>
+    </style>
+    
     <style name="VerticalSeparator">
         <item name="android:layout_width">2dp</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+    
+    <style name="HorizontalSeparator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
         <item name="android:background">@android:color/black</item>
     </style>
 
@@ -131,11 +149,23 @@
         <item name="android:layout_height">@dimen/in_call_end_button_height</item>
         <item name="android:layout_weight">1</item>
     </style>
+    
+    <style name="InCallEndButtonLand">
+        <item name="android:layout_width">@dimen/in_call_end_button_height</item>
+        <item name="android:layout_height">0dip</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 
     <!-- Buttons in extra button row. -->
     <style name="InCallExtraRowButton">
         <item name="android:layout_width">@dimen/extra_row_button_width</item>
         <item name="android:layout_height">@dimen/extra_row_button_height</item>
+        <item name="android:background">@null</item>
+    </style>
+    
+    <style name="InCallExtraRowButtonLand">
+        <item name="android:layout_width">@dimen/extra_row_button_height</item>
+        <item name="android:layout_height">@dimen/extra_row_button_width</item>
         <item name="android:background">@null</item>
     </style>
 

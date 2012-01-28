@@ -659,6 +659,8 @@
     <string name="auto_retry_mode_summary">Enable Auto-retry mode</string>
     <string name="exit_to_home_screen_title">Exit to Home on End Call</string>
     <string name="exit_to_home_screen_summary">Exit to Home screen on End Call rather than going to Call Log</string>
+    <string name="landscape_mode_title">Enable Landscape</string>
+    <string name="landscape_mode_summary">Enable Landscape Mode (if sensor enabled)</string>
 
     <!-- FDN list screen: menu item label -->
     <string name="menu_add">Add contact</string>
