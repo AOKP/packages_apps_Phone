@@ -145,6 +145,18 @@
         android:persistent="true"
         android:summary="@string/hac_mode_summary"/>
 
+     <CheckBoxPreference
+        android:key="button_exit_to_home_screen_key"
+        android:title="@string/exit_to_home_screen_title"
+        android:persistent="true"
+        android:summary="@string/exit_to_home_screen_summary"/>
+
+    <CheckBoxPreference
+        android:key="button_landscape_key"
+        android:title="@string/landscape_mode_title"
+        android:persistent="true"
+        android:summary="@string/landscape_mode_summary"/>
+
     <ListPreference
         android:key="button_dtmf_settings"
         android:title="@string/dtmf_tones_title"
