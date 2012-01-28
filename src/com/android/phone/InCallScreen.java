@@ -69,6 +69,10 @@ import com.android.phone.InCallUiState.InCallScreenMode;
 import com.android.phone.OtaUtils.CdmaOtaInCallScreenUiState;
 import com.android.phone.OtaUtils.CdmaOtaScreenState;
 
+import android.provider.Settings;
+import android.database.ContentObserver;
+import android.content.ContentResolver;
+
 import java.util.List;
 
 
@@ -259,6 +263,14 @@ public class InCallScreen extends Activity
         EARPIECE,   // Handset earpiece (or wired headset, if connected)
     }
 
+    /** 
+     * Extended settings for Landscape, StatusBar & LightsOut
+     *
+     */
+    
+    public boolean Enable_Landscape_In_Call = false;
+    public boolean Enable_StatusBar_In_Call = false;
+    public boolean Enable_LightsOut_In_Call = true;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -481,14 +493,25 @@ public class InCallScreen extends Activity
             flags |= WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
         }
         getWindow().addFlags(flags);
+        
+        setPhone(mApp.phone);  // Sets mPhone
+        
+        updateSettings(); // get My custom variables.  I need mPhone already set, but before lightsout gets set.
 
         // Also put the system bar (if present on this device) into
         // "lights out" mode any time we're the foreground activity.
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE;
-        getWindow().setAttributes(params);
+        if  (Enable_LightsOut_In_Call) {
+        	// Lightsout is not disabled
+        	WindowManager.LayoutParams params = getWindow().getAttributes();
+        	params.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+        	getWindow().setAttributes(params);
+        } else {
+        	WindowManager.LayoutParams params = getWindow().getAttributes();
+        	params.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
+        	getWindow().setAttributes(params);
+        }
 
-        setPhone(mApp.phone);  // Sets mPhone
+        
 
         mCM =  mApp.mCM;
         log("- onCreate: phone state = " + mCM.getState());
@@ -573,7 +596,12 @@ public class InCallScreen extends Activity
 
         // Disable the status bar "window shade" the entire time we're on
         // the in-call screen.
-        mApp.notificationMgr.statusBarHelper.enableExpandedView(false);
+        if  (Enable_StatusBar_In_Call) {
+        	//StatusBar is enabled
+        	mApp.notificationMgr.statusBarHelper.enableExpandedView(true);
+        }else { // StatusBar is enabled.
+        	mApp.notificationMgr.statusBarHelper.enableExpandedView(false);
+        }
         // ...and update the in-call notification too, since the status bar
         // icon needs to be hidden while we're the foreground activity:
         mApp.notificationMgr.updateInCallNotification();
@@ -1219,8 +1247,10 @@ public class InCallScreen extends Activity
 
         // The DTMF Dialpad.
         // TODO: Don't inflate this until the first time it's needed.
+        
         ViewStub stub = (ViewStub)findViewById(R.id.dtmf_twelve_key_dialer_stub);
         stub.inflate();
+        // }
         mDialerView = (DTMFTwelveKeyDialerView) findViewById(R.id.dtmf_twelve_key_dialer_view);
         if (DBG) log("- Found dialerView: " + mDialerView);
 
@@ -2088,7 +2118,8 @@ public class InCallScreen extends Activity
 
     private View createWildPromptView() {
         LinearLayout result = new LinearLayout(this);
-        result.setOrientation(LinearLayout.VERTICAL);
+        //result.setOrientation(LinearLayout.VERTICAL);
+        // Let the Manfiest determine Layout.
         result.setPadding(5, 5, 5, 5);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -4405,7 +4436,7 @@ public class InCallScreen extends Activity
      *
      */
     public void onConfigurationChanged(Configuration newConfig) {
-        if (DBG) log("onConfigurationChanged: newConfig = " + newConfig);
+    	 if (DBG) log("onConfigurationChanged: newConfig = " + newConfig);
 
         // Note: At the time this function is called, our Resources object
         // will have already been updated to return resource values matching
@@ -4423,11 +4454,28 @@ public class InCallScreen extends Activity
         // android:screenOrientation="portrait" in our manifest, and we don't
         // change our UI at all based on newConfig.keyboardHidden or
         // newConfig.uiMode.)
+        
+        // removed android:screenOrientation="portrait" from manifest.  Need to respond to
+        // orientation changes
 
         // TODO: we do eventually want to handle at least some config changes, such as:
         boolean isKeyboardOpen = (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO);
         if (DBG) log("  - isKeyboardOpen = " + isKeyboardOpen);
         boolean isLandscape = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
+        if  (Enable_Landscape_In_Call) {
+        	// Landscape is Enabled - let's redraw
+        	// I'm going to try to dump the old view and re-inflate based on new configuration.
+        	//ViewGroup vg = (ViewGroup) findViewById (android.R.id.content);
+        	//vg.invalidate();
+        	setContentView(R.layout.incall_screen);
+        	initInCallScreen(); 
+        	updateScreen();
+        	// the above is very 'hackish' - somone better than me should clean it up.
+        } else {
+        	// Landscape is disabled - let's try to go back to portrait;
+            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
+        }
+        // the above is very 'hackish' - somone better than me should clean it up.
         if (DBG) log("  - isLandscape = " + isLandscape);
         if (DBG) log("  - uiMode = " + newConfig.uiMode);
         // See bug 2089513.
@@ -4476,4 +4524,42 @@ public class InCallScreen extends Activity
     private void log(String msg) {
         Log.d(LOG_TAG, msg);
     }
+    
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mPhone.getContext().getContentResolver();
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.CALL_ENABLE_LANDSCAPE), false,
+                    this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.CALL_ENABLE_STATUSBAR),
+                    false,
+                    this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.CALL_DISABLE_LIGHTSOUT), false,
+                    this);
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+
+    protected void updateSettings() {
+        ContentResolver resolver = mPhone.getContext().getContentResolver();
+
+        Enable_Landscape_In_Call = (Settings.System.getInt(resolver,
+                Settings.System.CALL_ENABLE_LANDSCAPE,0) == 0) ?  false:true;
+        Enable_StatusBar_In_Call = (Settings.System.getInt(resolver,
+                Settings.System.CALL_ENABLE_STATUSBAR,0) == 0) ?  false:true;
+        Enable_LightsOut_In_Call = (Settings.System.getFloat(resolver,
+                Settings.System.CALL_DISABLE_LIGHTSOUT,0) == 0) ? true:false;
+        }
+       
 }
