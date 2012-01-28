@@ -127,4 +127,23 @@
             android:targetPackage="com.android.phone"
             android:targetClass="com.android.phone.CdmaCallOptions"/>
     </PreferenceScreen>
+    
+    <CheckBoxPreference
+        android:key="button_landscape_key"
+        android:title="@string/landscape_mode_title"
+        android:persistent="false"
+        android:summary="@string/landscape_mode_summary"/>
+    
+    <CheckBoxPreference
+        android:key="button_statusbar_key"
+        android:title="@string/enable_statusbar_title"
+        android:persistent="false"
+        android:summary="@string/enable_statusbar_summary"/> 
+        
+     <CheckBoxPreference
+        android:key="button_lightsout_key"
+        android:title="@string/disable_lightsout_title"
+        android:persistent="false"
+        android:summary="@string/disable_lightsout_summary"/>   
+        
 </PreferenceScreen>

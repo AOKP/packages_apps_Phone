@@ -20,6 +20,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.pim.ContactsAsyncHelper;
@@ -257,6 +258,9 @@ public class CallCard extends FrameLayout
         //   controls on the bottom part of the screen.
 
         int reservedVerticalSpace = mInCallScreen.getInCallTouchUi().getTouchUiHeight();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+       	 reservedVerticalSpace = 0;
+      		// If in Landscape Mode, I don't want reserved space at bottom.
         ViewGroup.MarginLayoutParams callInfoLp =
                 (ViewGroup.MarginLayoutParams) mCallInfoContainer.getLayoutParams();
         callInfoLp.bottomMargin = reservedVerticalSpace;  // Equivalent to setting
