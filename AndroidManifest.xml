@@ -244,7 +244,7 @@
             android:label="@string/phoneIconLabel"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
-            android:screenOrientation="nosensor"
+            android:screenOrientation="sensor"
             android:configChanges="keyboardHidden"
             android:exported="false">
         </activity>
