@@ -457,18 +457,6 @@ public class CallFeaturesSetting extends PreferenceActivity
             if (DBG) log("Invoking cfg intent " + preference.getIntent().getPackage());
             this.startActivityForResult(preference.getIntent(), VOICEMAIL_PROVIDER_CFG_ID);
             return true;
-        }else if (preference == mButtonLandscape) {
-            android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
-                    android.provider.Settings.System.CALL_ENABLE_LANDSCAPE,
-                    mButtonLandscape.isChecked() ? 1 : 0);
-        }else if (preference == mButtonStatusbar) {
-            android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
-                    android.provider.Settings.System.CALL_ENABLE_STATUSBAR,
-                    mButtonStatusbar.isChecked() ? 1 : 0);
-        }else if (preference == mButtonLightsout) {
-            android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
-                    android.provider.Settings.System.CALL_DISABLE_LIGHTSOUT,
-                    mButtonLightsout.isChecked() ? 1 : 0);
         }
         return false;
     }
@@ -1583,21 +1571,6 @@ public class CallFeaturesSetting extends PreferenceActivity
                     Phone.TTY_MODE_OFF);
             mButtonTTY.setValue(Integer.toString(settingsTtyMode));
             updatePreferredTtyModeSummary(settingsTtyMode);
-        }
-        if (mButtonLandscape != null) {
-            int landscape = Settings.System.getInt(getContentResolver(),
-                    Settings.System.CALL_ENABLE_LANDSCAPE, 0);
-            mButtonLandscape.setChecked(landscape != 0);
-        }
-        if (mButtonStatusbar != null) {
-            int statusbar = Settings.System.getInt(getContentResolver(),
-                    Settings.System.CALL_ENABLE_STATUSBAR, 0);
-            mButtonStatusbar.setChecked(statusbar != 0);
-        }
-        if (mButtonLightsout != null) {
-            int lightsout = Settings.System.getInt(getContentResolver(),
-                    Settings.System.CALL_DISABLE_LIGHTSOUT, 0);
-            mButtonLightsout.setChecked(lightsout != 0);
         }
     }
 
