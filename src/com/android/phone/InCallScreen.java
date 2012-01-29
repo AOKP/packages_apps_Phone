@@ -164,6 +164,7 @@ public class InCallScreen extends Activity
     private static final String BUTTON_LANDSCAPE_KEY = "button_landscape_key";
     private static final String BUTTON_STATUSBAR_KEY = "button_statusbar_key";
     private static final String BUTTON_LIGHTSOUT_KEY = "button_lightsout_key";
+    private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
 
     // When InCallScreenMode is UNDEFINED set the default action
     // to ACTION_UNDEFINED so if we are resumed the activity will
@@ -270,10 +271,13 @@ public class InCallScreen extends Activity
      * Extended settings for Landscape, StatusBar & LightsOut
      *
      */
+    //  these are new custom settings - I'm defaulting them to the normal behaviour
+    // but will load them from preferences per user setting.
     
     public boolean Enable_Landscape_In_Call = false;
     public boolean Enable_StatusBar_In_Call = false;
     public boolean Enable_LightsOut_In_Call = true;
+    public boolean Exit_To_Home_Screen = false;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -483,7 +487,6 @@ public class InCallScreen extends Activity
         }
         
         updateSettings();
-        Log.d("LAND","UpdateSettings();");
 
         mApp = PhoneApp.getInstance();
         mApp.setInCallScreenInstance(this);
@@ -2546,22 +2549,24 @@ public class InCallScreen extends Activity
                         log("- Show Call Log (or Dialtacts) after disconnect. Current intent: "
                                 + intent);
                     }
-                    try {
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
+                    if (!Exit_To_Home_Screen)  // If User wants to exit to home screen, skip this part - else go to call log.
+                    	try {
+                    		startActivity(intent);
+                    	} catch (ActivityNotFoundException e) {
                         // Don't crash if there's somehow no "Call log" at
                         // all on this device.
                         // (This should never happen, though, since we already
                         // checked PhoneApp.sVoiceCapable above, and any
                         // voice-capable device surely *should* have a call
                         // log activity....)
-                        Log.w(LOG_TAG, "delayedCleanupAfterDisconnect: "
+                    		Log.w(LOG_TAG, "delayedCleanupAfterDisconnect: "
                               + "transition to call log failed; intent = " + intent);
                         // ...so just return back where we came from....
-                    }
+                    	}
                     // Even if we did go to the call log, note that we still
                     // call endInCallScreenSession (below) to make sure we don't
                     // stay in the activity history.
+                    
                 }
 
                 endInCallScreenSession();
@@ -4548,14 +4553,14 @@ public class InCallScreen extends Activity
     	SharedPreferences callsettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Enable_Landscape_In_Call = callsettings.getBoolean(BUTTON_LANDSCAPE_KEY,false);
-        Log.d("LAND","Enable Landscape:" + Enable_Landscape_In_Call);	
         
         Enable_StatusBar_In_Call = callsettings.getBoolean(BUTTON_STATUSBAR_KEY,false);
-        Log.d("LAND","Enable StatusBar:" + Enable_StatusBar_In_Call);
         
         //this one is stored sort of backwars - the setting is to 'Disable Lightouts' - so true here means
         // NOT Enable_LightsOut_In__Call
         Enable_LightsOut_In_Call = !(callsettings.getBoolean(BUTTON_LIGHTSOUT_KEY,false)); 
-        Log.d("LAND","Enable Lightsout:" + Enable_LightsOut_In_Call);
+        
+        Exit_To_Home_Screen = (callsettings.getBoolean(BUTTON_EXIT_TO_HOMESCREEN_KEY,false));
+        
         }    
 }
