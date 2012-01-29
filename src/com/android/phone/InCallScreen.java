@@ -69,9 +69,8 @@ import com.android.phone.InCallUiState.InCallScreenMode;
 import com.android.phone.OtaUtils.CdmaOtaInCallScreenUiState;
 import com.android.phone.OtaUtils.CdmaOtaScreenState;
 
-import android.provider.Settings;
-import android.database.ContentObserver;
-import android.content.ContentResolver;
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 
 import java.util.List;
 
@@ -161,6 +160,10 @@ public class InCallScreen extends Activity
     private static final int REQUEST_UPDATE_SCREEN = 122;
     private static final int PHONE_INCOMING_RING = 123;
     private static final int PHONE_NEW_RINGING_CONNECTION = 124;
+    
+    private static final String BUTTON_LANDSCAPE_KEY = "button_landscape_key";
+    private static final String BUTTON_STATUSBAR_KEY = "button_statusbar_key";
+    private static final String BUTTON_LIGHTSOUT_KEY = "button_lightsout_key";
 
     // When InCallScreenMode is UNDEFINED set the default action
     // to ACTION_UNDEFINED so if we are resumed the activity will
@@ -478,6 +481,9 @@ public class InCallScreen extends Activity
             finish();
             return;
         }
+        
+        updateSettings();
+        Log.d("LAND","UpdateSettings();");
 
         mApp = PhoneApp.getInstance();
         mApp.setInCallScreenInstance(this);
@@ -495,8 +501,6 @@ public class InCallScreen extends Activity
         getWindow().addFlags(flags);
         
         setPhone(mApp.phone);  // Sets mPhone
-        
-        updateSettings(); // get My custom variables.  I need mPhone already set, but before lightsout gets set.
 
         // Also put the system bar (if present on this device) into
         // "lights out" mode any time we're the foreground activity.
@@ -583,6 +587,8 @@ public class InCallScreen extends Activity
     protected void onResume() {
         if (DBG) log("onResume()...");
         super.onResume();
+        
+        updateSettings();
 
         mIsForegroundActivity = true;
 
@@ -605,6 +611,21 @@ public class InCallScreen extends Activity
         // ...and update the in-call notification too, since the status bar
         // icon needs to be hidden while we're the foreground activity:
         mApp.notificationMgr.updateInCallNotification();
+        
+        // Also put the system bar (if present on this device) into
+        // "lights out" mode any time we're the foreground activity.
+        // This is set in OnCreated(), but since I've added the ability to turn it off
+        // it needs to be dealt with onResume as well.
+        if  (Enable_LightsOut_In_Call) {
+        	// Lightsout is not disabled
+        	WindowManager.LayoutParams params = getWindow().getAttributes();
+        	params.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+        	getWindow().setAttributes(params);
+        } else {
+        	WindowManager.LayoutParams params = getWindow().getAttributes();
+        	params.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
+        	getWindow().setAttributes(params);
+        }
 
         // Listen for broadcast intents that might affect the onscreen UI.
         registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
@@ -4465,17 +4486,13 @@ public class InCallScreen extends Activity
         if  (Enable_Landscape_In_Call) {
         	// Landscape is Enabled - let's redraw
         	// I'm going to try to dump the old view and re-inflate based on new configuration.
-        	//ViewGroup vg = (ViewGroup) findViewById (android.R.id.content);
-        	//vg.invalidate();
         	setContentView(R.layout.incall_screen);
         	initInCallScreen(); 
         	updateScreen();
-        	// the above is very 'hackish' - somone better than me should clean it up.
         } else {
         	// Landscape is disabled - let's try to go back to portrait;
             setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
         }
-        // the above is very 'hackish' - somone better than me should clean it up.
         if (DBG) log("  - isLandscape = " + isLandscape);
         if (DBG) log("  - uiMode = " + newConfig.uiMode);
         // See bug 2089513.
@@ -4525,41 +4542,20 @@ public class InCallScreen extends Activity
         Log.d(LOG_TAG, msg);
     }
     
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mPhone.getContext().getContentResolver();
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.CALL_ENABLE_LANDSCAPE), false,
-                    this);
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.CALL_ENABLE_STATUSBAR),
-                    false,
-                    this);
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.CALL_DISABLE_LIGHTSOUT), false,
-                    this);
-            updateSettings();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            updateSettings();
-        }
-    }
-
+  
     protected void updateSettings() {
-        ContentResolver resolver = mPhone.getContext().getContentResolver();
+        
+    	SharedPreferences callsettings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Enable_Landscape_In_Call = (Settings.System.getInt(resolver,
-                Settings.System.CALL_ENABLE_LANDSCAPE,0) == 0) ?  false:true;
-        Enable_StatusBar_In_Call = (Settings.System.getInt(resolver,
-                Settings.System.CALL_ENABLE_STATUSBAR,0) == 0) ?  false:true;
-        Enable_LightsOut_In_Call = (Settings.System.getFloat(resolver,
-                Settings.System.CALL_DISABLE_LIGHTSOUT,0) == 0) ? true:false;
-        }
-       
+        Enable_Landscape_In_Call = callsettings.getBoolean(BUTTON_LANDSCAPE_KEY,false);
+        Log.d("LAND","Enable Landscape:" + Enable_Landscape_In_Call);	
+        
+        Enable_StatusBar_In_Call = callsettings.getBoolean(BUTTON_STATUSBAR_KEY,false);
+        Log.d("LAND","Enable StatusBar:" + Enable_StatusBar_In_Call);
+        
+        //this one is stored sort of backwars - the setting is to 'Disable Lightouts' - so true here means
+        // NOT Enable_LightsOut_In__Call
+        Enable_LightsOut_In_Call = !(callsettings.getBoolean(BUTTON_LIGHTSOUT_KEY,false)); 
+        Log.d("LAND","Enable Lightsout:" + Enable_LightsOut_In_Call);
+        }    
 }
