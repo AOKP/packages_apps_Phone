@@ -33,7 +33,7 @@
          to make sure it doesn't overlap with the onscreen buttons from
          incall_touch_ui.xml. -->
     <RelativeLayout android:id="@+id/inCallPanel"
-                    android:layout_width="480dip"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     >
         <!-- The "Call Card", which displays info about the currently
