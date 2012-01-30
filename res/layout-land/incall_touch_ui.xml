@@ -47,8 +47,9 @@
     <com.android.internal.widget.multiwaveview.MultiWaveView
         android:id="@+id/incomingCallWidget"
         android:layout_width="match_parent"
-        android:layout_height="250dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:background="#D0000000"
         android:visibility="gone"
         
@@ -64,8 +65,8 @@
         prvandroid:leftChevronDrawable="@*android:drawable/ic_lockscreen_chevron_left"
         prvandroid:rightChevronDrawable="@*android:drawable/ic_lockscreen_chevron_right"
         prvandroid:feedbackCount="3"
-        prvandroid:horizontalOffset="0dip"
-        prvandroid:verticalOffset="100dip"
+        prvandroid:horizontalOffset="20dip"
+        prvandroid:verticalOffset="50dip"
         />
 
     <!--

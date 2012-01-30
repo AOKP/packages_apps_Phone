@@ -258,12 +258,13 @@ public class CallCard extends FrameLayout
         //   controls on the bottom part of the screen.
 
         int reservedVerticalSpace = mInCallScreen.getInCallTouchUi().getTouchUiHeight();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-       	 reservedVerticalSpace = 0;
-      		// If in Landscape Mode, I don't want reserved space at bottom.
+        
         ViewGroup.MarginLayoutParams callInfoLp =
                 (ViewGroup.MarginLayoutParams) mCallInfoContainer.getLayoutParams();
-        callInfoLp.bottomMargin = reservedVerticalSpace;  // Equivalent to setting
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        	callInfoLp.rightMargin = reservedVerticalSpace; // set margin on right side if in landscape rather than bottom
+        else 
+            callInfoLp.bottomMargin = reservedVerticalSpace;  // Equivalent to setting
                                                           // android:layout_marginBottom in XML
         if (DBG) log("  ==> callInfoLp.bottomMargin: " + reservedVerticalSpace);
         mCallInfoContainer.setLayoutParams(callInfoLp);
