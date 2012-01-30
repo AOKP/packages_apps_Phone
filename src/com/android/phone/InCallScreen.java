@@ -68,7 +68,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.internal.telephony.Call;
+import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.CallManager;
+import com.android.internal.telephony.CallStateException;
 import com.android.internal.telephony.Connection;
 import com.android.internal.telephony.MmiCode;
 import com.android.internal.telephony.Phone;
@@ -166,6 +168,9 @@ public class InCallScreen extends Activity
     private static final int REQUEST_UPDATE_SCREEN = 122;
     private static final int PHONE_INCOMING_RING = 123;
     private static final int PHONE_NEW_RINGING_CONNECTION = 124;
+    private static final int PHONE_INCOMING_MODIFY_CALL_REQUEST = 125;
+    private static final int PHONE_MODIFY_CALL_EVENT = 126;
+    private static final int PHONE_AVP_UPGRADE_RETRY_FAILURE_NOTICE = 127;
 
     // When InCallScreenMode is UNDEFINED set the default action
     // to ACTION_UNDEFINED so if we are resumed the activity will
@@ -190,6 +195,27 @@ public class InCallScreen extends Activity
         PHONE_NOT_IN_USE
     }
 
+    /**
+     * This table is for deciding whether consent is
+     * required while upgrade/downgrade from one calltype
+     * to other
+     * Read calltype transition from row to column
+     * 1 => Consent of user is required
+     * 0 => No consent required
+     * eg. from VOLTE to VT-TX, consent is needed so
+     * row 0, col 1 is set to 1
+     *
+     *         VOLTE     VT-TX      VT-RX      VT
+     * VOLTE |   0    |    0   |     1   |     1
+     * VT-TX |   0    |    0   |     0   |     0
+     * VT-RX |   0    |    0   |     0   |     1
+     * VT    |   0    |    0   |     0   |     0
+     */
+
+    private int[][] mVideoConsentTable = {{0, 0, 1, 1},
+                                          {0, 0, 0, 0},
+                                          {0, 0, 0, 1},
+                                          {0, 0, 0, 0}};
     private boolean mRegisteredForPhoneStates;
 
     private PhoneGlobals mApp;
@@ -236,6 +262,7 @@ public class InCallScreen extends Activity
     private AlertDialog mCallLostDialog;
     private AlertDialog mPausePromptDialog;
     private AlertDialog mExitingECMDialog;
+    private AlertDialog mModifyCallPromptDialog;
     // NOTE: if you add a new dialog here, be sure to add it to dismissAllDialogs() also.
 
     // ProgressDialog created by showProgressIndication()
@@ -407,6 +434,31 @@ public class InCallScreen extends Activity
 
                 case PHONE_NEW_RINGING_CONNECTION:
                     onNewRingingConnection();
+                    break;
+
+                case PHONE_INCOMING_MODIFY_CALL_REQUEST:
+                    log("videocall: received modifyCall request");
+                    AsyncResult ar = (AsyncResult) msg.obj;
+                    handleModifyCallRequest((Connection) ar.result);
+                    break;
+
+                case PHONE_MODIFY_CALL_EVENT:
+                    Throwable ex = ((AsyncResult) msg.obj).exception;
+                    if (ex != null) {
+                        String errorStr = ex.getMessage();
+                        Log.e(LOG_TAG, "videocall modify call request failed " + errorStr);
+                        Toast.makeText(mApp, R.string.modify_call_failure_str, Toast.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        log("videocall: IMS Modify call request to RIL returned without exception");
+                    }
+                    break;
+
+                case PHONE_AVP_UPGRADE_RETRY_FAILURE_NOTICE:
+                    String errorStr = (String) ((AsyncResult) msg.obj).result;
+                    Log.e(LOG_TAG, "videocall modify call request failed + errorStr=" + errorStr);
+                    Toast.makeText(mApp, R.string.modify_call_failure_str, Toast.LENGTH_SHORT)
+                            .show();
                     break;
 
                 default:
@@ -810,6 +862,11 @@ public class InCallScreen extends Activity
         // longer in the foreground.
         mDialer.stopDialerSession();
 
+        // Call onPause on CallCard
+        if (mCallCard != null) {
+            mCallCard.onPause();
+        }
+
         // If the device is put to sleep as the phone call is ending,
         // we may see cases where the DELAYED_CLEANUP_AFTER_DISCONNECT
         // event gets handled AFTER the device goes to sleep and wakes
@@ -1069,6 +1126,21 @@ public class InCallScreen extends Activity
             mCM.registerForSuppServiceFailed(mHandler, SUPP_SERVICE_FAILED, null);
             mCM.registerForIncomingRing(mHandler, PHONE_INCOMING_RING, null);
             mCM.registerForNewRingingConnection(mHandler, PHONE_NEW_RINGING_CONNECTION, null);
+
+            Phone phone = PhoneUtils.getImsPhone(mCM);
+            if (phone != null) {
+                try {
+                    phone.registerForModifyCallRequest(mHandler,
+                            PHONE_INCOMING_MODIFY_CALL_REQUEST, null);
+                    /* TODO: Uncomment after telephony-apps/ims enabled in MR2
+                    phone.registerForAvpUpgradeFailure(mHandler,
+                            PHONE_AVP_UPGRADE_RETRY_FAILURE_NOTICE, null);
+                    */
+                } catch (CallStateException e) {
+                    Log.e(LOG_TAG, "registerForModifyCallRequest failed for phone: " + phone);
+                }
+            }
+
             mRegisteredForPhoneStates = true;
         }
     }
@@ -1085,6 +1157,17 @@ public class InCallScreen extends Activity
         mCM.unregisterForNewRingingConnection(mHandler);
         // remove locally posted message
         mHandler.removeMessages(DELAYED_CLEANUP_AFTER_DISCONNECT);
+        Phone phone = PhoneUtils.getImsPhone(mCM);
+        try {
+            if (phone != null) {
+                phone.unregisterForModifyCallRequest(mHandler);
+                /* TODO: Uncomment after telephony-apps/ims enabled in MR2
+                phone.unregisterForAvpUpgradeFailure(mHandler);
+                */
+            }
+        } catch (CallStateException e) {
+            Log.e(LOG_TAG, "unregisterForModifyCallRequest failed for phone: " + phone);
+        }
         mRegisteredForPhoneStates = false;
     }
 
@@ -1924,6 +2007,11 @@ public class InCallScreen extends Activity
                     if (DBG) log("- DISMISSING mPausePromptDialog.");
                     mPausePromptDialog.dismiss();  // safe even if already dismissed
                     mPausePromptDialog = null;
+                }
+                if (mModifyCallPromptDialog != null) {
+                    if (DBG) log("- DISMISSING mModifyCallPromptDialog.");
+                    mModifyCallPromptDialog.dismiss(); // safe even if already dismissed
+                    mModifyCallPromptDialog = null;
                 }
             }
 
@@ -2995,7 +3083,16 @@ public class InCallScreen extends Activity
         switch (id) {
             // Actions while an incoming call is ringing:
             case R.id.incomingCallAnswer:
-                internalAnswerCall();
+                internalAnswerCall(Phone.CALL_TYPE_VOICE);
+                break;
+            case R.id.incomingCallAnswerVideo:
+                internalAnswerCall(Phone.CALL_TYPE_VT);
+                break;
+            case R.id.incomingCallAnswerTxVideo:
+                internalAnswerCall(Phone.CALL_TYPE_VT_TX);
+                break;
+            case R.id.incomingCallAnswerRxVideo:
+                internalAnswerCall(Phone.CALL_TYPE_VT_RX);
                 break;
             case R.id.incomingCallReject:
                 hangupRingingCall();
@@ -3013,6 +3110,9 @@ public class InCallScreen extends Activity
                 break;
             case R.id.endButton:
                 internalHangup();
+                break;
+            case R.id.modifyCallButton:
+                onModifyCall();
                 break;
             case R.id.dialpadButton:
                 onOpenCloseDialpad();
@@ -3405,6 +3505,11 @@ public class InCallScreen extends Activity
             mExitingECMDialog.dismiss();
             mExitingECMDialog = null;
         }
+        if (mModifyCallPromptDialog != null) {
+            if (DBG) log("- DISMISSING mModifyCallPromptDialog.");
+            mModifyCallPromptDialog.dismiss();
+            mModifyCallPromptDialog = null;
+        }
     }
 
     /**
@@ -3496,13 +3601,23 @@ public class InCallScreen extends Activity
      * ringing or waiting call.
      */
     private void internalAnswerCall() {
-        if (DBG) log("internalAnswerCall()...");
+        internalAnswerCall(Phone.CALL_TYPE_UNKNOWN);
+    }
+
+    /**
+     * Answer a ringing call with calltype specified. answerCallType is
+     * valid only for IMS calls. This method does nothing if there's no
+     * ringing or waiting call.
+     */
+    private void internalAnswerCall(int answerCallType) {
+        if (DBG) log("internalAnswerCall()..." + answerCallType);
         // if (DBG) PhoneUtils.dumpCallState(mPhone);
 
         final boolean hasRingingCall = mCM.hasActiveRingingCall();
 
         if (hasRingingCall) {
             Phone phone = mCM.getRingingPhone();
+            if (DBG) log(" Ringing Phone" + phone);
             Call ringing = mCM.getFirstActiveRingingCall();
             int phoneType = phone.getPhoneType();
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
@@ -3523,7 +3638,7 @@ public class InCallScreen extends Activity
                             + "CDMA incoming and end " + fgPhoneName + " ongoing");
                     PhoneUtils.answerAndEndActive(mCM, ringing);
                 } else {
-                    PhoneUtils.answerCall(ringing);
+                    PhoneUtils.answerCall(ringing, answerCallType);
                 }
             } else if (phoneType == PhoneConstants.PHONE_TYPE_SIP) {
                 if (DBG) log("internalAnswerCall: answering (SIP)...");
@@ -3541,7 +3656,7 @@ public class InCallScreen extends Activity
                             + "SIP incoming and end CDMA ongoing");
                     PhoneUtils.answerAndEndActive(mCM, ringing);
                 } else {
-                    PhoneUtils.answerCall(ringing);
+                    PhoneUtils.answerCall(ringing,answerCallType);
                 }
             } else if (phoneType == PhoneConstants.PHONE_TYPE_GSM
                     || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
@@ -3566,8 +3681,9 @@ public class InCallScreen extends Activity
                     // here to end the on-hold call instead.
                 } else {
                     if (DBG) log("internalAnswerCall: answering...");
-                    PhoneUtils.answerCall(ringing);  // Automatically holds the current active call,
-                                                    // if there is one
+                    PhoneUtils.answerCall(ringing,answerCallType);  // Automatically holds
+                                                                    //the current active call,
+                                                                    // if there is one
                 }
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -4078,6 +4194,95 @@ public class InCallScreen extends Activity
         if (DBG) log("requestUpdateScreen()...");
         mHandler.removeMessages(REQUEST_UPDATE_SCREEN);
         mHandler.sendEmptyMessage(REQUEST_UPDATE_SCREEN);
+    }
+
+    private void onModifyCall() {
+        //Order in which UI options appear
+        final int VT = 0;
+        final int VT_TX = 1;
+        final int VT_RX = 2;
+        final int VOICE = 3;
+        final CharSequence[] items = {
+                (CharSequence) getResources().getText(R.string.modify_call_option_vt),
+                (CharSequence) getResources().getText(R.string.modify_call_option_vt_tx),
+                (CharSequence) getResources().getText(R.string.modify_call_option_vt_rx),
+                (CharSequence) getResources().getText(R.string.modify_call_option_voice)
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.modify_call_option_title);
+        final AlertDialog alert;
+
+        final Connection conn = mCM.getFgCallLatestConnection();
+        final Phone phone = conn.getCall().getPhone();
+        if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_IMS) {
+
+            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+
+                    Message msg = mHandler.obtainMessage(PHONE_MODIFY_CALL_EVENT, null);
+
+                    try {
+                        switch (item) {
+                            case VT:
+                                Log.d("videocall", "ModifyCall called: upgrade to VT");
+                                phone.changeConnectionType(msg, conn,
+                                        Phone.CALL_TYPE_VT, null);
+                                break;
+
+                            case VT_TX:
+                                Log.d("videocall", "ModifyCall called: upgrade to VT TX");
+                                phone.changeConnectionType(msg, conn,
+                                        Phone.CALL_TYPE_VT_TX, null);
+                                break;
+
+                            case VT_RX:
+                                Log.d("videocall", "ModifyCall called: upgrade to VT RX");
+                                phone.changeConnectionType(msg, conn,
+                                        Phone.CALL_TYPE_VT_RX, null);
+                                break;
+
+                            case VOICE:
+                                Log.d("videocall", "ModifyCall called: downgrade to voice");
+                                phone.changeConnectionType(msg, conn,
+                                        Phone.CALL_TYPE_VOICE, null);
+
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                    catch (CallStateException e) {
+                        Log.e("videocall", "onModifyCall CallStateException " + e);
+                    }
+
+                }
+            };
+
+            try {
+                int callType = phone.getCallType(mCM.getActiveFgCall());
+                int index = -1;
+                switch(callType) {
+                    case Phone.CALL_TYPE_VT:
+                        index = VT;
+                        break;
+                    case Phone.CALL_TYPE_VT_TX:
+                        index = VT_TX;
+                        break;
+                    case Phone.CALL_TYPE_VT_RX:
+                        index = VT_RX;
+                        break;
+                    case Phone.CALL_TYPE_VOICE:
+                        index = VOICE;
+                        break;
+                }
+                builder.setSingleChoiceItems(items, index, listener);
+                alert = builder.create();
+                alert.show();
+            } catch (CallStateException e) {
+                Log.e("videocall", "onModifyCall CallStateException " + e);
+            }
+        }
     }
 
     /**
@@ -4623,6 +4828,103 @@ public class InCallScreen extends Activity
         } else {
             mApp.notificationMgr.statusBarHelper.enableExpandedView(true);
         }
+    }
+
+    /**
+     * @return true if we're in restricted / emergency dialing only mode.
+     */
+    public boolean isPhoneStateRestricted(Phone phone) {
+        // TODO:  This needs to work IN TANDEM with the KeyGuardViewMediator Code.
+        // Right now, it looks like the mInputRestricted flag is INTERNAL to the
+        // KeyGuardViewMediator and SPECIFICALLY set to be FALSE while the emergency
+        // phone call is being made, to allow for input into the InCallScreen.
+        // Having the InCallScreen judge the state of the device from this flag
+        // becomes meaningless since it is always false for us.  The mediator should
+        // have an additional API to let this app know that it should be restricted.
+        int serviceState = phone.getServiceState().getState();
+        return ((serviceState == ServiceState.STATE_EMERGENCY_ONLY) ||
+                (serviceState == ServiceState.STATE_OUT_OF_SERVICE) ||
+                (PhoneGlobals.getInstance().getKeyguardManager().inKeyguardRestrictedInputMode()));
+     }
+
+    /**
+     * Handles modify call request and shows dialog to user for accepting or
+     * rejecting the modify call
+     */
+    private void handleModifyCallRequest(final Connection conn) {
+        log("videocall handleModifyCallRequest");
+        if (mModifyCallPromptDialog != null) {
+            if (DBG)
+                log("videocall: - DISMISSING mModifyCallPromptDialog.");
+            mModifyCallPromptDialog.dismiss(); // safe even if already dismissed
+            mModifyCallPromptDialog = null;
+        }
+
+        String str = getResources().getString(R.string.accept_modify_call_request_prompt);
+        try {
+            final Phone phone = conn.getCall().getPhone();
+            if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_IMS) {
+                int callType = phone.getProposedConnectionType(conn);
+                int prevCallType = phone.getCallType(mCM.getActiveFgCall());
+                log("videocall handleModifyCallRequest: connection = " + conn
+                        + " prevCallType= " + prevCallType
+                        + " calltype = " + callType);
+
+                boolean isConsentRequired = false;
+                isConsentRequired = isUserConsentRequired(callType, prevCallType);
+                if (callType == Phone.CALL_TYPE_VT) {
+                    str = getResources().getString(R.string.upgrade_vt_prompt);
+                } else if (callType == Phone.CALL_TYPE_VT_TX) {
+                    str = getResources().getString(R.string.upgrade_vt_tx_prompt);
+                } else if (callType == Phone.CALL_TYPE_VT_RX) {
+                    str = getResources().getString(R.string.upgrade_vt_rx_prompt);
+                }
+                if (isConsentRequired) {
+                    mModifyCallPromptDialog = new AlertDialog.Builder(this)
+                            .setMessage(str)
+                            .setPositiveButton(R.string.modify_call_prompt_yes,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                int whichButton) {
+                                            log("videocall: MODIFY_CALL_PROMPT_CONFIRMED, proceed");
+                                            try {
+                                                phone.acceptConnectionTypeChange(conn, null);
+                                            } catch (CallStateException e) {
+                                                Log.e(LOG_TAG, "videocall: Exception "
+                                                        + "acceptConnectionTypeChange " + e);
+                                            }
+                                        }
+                                    })
+                            .setNegativeButton(R.string.modify_call_prompt_no,
+                                    new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface dialog,
+                                                int whichButton) {
+                                            log("videocall: MODIFY_CALL_PROMPT_CANCELED!");
+                                            try {
+                                                phone.rejectConnectionTypeChange(conn);
+                                            } catch (CallStateException e) {
+                                                Log.e(LOG_TAG, "videocall: Exception "
+                                                        + "acceptConnectionTypeChange " + e);
+                                            }
+                                        }
+                                    })
+                            .create();
+                    mModifyCallPromptDialog.getWindow().addFlags(
+                            WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+
+                    mModifyCallPromptDialog.show();
+                }
+            }
+        } catch (CallStateException e) {
+            Log.e(LOG_TAG, "videocall CallStateException " + e);
+        }
+    }
+
+    private boolean isUserConsentRequired(int callType, int prevCallType) {
+        boolean isConsentRequired;
+        isConsentRequired = mVideoConsentTable[prevCallType][callType] == 1;
+        return isConsentRequired;
     }
 
     private void log(String msg) {

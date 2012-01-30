@@ -3,4 +3,14 @@
   *** setCrossFadeAlpha(...);
 }
 
+-keep public class com.android.phone.MediaHandler
+
+-keepclasseswithmembers class * {
+    native <methods>;
+}
+
+-keep class com.android.phone.MediaHandler {
+    *** onMediaEvent(...);
+}
+
 -verbose

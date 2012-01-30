@@ -89,5 +89,10 @@ interface IImsService {
      * Get List of User Uri in an IMS Conference Call
      */
     String[] getUriListinConf();
+
+    /**
+     * Get the Service State for SMS service
+     */
+    boolean isVTModifyAllowed();
 }
 

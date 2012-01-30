@@ -120,6 +120,7 @@ public class PhoneGlobals extends ContextWrapper
     private static final int EVENT_TTY_MODE_GET = 15;
     private static final int EVENT_TTY_MODE_SET = 16;
     private static final int EVENT_START_SIP_SERVICE = 17;
+    private static final int EVENT_CALL_STATE_CHANGED = 18;
 
     // The MMI codes are also used by the InCallScreen.
     public static final int MMI_INITIATE = 51;
@@ -185,6 +186,8 @@ public class PhoneGlobals extends ContextWrapper
     static boolean sVoiceCapable = true;
 
     public static IImsService mImsService;
+
+    private boolean mIsMediaInitialized = false;
 
     // Internal PhoneApp Call state tracker
     CdmaPhoneCallState cdmaPhoneCallState;
@@ -264,6 +267,9 @@ public class PhoneGlobals extends ContextWrapper
     private boolean mTtyEnabled;
     // Current TTY operating mode selected by user
     private int mPreferredTtyMode = Phone.TTY_MODE_OFF;
+
+    // Video Call related
+    private VideoCallManager mVideoCallManager;
 
     /**
      * Set the restore mute state flag. Used when we are setting the mute state
@@ -425,6 +431,10 @@ public class PhoneGlobals extends ContextWrapper
 
                 case EVENT_TTY_MODE_SET:
                     handleSetTTYModeResponse(msg);
+                    break;
+
+                case EVENT_CALL_STATE_CHANGED:
+                    handleCallStateChanged();
                     break;
             }
         }
@@ -654,6 +664,15 @@ public class PhoneGlobals extends ContextWrapper
             audioManager.setParameter(CallFeaturesSetting.HAC_KEY, hac != 0 ?
                                       CallFeaturesSetting.HAC_VAL_ON :
                                       CallFeaturesSetting.HAC_VAL_OFF);
+        }
+
+        // If IMS property is enabled then register for precise call state
+        // changed. This is done to be able to init the Media without
+        // waiting for the RIL to report the call states as that is too late
+        // sometimes
+        if (PhoneUtils.isCallOnImsEnabled()) {
+            mVideoCallManager = VideoCallManager.getInstance(this);
+            mCM.registerForPreciseCallStateChanged(mHandler, EVENT_CALL_STATE_CHANGED, null);
         }
    }
 
@@ -1828,6 +1847,25 @@ public class PhoneGlobals extends ContextWrapper
                     + ar.exception);
         }
         phone.queryTTYMode(mHandler.obtainMessage(EVENT_TTY_MODE_GET));
+    }
+
+    /**
+     * Handle call state changes for IMS calls
+     */
+    private void handleCallStateChanged() {
+        if (mCM.isImsPhoneActive()) {
+            int error = mVideoCallManager.mediaInit();
+            if (error == 0) {
+                mIsMediaInitialized = true;
+                mVideoCallManager.setFarEndSurface();
+            } else {
+                Log.e(LOG_TAG, "videocall: Media init failed");
+            }
+        } else if (mIsMediaInitialized && mCM.isImsPhoneIdle()) {
+            // Call mediaDeInit only for IMS phones
+            mVideoCallManager.mediaDeInit();
+            mIsMediaInitialized = false;
+        }
     }
 
     /**

@@ -95,4 +95,6 @@
          So, (94 - 38)/2 ==> 28dp -->
     <dimen name="incoming_call_widget_asset_margin">28dp</dimen>
 
+    <!-- Dimensions for Video Call Panel -->
+    <dimen name="indicator_bar_width">38dp</dimen>
 </resources>

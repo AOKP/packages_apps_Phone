@@ -228,7 +228,20 @@ public class PhoneUtils {
      * @see #answerAndEndActive(CallManager, Call)
      */
     /* package */ static boolean answerCall(Call ringingCall) {
-        log("answerCall(" + ringingCall + ")...");
+        return answerCall(ringingCall, Phone.CALL_TYPE_UNKNOWN);
+    }
+
+    /**
+     * Answer the currently-ringing call.
+     *
+     * @return true if we answered the call, or false if there wasn't
+     *         actually a ringing incoming call, or some other error occurred.
+     *
+     * @see #answerAndEndHolding(CallManager, Call)
+     * @see #answerAndEndActive(CallManager, Call)
+     */
+    /* package */ static boolean answerCall(Call ringingCall, int answerCallType) {
+        log("answerCall(" + ringingCall + ")..." + "calltype:" + answerCallType);
         final PhoneGlobals app = PhoneGlobals.getInstance();
         final CallNotifier notifier = app.notifier;
 
@@ -285,7 +298,7 @@ public class PhoneUtils {
                 final boolean isRealIncomingCall = isRealIncomingCall(ringingCall.getState());
 
                 //if (DBG) log("sPhone.acceptCall");
-                app.mCM.acceptCall(ringingCall);
+                app.mCM.acceptCall(ringingCall, answerCallType);
                 answered = true;
 
                 // Always reset to "unmuted" for a freshly-answered call
@@ -661,6 +674,20 @@ public class PhoneUtils {
         // After calling CallManager#dial(), getState() will return different state.
         final boolean initiallyIdle = app.mCM.getState() == PhoneConstants.State.IDLE;
 
+        // If VT/VS cal is initiated, perform dpl media init.
+        // If media init fails then make a voice call instead of VT
+        if (callType == Phone.CALL_TYPE_VT
+                || callType == Phone.CALL_TYPE_VT_TX
+                || callType == Phone.CALL_TYPE_VT_RX) {
+            int error = mediaInit();
+            if (error != 0) {
+                //Dpl init failed so continue with VoLTE call
+                callType = Phone.CALL_TYPE_VOICE;
+                Log.e(LOG_TAG, "videocall init failed. Downgrading to VoLTE call");
+                Toast.makeText(app, R.string.vt_init_fail_str, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
         try {
             connection = app.mCM.dial(phone, numberToDial, callType, extras);
         } catch (CallStateException ex) {
@@ -2008,6 +2035,16 @@ public class PhoneUtils {
         }
     }
 
+    /**
+     * Do DPL initialization if the call is a VT call
+     */
+    /* package */static int mediaInit() {
+        if (DBG) Log.d(LOG_TAG, "mediaInit()...");
+        Context context = PhoneGlobals.getInstance().getApplicationContext();
+        VideoCallManager mVideoCallManager = VideoCallManager.getInstance(context);
+        return mVideoCallManager.mediaInit();
+    }
+
     /* package */ static void setAudioMode() {
         setAudioMode(PhoneGlobals.getInstance().mCM);
     }
@@ -2709,37 +2746,19 @@ public class PhoneUtils {
      * @return
      */
     public static boolean isImsVideoCall(Call call) {
-        /* FIXME -port later
-        if (DBG) log("In isIMSVideoCallActive");
-        List<Connection> connections = call.getConnections();
-        Phone callDetails;
-
-        // Check if connection exist
-        if (connections == null || connections.size() < 1) {
-            if (DBG) log("No active connection for this call");
-            return false;
+        if (DBG) log("In isImsVideoCall call=" + call);
+        Phone phone = call.getPhone();
+        if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_IMS) {
+            try {
+                int callType = phone.getCallType(call);
+                if (callType == Phone.CALL_TYPE_VT || callType == Phone.CALL_TYPE_VT_RX
+                        || callType == Phone.CALL_TYPE_VT_TX) {
+                    return true;
+                }
+            } catch (CallStateException ex) {
+                Log.e(LOG_TAG, "isIMSVideoCall: caught " + ex, ex);
+            }
         }
-
-        // Video Call doesn't support conferencing so if there are more than one
-        // connection then the call can not be of type VT
-        if (connections.size() > 1) {
-            return false;
-        }
-
-        // Get call type and call domain
-        callDetails = connections.get(0).getCallDetails();
-        if (callDetails == null) {
-            if (DBG) log("Call details is null");
-            return false;
-        }
-
-        if (DBG) log("In callType: " + callDetails.call_type + ", callDomain: "
-                    + callDetails.call_domain);
-        if ((callDetails != null) && (callDetails.call_type == Phone.RIL_CALL_TYPE_VT)
-                && (callDetails.call_domain == Phone.RIL_CALL_DOMAIN_PS)) {
-            return true;
-        }
-        */
         return false;
     }
 
@@ -2750,6 +2769,8 @@ public class PhoneUtils {
      * @return
      */
     public static boolean isImsVideoCallActive(Call call) {
+        if (call == null) return false;
+
         // Check if there is an active call
         if (call.getState() != Call.State.ACTIVE) {
             if (DBG) log("Call is not active");

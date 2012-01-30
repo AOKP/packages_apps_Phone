@@ -31,6 +31,10 @@
          android:scaleType="centerCrop"
          android:contentDescription="@string/contactPhoto" />
 
+    <!-- Layout to replace the InCallContactPhoto with the video call panel
+         for a VT call. By default this view is not visible -->
+    <include layout="@layout/invideocall_panel" />
+
     <!-- Used when the phone call is on hold, dimming the primary photo
 
          Note: Theoretically it is possible to achieve this effect using
