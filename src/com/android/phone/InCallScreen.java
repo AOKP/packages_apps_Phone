@@ -71,6 +71,7 @@ import com.android.phone.OtaUtils.CdmaOtaScreenState;
 
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 
 import java.util.List;
 
@@ -517,9 +518,7 @@ public class InCallScreen extends Activity
         	params.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
         	getWindow().setAttributes(params);
         }
-
-        
-
+    
         mCM =  mApp.mCM;
         log("- onCreate: phone state = " + mCM.getState());
 
@@ -539,6 +538,7 @@ public class InCallScreen extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // Inflate everything in incall_screen.xml and add it to the screen.
+            
         setContentView(R.layout.incall_screen);
 
         initInCallScreen();
@@ -592,7 +592,21 @@ public class InCallScreen extends Activity
         super.onResume();
         
         updateSettings();
-
+        
+        if ((!Enable_Landscape_In_Call) && (getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE)) {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        	// We are in Landscape mode physically, but have not enabled it in settings.
+        }
+        if (Enable_Landscape_In_Call && (getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_SENSOR)){
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        	// We have enabled Landscape in settings, but it looks like we are still locked in Portrait
+        }
+     
+        // This next block is a little overkill, but I need to force a redraw
+        setContentView(R.layout.incall_screen);
+    	initInCallScreen(); 
+    	updateScreen();
+ 
         mIsForegroundActivity = true;
 
         final InCallUiState inCallUiState = mApp.inCallUiState;
@@ -4488,16 +4502,15 @@ public class InCallScreen extends Activity
         boolean isKeyboardOpen = (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO);
         if (DBG) log("  - isKeyboardOpen = " + isKeyboardOpen);
         boolean isLandscape = (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
-        if  (Enable_Landscape_In_Call) {
-        	// Landscape is Enabled - let's redraw
-        	// I'm going to try to dump the old view and re-inflate based on new configuration.
-        	setContentView(R.layout.incall_screen);
-        	initInCallScreen(); 
-        	updateScreen();
-        } else {
+        if  (!Enable_Landscape_In_Call) 
         	// Landscape is disabled - let's try to go back to portrait;
-            setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
-        }
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        
+        // if we are here, there must have been a change that justifies redrawing the screen...	
+        setContentView(R.layout.incall_screen);
+        initInCallScreen(); 
+        updateScreen();
+        
         if (DBG) log("  - isLandscape = " + isLandscape);
         if (DBG) log("  - uiMode = " + newConfig.uiMode);
         // See bug 2089513.
@@ -4556,7 +4569,7 @@ public class InCallScreen extends Activity
         
         Enable_StatusBar_In_Call = callsettings.getBoolean(BUTTON_STATUSBAR_KEY,false);
         
-        //this one is stored sort of backwars - the setting is to 'Disable Lightouts' - so true here means
+        //this one is stored sort of backwards - the setting is to 'Disable Lightouts' - so true here means
         // NOT Enable_LightsOut_In__Call
         Enable_LightsOut_In_Call = !(callsettings.getBoolean(BUTTON_LIGHTSOUT_KEY,false)); 
         
