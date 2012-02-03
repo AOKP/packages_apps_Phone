@@ -805,6 +805,9 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
                 PendingIntent.getActivity(mContext, 0,
                                           PhoneApp.createInCallIntent(), 0);
         notification.contentIntent = inCallPendingIntent;
+        
+        PendingIntent inCallHangup = PendingIntent.getActivity(mContext, 0,
+                PhoneApp.createHangupIntent(), 0);
 
         // When expanded, the "Ongoing call" notification is (visually)
         // different from most other Notifications, so we need to use a
@@ -816,6 +819,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         RemoteViews contentView = new RemoteViews(mContext.getPackageName(),
                                                    R.layout.ongoing_call_notification);
         contentView.setImageViewResource(R.id.icon, expandedViewIcon);
+        contentView.setOnClickPendingIntent(R.id.endButton,inCallHangup);
 
         // if the connection is valid, then build what we need for the
         // first line of notification information, and start the chronometer.
