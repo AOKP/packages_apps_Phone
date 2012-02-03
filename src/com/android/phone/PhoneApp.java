@@ -674,6 +674,15 @@ public class PhoneApp extends Application implements AccelerometerListener.Orien
         intent.putExtra(InCallScreen.SHOW_DIALPAD_EXTRA, showDialpad);
         return intent;
     }
+    
+    /* package */ static Intent createHangupIntent() {
+        Intent intent = new Intent(InCallScreen.ACTION_END_CALL, null);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+        intent.setClassName("com.android.phone", getCallScreenClassName());
+        return intent;
+    }
 
     // TODO(InCallScreen redesign): This should be made private once
     // we fix PhoneInterfaceManager.java to *not* manually launch
