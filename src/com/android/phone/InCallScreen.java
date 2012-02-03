@@ -172,6 +172,8 @@ public class InCallScreen extends Activity
     // know its undefined. In particular checkIsOtaCall will return
     // false.
     public static final String ACTION_UNDEFINED = "com.android.phone.InCallScreen.UNDEFINED";
+    
+    public static final String ACTION_END_CALL = "com.android.phone.InCallScreen.END_CALL";
 
     /** Status codes returned from syncWithPhoneState(). */
     private enum SyncWithPhoneStateStatus {
@@ -1159,7 +1161,7 @@ public class InCallScreen extends Activity
         }
         String action = intent.getAction();
         if (DBG) log("internalResolveIntent: action=" + action);
-
+        
         // In gingerbread and earlier releases, the InCallScreen used to
         // directly handle certain intent actions that could initiate phone
         // calls, namely ACTION_CALL and ACTION_CALL_EMERGENCY, and also
@@ -1228,7 +1230,11 @@ public class InCallScreen extends Activity
             }
             return;
         }
-
+        // define an intent to allow hangup from notification
+        if (action.equals(ACTION_END_CALL)){
+        	internalHangup();
+        	
+        }
         // Various intent actions that should no longer come here directly:
         if (action.equals(OtaUtils.ACTION_PERFORM_CDMA_PROVISIONING)) {
             // This intent is now handled by the InCallScreenShowActivation
