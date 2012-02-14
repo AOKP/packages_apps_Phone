@@ -57,8 +57,7 @@
     	android:layout_height="wrap_content"
    	 	android:layout_gravity="center"
     	android:orientation="vertical"
-    	android:paddingLeft="8dp"
-    	android:paddingRight="8dp"
+    	android:padding="10dp"
     	>
     	<TextView android:id="@+id/title"
         	android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent.Title"
@@ -132,14 +131,17 @@
 	<LinearLayout
         android:orientation="horizontal"
         android:layout_width="64.0dip"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:background="@drawable/end_call_background"
         >
         <ImageButton android:id="@+id/endButton"
-              style="@style/InCallEndButton"
-              android:layout_width="match_parent"
+              android:layout_weight="1"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:background="?android:attr/selectableItemBackground"
               android:src="@drawable/ic_end_call"
+              android:scaleType="centerInside"
               android:contentDescription="@string/onscreenEndCallText"
               />
     </LinearLayout>
