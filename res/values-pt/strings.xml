@@ -621,4 +621,6 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrar quando estiver tocando"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tons de toque do teclado numérico"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Toque"</string>
+    <string name="perm_change_mobile_network">Alternar rede de dados (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Aplicação com está permissão pode a qualquer momento, alterar entre dados 2G and 3G. 3G é mais rápido, consome mais bateria, e também pode gastar mais seu dinheiro.</string>
 </resources>

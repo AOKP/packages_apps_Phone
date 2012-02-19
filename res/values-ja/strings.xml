@@ -621,4 +621,6 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"着信時のバイブレーション"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"ダイヤルパッドのタッチ操作音"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"着信音"</string>
+    <string name="perm_change_mobile_network">ネットワークを変更(2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">この権限を許可されたアプリケーションは、いつでも2G/3Gデータの切り替えが可能です。3Gは高速ですが、バッテリ消費が増加します。また、キャリアの課金も増加することがあります。</string>
 </resources>

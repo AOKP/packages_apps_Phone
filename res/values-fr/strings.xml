@@ -621,4 +621,6 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Mode Vibreur lorsque le téléphone sonne"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Numérotation sonore"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Sonnerie"</string>
+    <string name="perm_change_mobile_network">Changer la technologie réseau (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Les applications possédant cette permission peuvent à chaque instant changer entre les technologies 2G et 3G. La 3G est plus rapide, consomme plus de batterie, et peut également vous coûter plus</string>
 </resources>
