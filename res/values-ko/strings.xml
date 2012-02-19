@@ -623,4 +623,6 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"전화 수신 시 진동"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"다이얼패드 터치음"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"벨소리 및 진동"</string>
+    <string name="perm_change_mobile_network">네트워크 바꾸기 (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">이 권한을 가진 어플리케이션은 아무 때나 2G 데이터와 3G 데이터를 선택할 수 있습니다. 3G는 더 빠르지만 배터리를 더 많이 소모하며 요금이 더 많이 나올 수 있습니다.</string>
 </resources>

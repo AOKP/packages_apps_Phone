@@ -655,4 +655,6 @@
     <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
     <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
     <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
+    <string name="perm_change_mobile_network">Změnit typ sítě (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
 </resources>

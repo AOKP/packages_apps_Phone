@@ -657,6 +657,7 @@
     <!-- End Noise suppression -->
 
     <string name="preference_category_ringtone" msgid="5197960752529332721">"着信音とバイブレーション"</string>
+
     <!-- Advanced Settings -->
     <string name="advanced_setting">拡張設定</string>
     <string name="vibrate_outgoing">応答時のバイブレーション</string>
@@ -667,4 +668,7 @@
     <string name="vibrate_hangup_sum">通話を終了した時にバイブレーションする</string>
     <string name="vibrate_call_waiting">呼出中のバイブレーション</string>
     <string name="vibrate_call_waiting_sum">呼び出し中にバイブレーションする</string>
+
+    <string name="perm_change_mobile_network">ネットワークを変更(2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">この権限を許可されたアプリケーションは、いつでも2G/3Gデータの切り替えが可能です。3Gは高速ですが、バッテリ消費が増加します。また、キャリアの課金も増加することがあります。</string>
 </resources>

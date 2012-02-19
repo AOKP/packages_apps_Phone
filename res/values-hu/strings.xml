@@ -632,4 +632,6 @@
     <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
     <string name="vibration_title">Telefon rezgés</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Csengőhang és rezgés"</string>
+    <string name="perm_change_mobile_network">Hálózat módosítása (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Az ilyen engedéllyel rendelkező alkalmazás, bármikor válthat 2G és 3G közt. A 3G gyorsabb, jobban meríti az akkumulátort, és több pénzbe is kerülhet a nagyobb adatforgalom miatt.</string>
 </resources>

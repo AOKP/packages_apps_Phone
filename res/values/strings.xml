@@ -1506,8 +1506,6 @@
          [CHAR LIMIT=40] -->
     <string name="dtmf_tone_enable_title">Dial pad touch tones</string>
 
-    <!-- CYANOGENMOD ADDITIONS START -->
-
     <!-- Mobile network settings screen, setting check box name -->
     <string name="national_roaming">National data roaming</string>
     <!-- Mobile network settings screen, setting summary text when check box is selected -->
@@ -1515,7 +1513,9 @@
     <!-- Mobile network settings screen, setting summary text when check box is clear -->
     <string name="national_roaming_disable">Connect to data services when nationally roaming</string>
 
-    <!-- CYANOGENMOD ADDITIONS END -->
+    <!-- Permission for notification-bar network toggle -->
+    <string name="perm_change_mobile_network">Change network (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Application with this permission can, at any time, change between 2G data and 3G data. 3G is faster, consumes more battery, and can also cost you more money.</string>
 
     <!-- Noise suppression -->
     <string name="noise_suppression_title">Noise suppression</string>
@@ -1523,6 +1523,7 @@
     <!-- End Noise suppression -->
 
     <string name="preference_category_ringtone">Ringtone &amp; Vibrate</string>
+
     <!-- Advanced Settings -->
     <string name="advanced_setting">Advanced Settings</string>
     <string name="vibrate_outgoing">Vibrate on answer</string>
