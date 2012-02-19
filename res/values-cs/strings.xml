@@ -646,4 +646,6 @@
     <string name="noise_suppression_title">Potlačení šumu</string>
     <string name="noise_suppression_summary">Zapnout potlačení šumu u hovorů</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Vyzvánění a vibrace"</string>
+    <string name="perm_change_mobile_network">Změnit typ sítě (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
 </resources>

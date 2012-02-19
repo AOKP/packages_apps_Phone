@@ -627,4 +627,10 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Beim Klingeln vibrieren"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Wähltastentöne"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Klingelton &amp; Vibration"</string>
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Lärmunterdrückung</string>
+    <string name="noise_suppression_summary">Aktiviere Lärmunterdrückung für Anrufe</string>
+    <!-- End Noise suppression -->
+    <string name="perm_change_mobile_network">Mobilfunkstandard wechseln (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Anwendungen mit dieser Berechtigung können jederzeit zwischen 2G- und 3G-Netz wechseln. 3G ist schneller, verbraucht mehr Batterieladung und kann teurer sein</string>
 </resources>

@@ -1515,7 +1515,9 @@
     <!-- Mobile network settings screen, setting summary text when check box is clear -->
     <string name="national_roaming_disable">Connect to data services when nationally roaming</string>
 
-    <!-- CYANOGENMOD ADDITIONS END -->
+    <!-- Permission for notification-bar network toggle -->
+    <string name="perm_change_mobile_network">Change network (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Application with this permission can, at any time, change between 2G data and 3G data. 3G is faster, consumes more battery, and can also cost you more money.</string>
 
     <!-- Noise suppression -->
     <string name="noise_suppression_title">Noise suppression</string>
