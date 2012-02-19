@@ -647,4 +647,6 @@
     <string name="noise_suppression_summary">通話ノイズを抑制する</string>
     <!-- End Noise suppression -->
 
+    <string name="perm_change_mobile_network">ネットワークを変更(2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">この権限を許可されたアプリケーションは、いつでも2G/3Gデータの切り替えが可能です。3Gは高速ですが、バッテリ消費が増加します。また、キャリアの課金も増加することがあります。</string>
 </resources>
