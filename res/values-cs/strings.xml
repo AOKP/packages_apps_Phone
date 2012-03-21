@@ -713,4 +713,16 @@
     <string name="description_target_answer" msgid="7205604197797472471">"Odpověď"</string>
     <string name="description_target_send_sms" msgid="2098326025587950144">"Odeslat SMS"</string>
     <string name="description_target_decline" msgid="4789834364389731957">"Odmítnout"</string>
+    <!-- AOKP special translations -->
+    <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
+    <string name="landscape_mode_summary">Zapnout rotaci obrazovky (pokud je zapnut senzor)</string>
+    <string name="enable_statusbar_title">Zapnout stavovou lištu</string>
+    <string name="enable_statusbar_summary">Zapnout možnost použití stavové lišty během hovoru</string>
+    <string name="disable_lightsout_title">Vypnout skrývání navigační lišty</string>
+    <string name="disable_lightsout_summary">Vypnout skrývání navigační lišty během hovoru</string>
+    <string name="exit_to_home_screen_title">Skočit domů po ukončení hovoru</string>
+    <string name="exit_to_home_screen_summary">Po ukončení hovoru přejít na domovskou obrazovku místo výpisu hovorů</string>
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Nastavení číselníku</string>
+    <string name="dialer_ui_settings_summary">Nastavení číselníku pro zadávání čísel</string>
 </resources>
