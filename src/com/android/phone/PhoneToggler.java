@@ -52,6 +52,7 @@ public class PhoneToggler extends BroadcastReceiver  {
                     if (networkMode == Phone.NT_MODE_GSM_ONLY
                             || networkMode == Phone.NT_MODE_GSM_UMTS
                             || networkMode == Phone.NT_MODE_WCDMA_PREF
+                            || networkMode == Phone.NT_MODE_LTE_GSM_WCDMA
                             || networkMode == Phone.NT_MODE_WCDMA_ONLY) {
                         networkModeOk = true;
                     }
@@ -131,6 +132,7 @@ public class PhoneToggler extends BroadcastReceiver  {
                         modemNetworkMode == Phone.NT_MODE_GSM_ONLY ||
                         modemNetworkMode == Phone.NT_MODE_WCDMA_ONLY ||
                         modemNetworkMode == Phone.NT_MODE_GSM_UMTS ||
+                        modemNetworkMode == Phone.NT_MODE_LTE_GSM_WCDMA ||
                         modemNetworkMode == Phone.NT_MODE_CDMA ||
                         modemNetworkMode == Phone.NT_MODE_CDMA_NO_EVDO ||
                         modemNetworkMode == Phone.NT_MODE_EVDO_NO_CDMA ||
