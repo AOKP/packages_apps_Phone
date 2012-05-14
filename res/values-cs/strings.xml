@@ -191,7 +191,10 @@
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Upřednostňovaný režim sítě: pouze CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Upřednostňovaný režim sítě: pouze EvDo"</string>
     <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Upřednostňovaný režim sítě: LTE / CDMA"</string>
+    <string name="preferred_network_mode_lte_gsm_summary">přednostňovaný režim sítě: LTE / WCDMA / GSM</string>
   <string-array name="preferred_network_mode_choices">
+    <item>LTE / WCDMA / GSM</item>
+    <item>LTE / CDMA / EvDo</item>
     <item msgid="5886604709726177211">"LTE / CDMA"</item>
     <item msgid="3273348576277144124">"Pouze EvDo"</item>
     <item msgid="454610224530856274">"CDMA bez EvDo"</item>
@@ -721,15 +724,24 @@
     <item msgid="1458182414036878616">"Nikdy"</item>
   </string-array>
     <!-- AOKP special translations -->
-     <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
-     <string name="landscape_mode_summary">Zapnout rotaci obrazovky (pokud je zapnut senzor)</string>
-     <string name="enable_statusbar_title">Zapnout stavovou lištu</string>
-     <string name="enable_statusbar_summary">Zapnout možnost použití stavové lišty během hovoru</string>
-     <string name="disable_lightsout_title">Vypnout skrývání navigační lišty</string>
-     <string name="disable_lightsout_summary">Vypnout skrývání navigační lišty během hovoru</string>
-     <string name="exit_to_home_screen_title">Skočit domů po ukončení hovoru</string>
-     <string name="exit_to_home_screen_summary">Po ukončení hovoru přejít na domovskou obrazovku místo výpisu hovorů</string>
-     <!-- Dialer UI Settings -->
-     <string name="dialer_ui_settings_title">Nastavení číselníku</string>
-     <string name="dialer_ui_settings_summary">Nastavení číselníku pro zadávání čísel</string>
+    <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
+    <string name="landscape_mode_summary">Zapnout rotaci obrazovky (pokud je zapnut senzor)</string>
+    <string name="enable_statusbar_title">Zapnout stavovou lištu</string>
+    <string name="enable_statusbar_summary">Zapnout možnost použití stavové lišty během hovoru</string>
+    <string name="disable_lightsout_title">Vypnout skrývání navigační lišty</string>
+    <string name="disable_lightsout_summary">Vypnout skrývání navigační lišty během hovoru</string>
+    <string name="exit_to_home_screen_title">Skočit domů po ukončení hovoru</string>
+    <string name="exit_to_home_screen_summary">Po ukončení hovoru přejít na domovskou obrazovku místo výpisu hovorů</string>
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Nastavení číselníku</string>
+    <string name="dialer_ui_settings_summary">Nastavení číselníku pro zadávání čísel</string>
+    <string name="ring_delay_title">Prodleva vyzvánění</string>
+    <string name="ring_delay_summary">Nastavit prodlevu vyzvánění</string>
+    <!-- Ring Delay entries.  -->
+    <string-array name="ring_delay_entries">
+        <item>Prodleva vyzvánění vypnuta</item>
+        <item>3 sekundy</item>
+        <item>6 sekund</item>
+        <item>9 sekund</item>
+    </string-array>
 </resources>
