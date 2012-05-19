@@ -398,6 +398,14 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
     <string name="auto_retry_mode_title" msgid="1478311108889330757">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4921028586041909574">"启用自动重拨模式"</string>
+    <string name="landscape_mode_title">启用旋转</string>
+    <string name="landscape_mode_summary">允许通话界面旋转（如果传感器启用）</string>
+    <string name="enable_statusbar_title">启用状态栏</string>
+    <string name="enable_statusbar_summary">允许在通话界面下拉状态栏</string>
+    <string name="disable_lightsout_title">禁用虚拟键图标隐藏</string>
+    <string name="disable_lightsout_summary">禁止在通话界面自动隐藏虚拟键图标</string>
+    <string name="exit_to_home_screen_title">通话结束后返回主屏幕</string>
+    <string name="exit_to_home_screen_summary">通话结束后返回主屏幕而不是返回通话记录</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
@@ -587,6 +595,8 @@
     <string name="voicemail_settings_for" msgid="9018656268027893088">"<xliff:g id="PROVIDER_NAME">%s</xliff:g>的设置"</string>
     <string name="other_settings" msgid="3672912580359716394">"其他通话设置"</string>
     <string name="dial_button_label" msgid="5551611636419190229">"拨打"</string>
+    <string name="dialer_ui_settings_title">拨号器设置</string>
+    <string name="dialer_ui_settings_summary">是否开启传感器，是否开启T9搜索</string>
     <string name="calling_via_template" msgid="7374498518104190489">"通过 ^1"\n<b>"^2"</b>" 呼叫"</string>
     <string name="slide_to_answer" msgid="255903188611244476">"向右拖动以接听"</string>
     <string name="slide_to_silence" msgid="2224982696981131553">"向左拖动以使振铃器静音"</string>
@@ -713,6 +723,7 @@
     <string name="description_target_answer" msgid="7205604197797472471">"接听"</string>
     <string name="description_target_send_sms" msgid="2098326025587950144">"发送短信"</string>
     <string name="description_target_decline" msgid="4789834364389731957">"拒绝"</string>
+    <string name="per_change_mobile_network">更改网络（2G/3G）</string>
     <string name="voicemail_notification_vibrate_when_title" msgid="8361970092063604886">"振动"</string>
     <string name="voicemail_notification_vibarte_when_dialog_title" msgid="5739583146522136440">"振动"</string>
   <string-array name="voicemail_notification_vibrate_when_entries">
@@ -721,3 +732,4 @@
     <item msgid="1458182414036878616">"一律不"</item>
   </string-array>
 </resources>
+
