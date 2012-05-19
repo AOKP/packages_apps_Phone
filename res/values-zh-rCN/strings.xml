@@ -396,8 +396,18 @@
     <string name="tty_mode_summary" msgid="5057244302665817977">"启用 TTY 模式"</string>
     <string name="tty_mode_option_title" msgid="9033098925144434669">"TTY 模式"</string>
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
+    <string name="ring_delay_title">铃声延迟时间</string>
+    <string name="ring_delay_summary">选择铃声延迟时间</string>
     <string name="auto_retry_mode_title" msgid="1478311108889330757">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4921028586041909574">"启用自动重拨模式"</string>
+    <string name="landscape_mode_title">启用横向模式</string>
+    <string name="landscape_mode_summary">启用横向模式（如果有启用传感器）</string>
+    <string name="enable_statusbar_title">显示通知栏</string>
+    <string name="enable_statusbar_summary">在通话时显示通知栏</string>
+    <string name="disable_lightsout_title">隐藏导航列</string>
+    <string name="disable_lightsout_summary">在通话时隐藏导航列</string>
+    <string name="exit_to_home_screen_title">结束通话时回到主屏幕</string>
+    <string name="exit_to_home_screen_summary">结束通话时回到主屏幕而不是通话纪录</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
@@ -530,6 +540,12 @@
     <item msgid="1937509904407445684">"TTY HCO"</item>
     <item msgid="5644925873488772224">"TTY VCO"</item>
   </string-array>
+  <string-array name="ring_delay_entries">
+    <item>关闭</item>
+	<item>3 秒</item>
+	<item>6 秒</item>
+	<item>9 秒</item>
+  </string-array>
     <string name="eri_text_label" msgid="4326942349915331461">"ERI 文字"</string>
     <string name="dtmf_tones_title" msgid="3866923093113274152">"DTMF 音"</string>
     <string name="dtmf_tones_summary" msgid="3351820372864020331">"设置 DTMF 音长度"</string>
@@ -587,6 +603,8 @@
     <string name="voicemail_settings_for" msgid="9018656268027893088">"<xliff:g id="PROVIDER_NAME">%s</xliff:g>的设置"</string>
     <string name="other_settings" msgid="3672912580359716394">"其他通话设置"</string>
     <string name="dial_button_label" msgid="5551611636419190229">"拨打"</string>
+	<string name="dialer_ui_settings_title">拨号键盘设定</string>
+	<string name="dialer_ui_settings_summary">拨号键盘的细部设定</string>
     <string name="calling_via_template" msgid="7374498518104190489">"通过 ^1"\n<b>"^2"</b>" 呼叫"</string>
     <string name="slide_to_answer" msgid="255903188611244476">"向右拖动以接听"</string>
     <string name="slide_to_silence" msgid="2224982696981131553">"向左拖动以使振铃器静音"</string>
