@@ -691,19 +691,20 @@ public class BluetoothSMSAccess {
                     int idColumn = sms.getColumnIndex("_id");
 
                     int curMsgIdx = sms.getCount();
-                    sms.moveToFirst();
-                    do {
-                        if (Sms.MESSAGE_TYPE_INBOX == sms.getLong(typeColumn)) {
-                            if (0 == sms.getLong(seenColumn)) {
-                                // send notification
-                                SendNMINofitication(sms.getInt(idColumn), curMsgIdx);
-                                curMsgIdx--;
-                            } else {
-                                // on the first seen message, break from the loop
-                                break;
+                    if ((0 != curMsgIdx) && sms.moveToFirst()) {
+                        do {
+                            if (Sms.MESSAGE_TYPE_INBOX == sms.getLong(typeColumn)) {
+                                if (0 == sms.getLong(seenColumn)) {
+                                    // send notification
+                                    SendNMINofitication(sms.getInt(idColumn), curMsgIdx);
+                                    curMsgIdx--;
+                                } else {
+                                    // on the first seen message, break from the loop
+                                    break;
+                                }
                             }
-                        }
-                    } while (sms.moveToPrevious());
+                        } while (sms.moveToPrevious());
+                    }
                     sms.close();
                 }
             } // if 0 bfr
