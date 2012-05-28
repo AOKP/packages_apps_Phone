@@ -42,6 +42,7 @@ import com.android.internal.telephony.OperatorInfo;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * "Networks" settings UI for the Phone app.
@@ -407,14 +408,21 @@ public class NetworkSetting extends PreferenceActivity
                 // create a preference for each item in the list.
                 // just use the operator name instead of the mildly
                 // confusing mcc/mnc.
+                ArrayList <String> operatorNumerics = new ArrayList<String>();
                 for (OperatorInfo ni : result) {
-                    Preference carrier = new Preference(this, null);
-                    carrier.setTitle(getNetworkTitle(ni));
-                    carrier.setPersistent(false);
-                    mNetworkList.addPreference(carrier);
-                    mNetworkMap.put(carrier, ni);
+                    String operatorNumeric = ni.getOperatorNumeric();
+                    if (!operatorNumerics.contains(operatorNumeric)) {
+                        operatorNumerics.add(operatorNumeric);
+                        Preference carrier = new Preference(this, null);
+                        carrier.setTitle(getNetworkTitle(ni));
+                        carrier.setPersistent(false);
+                        mNetworkList.addPreference(carrier);
+                        mNetworkMap.put(carrier, ni);
 
-                    if (DBG) log("  " + ni);
+                        if (DBG) log("  adding:   " + ni);
+                    } else {
+                        if (DBG) log("  skipping: " + ni);
+                    }
                 }
 
             } else {
