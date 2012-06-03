@@ -84,6 +84,8 @@ public class PhoneToggler extends BroadcastReceiver {
             case Phone.NT_MODE_CDMA_NO_EVDO:
             case Phone.NT_MODE_EVDO_NO_CDMA:
             case Phone.NT_MODE_GLOBAL:
+            case Phone.NT_MODE_LTE_CDMA_EVDO:
+            case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
             case Phone.NT_MODE_LTE_ONLY:
                 return (isCdma);
             case Phone.NT_MODE_GSM_ONLY:
