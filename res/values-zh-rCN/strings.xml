@@ -396,6 +396,8 @@
     <string name="tty_mode_summary" msgid="5057244302665817977">"启用 TTY 模式"</string>
     <string name="tty_mode_option_title" msgid="9033098925144434669">"TTY 模式"</string>
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
+    <string name="ring_delay_title">铃声延迟</string>
+    <string name="ring_delay_summary">选择铃声延迟时间</string>
     <string name="auto_retry_mode_title" msgid="1478311108889330757">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4921028586041909574">"启用自动重拨模式"</string>
     <string name="landscape_mode_title">启用旋转</string>
@@ -538,6 +540,12 @@
     <item msgid="1937509904407445684">"TTY HCO"</item>
     <item msgid="5644925873488772224">"TTY VCO"</item>
   </string-array>
+    <string-array name="ring_delay_entries">
+        <item>关闭</item>
+        <item>3 秒</item>
+        <item>6 秒</item>
+        <item>9 秒</item>
+    </string-array>
     <string name="eri_text_label" msgid="4326942349915331461">"ERI 文字"</string>
     <string name="dtmf_tones_title" msgid="3866923093113274152">"DTMF 音"</string>
     <string name="dtmf_tones_summary" msgid="3351820372864020331">"设置 DTMF 音长度"</string>
