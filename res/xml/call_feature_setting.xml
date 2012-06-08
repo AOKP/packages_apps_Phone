@@ -166,7 +166,13 @@
         android:key="button_exit_to_home_screen_key"
         android:title="@string/exit_to_home_screen_title"
         android:persistent="true"
-        android:summary="@string/exit_to_home_screen_summary"/>  
+        android:summary="@string/exit_to_home_screen_summary"/>
+     
+     <CheckBoxPreference
+        android:key="button_speaker_mode_key"
+        android:title="@string/enable_speaker_mode_title"
+        android:persistent="true"
+        android:summary="@string/enable_speaker_mode_summary"/> 
 
     <PreferenceScreen
         android:title="@string/dialer_ui_settings_title"
