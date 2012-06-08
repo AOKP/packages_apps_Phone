@@ -165,6 +165,7 @@ public class InCallScreen extends Activity
     
     private static final String BUTTON_LANDSCAPE_KEY = "button_landscape_key";
     private static final String BUTTON_STATUSBAR_KEY = "button_statusbar_key";
+    private static final String BUTTON_SPEAKER_MODE_KEY = "button_speaker_mode_key";
     private static final String BUTTON_LIGHTSOUT_KEY = "button_lightsout_key";
     private static final String BUTTON_EXIT_TO_HOMESCREEN_KEY = "button_exit_to_home_screen_key";
 
@@ -282,6 +283,7 @@ public class InCallScreen extends Activity
     
     public boolean Enable_Landscape_In_Call = false;
     public boolean Enable_StatusBar_In_Call = false;
+    public boolean Enable_SpeakerMode_In_Call = false;
     public boolean Enable_LightsOut_In_Call = true;
     public boolean Exit_To_Home_Screen = false;
 
@@ -634,6 +636,10 @@ public class InCallScreen extends Activity
         // ...and update the in-call notification too, since the status bar
         // icon needs to be hidden while we're the foreground activity:
         mApp.notificationMgr.updateInCallNotification();
+
+        if(Enable_SpeakerMode_In_Call && getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE){
+            toggleSpeaker();
+        }
         
         // Also put the system bar (if present on this device) into
         // "lights out" mode any time we're the foreground activity.
@@ -4530,6 +4536,19 @@ public class InCallScreen extends Activity
         	// Landscape is disabled - let's try to go back to portrait;
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && Enable_SpeakerMode_In_Call){
+                // Call is in now landscape and setting is enabled
+                boolean isSpeakerOn = PhoneUtils.isSpeakerOn(this);
+		if(!isSpeakerOn)
+                    toggleSpeaker();
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && Enable_SpeakerMode_In_Call) {
+                // Call is in now portrait and setting is enabled
+                boolean isSpeakerOn = PhoneUtils.isSpeakerOn(this);
+                if(isSpeakerOn)
+                    toggleSpeaker();
+        }
+
         // if we are here, there must have been a change that justifies redrawing the screen...	
         setContentView(R.layout.incall_screen);
         initInCallScreen(); 
@@ -4593,6 +4612,8 @@ public class InCallScreen extends Activity
         
         Enable_StatusBar_In_Call = callsettings.getBoolean(BUTTON_STATUSBAR_KEY,false);
         
+        Enable_SpeakerMode_In_Call = callsettings.getBoolean(BUTTON_SPEAKER_MODE_KEY,false);
+
         //this one is stored sort of backwards - the setting is to 'Disable Lightouts' - so true here means
         // NOT Enable_LightsOut_In__Call
         Enable_LightsOut_In_Call = !(callsettings.getBoolean(BUTTON_LIGHTSOUT_KEY,false)); 
