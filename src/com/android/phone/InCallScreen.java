@@ -1079,6 +1079,8 @@ public class InCallScreen extends Activity
         mCM.unregisterForSuppServiceFailed(mHandler);
         mCM.unregisterForIncomingRing(mHandler);
         mCM.unregisterForNewRingingConnection(mHandler);
+        // remove locally posted message
+        mHandler.removeMessages(DELAYED_CLEANUP_AFTER_DISCONNECT);
         mRegisteredForPhoneStates = false;
     }
 
