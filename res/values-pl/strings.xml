@@ -720,4 +720,24 @@
     <item msgid="1595097872875714252">"Tylko po wyciszeniu"</item>
     <item msgid="1458182414036878616">"Nigdy"</item>
   </string-array>
+    <string name="landscape_mode_title">Włącz tryb horyzontalny</string>
+    <string name="landscape_mode_summary">Włącz tryb horyzontalny (jeśli włączony jest czujnik)</string>
+    <string name="enable_statusbar_title">Włącz pasek stanu</string>
+    <string name="enable_statusbar_summary">Pozwól na używanie paska stanu podczas rozmowy</string>
+    <string name="disable_lightsout_title">Wyłącz ukrywanie paska nawigacji</string>
+    <string name="disable_lightsout_summary">Wyłącz ukrywanie paska nawigacji podczas rozmowy</string>
+    <string name="exit_to_home_screen_title">Wróć do ekranu głównego po rozmowie</string>
+    <string name="exit_to_home_screen_summary">Po zakończeniu rozmowy przejdź do ekranu głównego zamiast do historii połączeń</string>
+    <string name="dialer_ui_settings_title">Wybieranie numerów</string>
+    <string name="dialer_ui_settings_summary">Ustawienia wybierania numerów</string>
+    <string name="ring_delay_title">Opóźnienie dzwonka</string>
+    <string name="ring_delay_summary">Ustaw opóźnienie dzwonka</string>
+  <string-array name="ring_delay_entries">
+    <item>Wyłączone</item>
+    <item>3 sekundy</item>
+    <item>6 sekund</item>
+    <item>9 sekund</item>
+  </string-array>
+    <string name="enable_speaker_mode_title">Włącz głośnik</string>
+    <string name="enable_speaker_mode_summary">Automatycznie włącz głośnik w trybie horyzontalnym</string>
 </resources>
