@@ -398,6 +398,7 @@ public class BluetoothSMSAccess {
             boolean bError = false;
             String scAddress = null;
             String destAddress = null;
+            int destAddrTOA = 0;
             String msgBody = null;
 
             char[] inputArray = input.toCharArray();
@@ -460,7 +461,8 @@ public class BluetoothSMSAccess {
                     } else {
                         if (DBG) Log.d(TAG, "Parsing Status C:  curInputChar=" + curInputChar + ", destAddrLen=" + destAddrLen);
 
-                        curInputChar += 2; // skip the dest address type.
+                        // the TOA will be used later to possibly prefix the destAddress
+                        destAddrTOA = TwoCharToByte(inputArray[curInputChar++], inputArray[curInputChar++]);
 
                         // actually work to pull out the destination phone number.
                         StringBuilder sb = new StringBuilder(destAddrLen + 1);
@@ -514,6 +516,11 @@ public class BluetoothSMSAccess {
             }
 
             if (!bError) {
+
+                if ((destAddrTOA & 0x10) == 0x10) {
+                    // destAddress should be fixed to an international format by prepending a "+"
+                    destAddress = "+" + destAddress;
+                }
                 // send the message
                 if (DBG) {
                     Log.d(TAG, "To: " + destAddress);
