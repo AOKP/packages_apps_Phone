@@ -306,6 +306,9 @@ public class CallController extends Handler {
         //   and if so simply call updateInCallScreen() instead.
 
         mApp.displayCallScreen();
+
+        // enable noise suppression
+        PhoneUtils.turnOnNoiseSuppression(mApp.getApplicationContext(), true);
     }
 
     /**

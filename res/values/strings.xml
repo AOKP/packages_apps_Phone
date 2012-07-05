@@ -1504,6 +1504,10 @@
     <!-- Mobile network settings screen, setting summary text when check box is clear -->
     <string name="national_roaming_disable">Connect to data services when nationally roaming</string>
 
-    <!-- CYANOGENMOD ADDITIONS END -->
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Noise suppression</string>
+    <string name="noise_suppression_summary">Enable noise suppression for calls</string>
+    <!-- End Noise suppression -->
 
+    <!-- CYANOGENMOD ADDITIONS END -->
 </resources>
