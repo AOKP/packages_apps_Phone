@@ -724,4 +724,9 @@
     <item msgid="1595097872875714252">"Nur im Lautlos-Modus"</item>
     <item msgid="1458182414036878616">"Nie"</item>
   </string-array>
+
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Lärmunterdrückung</string>
+    <string name="noise_suppression_summary">Aktiviere Lärmunterdrückung für Anrufe</string>
+    <!-- End Noise suppression -->
 </resources>

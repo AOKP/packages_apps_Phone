@@ -1674,4 +1674,9 @@
         <item>silent</item>
         <item>never</item>
     </string-array>
+
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Noise suppression</string>
+    <string name="noise_suppression_summary">Enable noise suppression for calls</string>
+    <!-- End Noise suppression -->
 </resources>
