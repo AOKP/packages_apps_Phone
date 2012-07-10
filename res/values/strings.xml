@@ -364,8 +364,18 @@
     <string name="preferred_network_mode_evdo_only_summary">Preferred network mode: EvDo only</string>
     <!-- Mobile network settings, summary for preferred network mode LTE / CDMA[CHAR LIMIT=100] -->
     <string name="preferred_network_mode_lte_cdma_summary">Preferred network mode: LTE / CDMA</string>
+    <!-- Mobile network settings, summary for preferred network mode LTE / GSM[CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_gsm_summary">Preferred network mode: LTE / WCDMA / GSM</string>
+    <!-- Mobile network settings, summary for preferred network mode LTE / CDMA / EvDo[CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Preferred network mode: LTE / CDMA / EvDo</string>
+    <!-- Mobile network settings, summary for preferred network mode LTE / CMDA / EvDo / GSM/WCDMACHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Preferred network mode: LTE / CMDA / EvDo / GSM/WCDMA</string>
 
     <string-array name="preferred_network_mode_choices">
+        <item>LTE ONLY</item>
+        <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
+        <item>LTE/WCDMA/GSM</item>
+        <item>LTE/CDMA/ EvDo</item>
         <item>LTE/CDMA</item>
         <item>EvDo only</item>
         <item>CDMA w/o EvDo</item>
@@ -376,6 +386,10 @@
         <item>GSM/WCDMA preferred</item>
     </string-array>
     <string-array name="preferred_network_mode_values"  translatable="false">
+        <item>"11"</item>
+        <item>"10"</item>
+        <item>"9"</item>
+        <item>"8"</item>
         <item>"7"</item>
         <item>"6"</item>
         <item>"5"</item>
@@ -387,10 +401,14 @@
     </string-array>
     <!-- Mobile network settings, network mode choices for a device supporting CDMA and LTE [CHAR LIMIT=25] -->
     <string-array name="preferred_network_mode_choices_lte">
+        <item>LTE ONLY</item>
+        <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
         <item>LTE/CDMA</item>
-        <item>CDMA</item>
+        <item>CDMA/EvDo auto</item>
     </string-array>
     <string-array name="preferred_network_mode_values_lte" translatable="false">
+        <item>"11"</item>
+        <item>"10"</item>
         <item>"7"</item>
         <item>"4"</item>
     </string-array>
