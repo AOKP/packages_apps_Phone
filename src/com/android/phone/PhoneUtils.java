@@ -1879,7 +1879,7 @@ public class PhoneUtils {
      * @param store True when the settings should be stored in the device.
      */
     /* package */ static void turnOnSpeaker(Context context, boolean flag, boolean store) {
-        if (DBG) log("turnOnSpeaker(flag=" + flag + ", store=" + store + ")...");
+        log("turnOnSpeaker(flag=" + flag + ", store=" + store + ")...");
         final PhoneApp app = PhoneApp.getInstance();
 
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -1990,19 +1990,17 @@ public class PhoneUtils {
      */
     private static void setMuteInternal(Phone phone, boolean muted) {
         final PhoneApp app = PhoneApp.getInstance();
-        if (phone != null) {
-            Context context = phone.getContext();
-            boolean routeToAudioManager =
-                context.getResources().getBoolean(R.bool.send_mic_mute_to_AudioManager);
-            if (routeToAudioManager) {
-                AudioManager audioManager =
-                    (AudioManager) phone.getContext().getSystemService(Context.AUDIO_SERVICE);
-                if (DBG) log("setMuteInternal: using setMicrophoneMute(" + muted + ")...");
-                audioManager.setMicrophoneMute(muted);
-            } else {
-                if (DBG) log("setMuteInternal: using phone.setMute(" + muted + ")...");
-                phone.setMute(muted);
-            }
+        Context context = phone.getContext();
+        boolean routeToAudioManager =
+            context.getResources().getBoolean(R.bool.send_mic_mute_to_AudioManager);
+        if (routeToAudioManager) {
+            AudioManager audioManager =
+                (AudioManager) phone.getContext().getSystemService(Context.AUDIO_SERVICE);
+            log("setMuteInternal: using setMicrophoneMute(" + muted + ")...");
+            audioManager.setMicrophoneMute(muted);
+        } else {
+            log("setMuteInternal: using phone.setMute(" + muted + ")...");
+            phone.setMute(muted);
         }
         app.notificationMgr.updateMuteNotification();
     }
