@@ -3,6 +3,9 @@
  * Not a Contribution
  *
  * Copyright (C) 2006 The Android Open Source Project
+ * Copyright (c) 2011-2013 The Linux Foundation. All rights reserved.
+ *
+ * Not a Contribution.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1842,6 +1845,15 @@ public class InCallScreen extends Activity
             return;
         } else if (cause == Connection.DisconnectCause.CS_RESTRICTED_NORMAL) {
             showGenericErrorDialog(R.string.callFailed_dsac_restricted_normal, false);
+            return;
+        } else if (cause == Connection.DisconnectCause.DIAL_MODIFIED_TO_USSD) {
+            showGenericErrorDialog(R.string.callFailed_dialToUssd, false);
+            return;
+        } else if (cause == Connection.DisconnectCause.DIAL_MODIFIED_TO_SS) {
+            showGenericErrorDialog(R.string.callFailed_dialToSs, false);
+            return;
+        } else if (cause == Connection.DisconnectCause.DIAL_MODIFIED_TO_DIAL) {
+            showGenericErrorDialog(R.string.callFailed_dialToDial, false);
             return;
         }
 
