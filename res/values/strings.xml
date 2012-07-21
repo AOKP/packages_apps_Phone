@@ -654,6 +654,8 @@
     <string name="voice_privacy_summary">Enable enhanced privacy mode</string>
     <string name="tty_mode_option_title">TTY mode</string>
     <string name="tty_mode_option_summary">Set TTY mode</string>
+    <string name="ring_delay_title">Ring Delay</string>
+    <string name="ring_delay_summary">Select Ring Delay</string>
     <string name="auto_retry_mode_title">Auto-retry</string>
     <string name="auto_retry_mode_summary">Enable Auto-retry mode</string>
     <string name="exit_to_home_screen_title">Exit to Last Activity on End Call</string>
@@ -969,6 +971,26 @@
         <item>2</item>
         <!-- Do not translate. -->
         <item>3</item>
+    </string-array>
+
+    <!-- Ring Delay entries.  -->
+    <string-array name="ring_delay_entries">
+        <item>Ring Delay Off</item>
+        <item>3 Seconds</item>
+        <item>6 Seconds</item>
+        <item>9 Seconds</item>
+    </string-array>
+
+    <!-- Do not translate. -->
+    <string-array name="ring_delay_values" translatable="false">
+        <!-- Do not translate. -->
+        <item>0</item>
+        <!-- Do not translate. -->
+        <item>3</item>
+        <!-- Do not translate. -->
+        <item>6</item>
+        <!-- Do not translate. -->
+        <item>9</item>
     </string-array>
 
     <!-- Dtmf tones settings -->
