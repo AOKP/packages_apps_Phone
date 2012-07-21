@@ -64,6 +64,9 @@
     <!-- Flag indicating if the tty is enabled -->
     <bool name="tty_enabled">false</bool>
 
+    <!-- Flag indicating if ring delay is enabled -->
+    <bool name="ringdelay_enabled">true</bool>
+
     <!-- Flag indicating if hac is enabled -->
     <bool name="hac_enabled">false</bool>
 

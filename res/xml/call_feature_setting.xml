@@ -132,6 +132,14 @@
         android:entries="@array/tty_mode_entries"
         android:entryValues="@array/tty_mode_values"/>
 
+    <ListPreference
+        android:key="button_ring_delay_key"
+        android:title="@string/ring_delay_title"
+        android:summary="@string/ring_delay_summary"
+        android:persistent="true"
+        android:entries="@array/ring_delay_entries"
+        android:entryValues="@array/ring_delay_values"/>
+
      <CheckBoxPreference
         android:key="button_hac_key"
         android:title="@string/hac_mode_title"
