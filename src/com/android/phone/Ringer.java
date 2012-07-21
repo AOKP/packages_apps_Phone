@@ -17,6 +17,7 @@
 package com.android.phone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -31,6 +32,7 @@ import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.SystemVibrator;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -176,8 +178,10 @@ public class Ringer {
 
             makeLooper();
             if (mFirstRingEventTime < 0) {
-                mFirstRingEventTime = SystemClock.elapsedRealtime();
-                mRingHandler.sendEmptyMessage(PLAY_RING_ONCE);
+                SharedPreferences callSettings = PreferenceManager.getDefaultSharedPreferences(mContext);
+                int ringDelay = Integer.valueOf(callSettings.getString(CallFeaturesSetting.BUTTON_RING_DELAY_KEY, "0"));
+                mFirstRingEventTime = SystemClock.elapsedRealtime() + ringDelay*1000;
+                mRingHandler.sendEmptyMessageDelayed(PLAY_RING_ONCE, ringDelay*1000);
             } else {
                 // For repeat rings, figure out by how much to delay
                 // the ring so that it happens the correct amount of
@@ -194,7 +198,9 @@ public class Ringer {
                     // We've gotten two ring events so far, but the ring
                     // still hasn't started. Reset the event time to the
                     // time of this event to maintain correct spacing.
-                    mFirstRingEventTime = SystemClock.elapsedRealtime();
+                    if (mFirstRingEventTime <= SystemClock.elapsedRealtime()) {
+                        mFirstRingEventTime = SystemClock.elapsedRealtime();
+                    }
                 }
             }
         }
