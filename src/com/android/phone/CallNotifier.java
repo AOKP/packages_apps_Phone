@@ -1131,6 +1131,9 @@ public class CallNotifier extends Handler
             }
         }
 
+        // disable noise suppression
+        PhoneUtils.turnOnNoiseSuppression(mApplication.getApplicationContext(), false);
+
         // If we don't need to play BUSY or CONGESTION, then play the
         // "call ended" tone if this was a "regular disconnect" (i.e. a
         // normal call where one end or the other hung up) *and* this

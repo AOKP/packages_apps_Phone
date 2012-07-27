@@ -145,6 +145,12 @@
         android:entries="@array/dtmf_tone_entries"
         android:entryValues="@array/dtmf_tone_values"/>
 
+    <CheckBoxPreference
+        android:key="button_noise_suppression_key"
+        android:title="@string/noise_suppression_title"
+        android:summary="@string/noise_suppression_summary"
+        android:defaultValue="1"/>
+
     <PreferenceScreen
         android:key="button_gsm_more_expand_key"
         android:title="@string/labelGSMMore"
