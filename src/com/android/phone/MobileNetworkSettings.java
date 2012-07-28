@@ -68,6 +68,7 @@ public class MobileNetworkSettings extends PreferenceActivity
     private static final String BUTTON_DATA_USAGE_KEY = "button_data_usage_key";
     private static final String BUTTON_PREFERED_NETWORK_MODE = "preferred_network_mode_key";
     private static final String BUTTON_ROAMING_KEY = "button_roaming_key";
+    private static final String BUTTON_NATIONAL_ROAMING_KEY = "button_national_roaming_key";
     private static final String BUTTON_CDMA_LTE_DATA_SERVICE_KEY = "cdma_lte_data_service_key";
 
     static final int preferredNetworkMode = Phone.PREFERRED_NT_MODE;
@@ -80,6 +81,7 @@ public class MobileNetworkSettings extends PreferenceActivity
     //UI objects
     private ListPreference mButtonPreferredNetworkMode;
     private CheckBoxPreference mButtonDataRoam;
+    private CheckBoxPreference mButtonNationalDataRoam;
     private CheckBoxPreference mButtonDataEnabled;
     private Preference mLteDataServicePref;
 
@@ -167,6 +169,10 @@ public class MobileNetworkSettings extends PreferenceActivity
                 mPhone.setDataRoamingEnabled(false);
             }
             return true;
+        } else if (preference == mButtonNationalDataRoam){
+             android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
+                 android.provider.Settings.System.MVNO_ROAMING, mButtonNationalDataRoam.isChecked() ? 1 : 0);
+	    return true;
         } else if (preference == mButtonDataEnabled) {
             if (DBG) log("onPreferenceTreeClick: preference == mButtonDataEnabled.");
             ConnectivityManager cm =
@@ -216,6 +222,7 @@ public class MobileNetworkSettings extends PreferenceActivity
 
         mButtonDataEnabled = (CheckBoxPreference) prefSet.findPreference(BUTTON_DATA_ENABLED_KEY);
         mButtonDataRoam = (CheckBoxPreference) prefSet.findPreference(BUTTON_ROAMING_KEY);
+        mButtonNationalDataRoam = (CheckBoxPreference) prefSet.findPreference(BUTTON_NATIONAL_ROAMING_KEY);
         mButtonPreferredNetworkMode = (ListPreference) prefSet.findPreference(
                 BUTTON_PREFERED_NETWORK_MODE);
         mButtonDataUsage = prefSet.findPreference(BUTTON_DATA_USAGE_KEY);
@@ -297,6 +304,9 @@ public class MobileNetworkSettings extends PreferenceActivity
         // app to change this setting's backend, and re-launch this settings app
         // and the UI state would be inconsistent with actual state
         mButtonDataRoam.setChecked(mPhone.getDataRoamingEnabled());
+
+        mButtonNationalDataRoam.setChecked(android.provider.Settings.System.getInt(
+             mPhone.getContext().getContentResolver(), android.provider.Settings.System.MVNO_ROAMING, 0) == 1);
 
         if (getPreferenceScreen().findPreference(BUTTON_PREFERED_NETWORK_MODE) != null)  {
             mPhone.getPreferredNetworkType(mHandler.obtainMessage(
