@@ -210,7 +210,7 @@
         android:layout_gravity="center|bottom"
         android:layout_marginTop="20dip"
         android:layout_marginBottom="-46dp"
-        android:background="@android:color/black"
+        android:background="@color/incall_call_banner_background"
         android:visibility="gone"
         android:gravity="top"
 
