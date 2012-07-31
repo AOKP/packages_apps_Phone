@@ -167,6 +167,10 @@
     <string name="settings_label">Network settings</string>
     <!-- Call settings screen, setting option name -->
     <string name="voicemail">Voicemail</string>
+    <!-- Call settings screen, message wait indicator name -->
+    <string name="mwi_notification_title">Message Wait Indicator</string>
+    <!-- Call settings screen, message wait indicator summary -->
+    <string name="mwi_notification_summary">Show message wait indicator voicemail notifications</string>
     <!-- Call forwarding dialog box, voicemail number prefix -->
     <string name="voicemail_abbreviated">VM:</string>
     <!-- Mobile network settings screen, setting option name -->

@@ -52,6 +52,14 @@
       android:key="button_voicemail_category_key"
       android:title="@string/voicemail"
       android:persistent="false">
+
+      <CheckBoxPreference
+          android:defaultValue="false"
+          android:key="button_mwi_notification_key"
+          android:title="@string/mwi_notification_title"
+          android:persistent="false"
+          android:summary="@string/mwi_notification_summary" />
+
       <ListPreference
           android:key="button_voicemail_provider_key"
           android:title="@string/voicemail_provider"
