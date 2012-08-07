@@ -621,4 +621,12 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrace při vyzvánění"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tóny při dotyku číselníku"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Vyzvánění"</string>
+  <string name="ring_delay_title">Opožděné vyzvánění</string>
+  <string name="ring_delay_summary">Nastavit zpoždění vyzvánění</string>
+  <string-array name="ring_delay_entries">
+    <item>Zpoždění vypnuto</item>
+    <item>3 sekundy</item>
+    <item>6 sekund</item>
+    <item>9 sekund</item>
+  </string-array>
 </resources>
