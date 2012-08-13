@@ -631,6 +631,9 @@
     <item>9 sekund</item>
   </string-array>
 
-    <string name="per_change_mobile_network">Změnit síť (2G/3G)</string>
-    <string name="per_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv přepínat mezi 2G/3G sítí.</string>
+  <string name="per_change_mobile_network">Změnit síť (2G/3G)</string>
+  <string name="per_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv přepínat mezi 2G/3G sítí.</string>
+
+  <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
+  <string name="dialer_ui_settings_summary">Možnosti číselníku vytáčení</string>
 </resources>
