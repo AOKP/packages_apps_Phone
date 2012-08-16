@@ -536,6 +536,8 @@ Tekrar deneyin veya daha fazla seçenek için müşteri hizmetlerini arayın."</
     <string name="description_target_answer">Yanıtla</string>
     <string name="description_target_send_sms">SMS gönder</string>
     <string name="description_target_decline">Reddet</string>
+    <string name="per_change_mobile_network">Ağ değiştirme (2G/3G)</string>
+    <string name="per_change_mobile_network_desc">Bu bağlantı ile herhangi bir zamanda 2G ile 3G arasında geçiş yapabilirsiniz.3G bağlantısı daha hızlı olmasının yanında daha fazla batarya ve ücret tüketimine neden olacaktır.</string>
     <string name="voicemail_notification_vibrate_when_title">Titreşim</string>
     <string name="voicemail_notification_vibarte_when_dialog_title">Titreşim</string>
     <string name="voicemail_notification_ringtone_title">Zil sesi</string>
