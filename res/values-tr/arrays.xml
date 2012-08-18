@@ -64,4 +64,10 @@
         <item>Yalnızca sessizken</item>
         <item>Hiçbir zaman</item>
     </string-array>
+    <string-array name="ring_delay_entries">
+        <item>Zil sesi gecikmesi kapalı</item>
+        <item>3 Saniye</item>
+        <item>6 Saniye</item>
+        <item>9 Saniye</item>
+    </string-array>
 </resources>

@@ -270,8 +270,8 @@ Bir sonraki dönem %2$d gün sonra başlıyor (%3$s)"</string>
     <string name="voice_privacy_summary">Gelişmiş gizlilik modunu etkinleştir</string>
     <string name="tty_mode_option_title">TTY modu</string>
     <string name="tty_mode_option_summary">TTY modunu ayarla</string>
-	<string name="ring_delay_title">Zil geciktirme</string>
-	<string name="ring_delay_summary">Zil geciktirme seç</string>
+    <string name="ring_delay_title">Zil geciktirme</string>
+    <string name="ring_delay_summary">Zil geciktirme seç</string>
     <string name="auto_retry_mode_title">Otomatik yeniden deneme</string>
     <string name="auto_retry_mode_summary">Otomatik Yeniden Deneme modunu etkinleştir</string>
     <string name="menu_add">Kişi ekle</string>
@@ -545,6 +545,7 @@ Tekrar deneyin veya daha fazla seçenek için müşteri hizmetlerini arayın."</
     <string name="vibrate_on_ring_title">Çalarken titret</string>
     <string name="dtmf_tone_enable_title">Tuş Takımı dokunmatik tonları</string>
     <string name="preference_category_ringtone">Zil sesi</string>
-	<string name="noise_suppression_title">Parazit önleyici</string>
-	<string name="noise_suppression_summary">Aramalar için parazit önleyiciyi etkinleştir</string>
+    <string name="voicemail_notification_vibrate_when_default">Asla</string>
+    <string name="noise_suppression_title">Parazit önleyici</string>
+    <string name="noise_suppression_summary">Aramalar için parazit önleyiciyi etkinleştir</string>
 </resources>
