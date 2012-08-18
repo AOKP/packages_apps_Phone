@@ -328,6 +328,8 @@
     <string name="voice_privacy_summary" msgid="3159383389833516214">"启用增强型隐秘模式"</string>
     <string name="tty_mode_option_title" msgid="9033098925144434669">"TTY 模式"</string>
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
+    <string name="ring_delay_title">铃声延迟</string>
+    <string name="ring_delay_summary">选择铃声延迟时间</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"启用自动重拨模式"</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
@@ -453,6 +455,13 @@
     <item msgid="1937509904407445684">"TTY HCO"</item>
     <item msgid="5644925873488772224">"TTY VCO"</item>
   </string-array>
+  <!-- Ring Delay entries.  -->
+  <string-array name="ring_delay_entries">
+    <item>关闭</item>
+    <item>3 秒</item>
+    <item>6 秒</item>
+    <item>9 秒</item>
+  </string-array>
     <string name="dtmf_tones_title" msgid="5163153771291340803">"DTMF 音"</string>
     <string name="dtmf_tones_summary" msgid="3351820372864020331">"设置 DTMF 音长度"</string>
   <string-array name="dtmf_tone_entries">
@@ -503,6 +512,9 @@
     <string name="voicemail_settings" msgid="72448049107749316">"设置"</string>
     <string name="voicemail_number_not_set" msgid="6724904736891087856">"&lt;未设置&gt;"</string>
     <string name="other_settings" msgid="3672912580359716394">"其他通话设置"</string>
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">拨号器设置</string>
+    <string name="dialer_ui_settings_summary">是否开启传感器，是否开启T9搜索</string>
     <string name="calling_via_template" msgid="4839419581866928142">"通过<xliff:g id="PROVIDER_NAME">%s</xliff:g>进行通话"</string>
     <string name="contactPhoto" msgid="4713193418046639466">"联系人照片"</string>
     <string name="goPrivate" msgid="865837794424530980">"私聊"</string>
@@ -609,6 +621,8 @@
     <string name="description_target_answer" msgid="7205604197797472471">"接听"</string>
     <string name="description_target_send_sms" msgid="2098326025587950144">"发送短信"</string>
     <string name="description_target_decline" msgid="4789834364389731957">"拒绝"</string>
+    <string name="per_change_mobile_network">更改网络（2G/3G）</string>
+    <string name="per_change_mobile_network_desc">可以在任何时候切换2G或3G数据，3G速度更快但消耗更多电量，费用也更高。</string>
     <string name="voicemail_notification_vibrate_when_title" msgid="8361970092063604886">"振动"</string>
     <string name="voicemail_notification_vibarte_when_dialog_title" msgid="5739583146522136440">"振动"</string>
     <string name="voicemail_notification_ringtone_title" msgid="2512535133814478358">"铃声"</string>
@@ -621,4 +635,8 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"响铃时振动"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"拨号键盘触摸音效"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"铃声"</string>
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">噪声抑制</string>
+    <string name="noise_suppression_summary">抑制通话时的环境噪声</string>
+    <!-- End Noise suppression -->
 </resources>
