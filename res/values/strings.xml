@@ -629,6 +629,8 @@
     <string name="ring_delay_summary">Select Ring Delay</string>
     <string name="auto_retry_mode_title">Auto-retry</string>
     <string name="auto_retry_mode_summary">Enable Auto-retry mode</string>
+    <string name="exit_to_home_screen_title">Exit to Home on End Call</string>
+    <string name="exit_to_home_screen_summary">Exit to Home screen on End Call rather than going to Call Log</string>
 
     <!-- FDN list screen: menu item label -->
     <string name="menu_add">Add contact</string>
