@@ -94,11 +94,19 @@
                  android:persistent="true"
                  android:label="@string/phoneAppLabel"
                  android:icon="@drawable/ic_launcher_phone">
-            <provider android:name="IccProvider"
-                      android:authorities="icc"
-                      android:multiprocess="true"
-                      android:readPermission="android.permission.READ_CONTACTS"
-                      android:writePermission="android.permission.WRITE_CONTACTS" />
+
+        <provider android:name="IccProvider"
+                  android:authorities="icc"
+                  android:multiprocess="true"
+                  android:readPermission="android.permission.READ_CONTACTS"
+                  android:writePermission="android.permission.WRITE_CONTACTS" />
+
+        <!-- Workaround for non saved phone number -->
+        <receiver android:name=".MyPhoneNumber">
+            <intent-filter>
+                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
         <!-- Dialer UI that only allows emergency calls -->
         <activity android:name="EmergencyDialer"
