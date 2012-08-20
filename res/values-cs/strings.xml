@@ -636,4 +636,7 @@
 
   <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
   <string name="dialer_ui_settings_summary">Možnosti číselníku vytáčení</string>
+
+  <string name="phone_number_label">Vlastní tel. číslo</string>
+  <string name="phone_number_summary">Nastavit telefonní číslo tohoto zařízení</string>
 </resources>
