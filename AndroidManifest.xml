@@ -529,17 +529,6 @@
                 <action android:name="com.android.phone.ACTION_SEND_SMS_FROM_NOTIFICATION" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.android.phone.PhoneToggler" android:permission="com.android.phone.CHANGE_NETWORK_MODE">
-            <intent-filter>
-                <action android:name="com.android.internal.telephony.REQUEST_NETWORK_MODE" />
-                <action android:name="com.android.internal.telephony.MODIFY_NETWORK_MODE" />
-            </intent-filter>
-        </receiver>
+
     </application>
-    <permission
-        android:description="@string/per_change_mobile_network_desc"
-        android:label="@string/per_change_mobile_network"
-        android:name="com.android.phone.CHANGE_NETWORK_MODE"
-        android:permissionGroup="android.permission-group.COST_MONEY"
-        android:protectionLevel="dangerous" />
 </manifest>
