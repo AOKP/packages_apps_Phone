@@ -212,7 +212,7 @@
         android:layout_marginBottom="-46dp"
         android:background="@color/incall_call_banner_background"
         android:visibility="gone"
-        android:gravity="top"
+        android:gravity="top|center_horizontal"
 
         prvandroid:targetDrawables="@array/incoming_call_widget_3way_targets"
         prvandroid:targetDescriptions="@array/incoming_call_widget_3way_target_descriptions"
