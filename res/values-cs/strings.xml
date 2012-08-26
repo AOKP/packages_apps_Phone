@@ -168,7 +168,14 @@
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Upřednostňovaný režim sítě: pouze CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Upřednostňovaný režim sítě: pouze EvDo"</string>
     <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Upřednostňovaný režim sítě: LTE / CDMA"</string>
+    <string name="preferred_network_mode_lte_gsm_summary">Upřednostňovaný režim sítě: LTE / WCDMA / GSM</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Upřednostňovaný režim sítě: LTE / CDMA / EvDo</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Upřednostňovaný režim sítě: LTE / CMDA / EvDo / GSM/WCDMA</string>
   <string-array name="preferred_network_mode_choices">
+    <item>Pouze LTE</item>
+    <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
+    <item>LTE/WCDMA/GSM</item>
+    <item>LTE/CDMA/ EvDo</item>
     <item msgid="5543794538185064048">"LTE/CDMA"</item>
     <item msgid="3273348576277144124">"Pouze EvDo"</item>
     <item msgid="454610224530856274">"CDMA bez EvDo"</item>
@@ -179,8 +186,10 @@
     <item msgid="8508331239546115206">"GSM/WCDMA – upřednostňováno"</item>
   </string-array>
   <string-array name="preferred_network_mode_choices_lte">
+    <item>Pouze LTE</item>
+    <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
     <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="5541716989029928208">"CDMA/EvDo - automaticky"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Dat. přenosy aktivovány"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Aktivovat datový přístup prostřednictvím mobilní sítě"</string>
@@ -630,10 +639,10 @@
       <item>6 sekund</item>
       <item>9 sekund</item>
     </string-array>
-
     <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
     <string name="dialer_ui_settings_summary">Možnosti číselníku vytáčení</string>
-
     <string name="perm_change_mobile_network">Změnit typ sítě (2G/3G)</string>
     <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
+    <string name="phone_number_label">Vlastní tel. číslo</string>
+    <string name="phone_number_summary">Nastavit telefonní číslo tohoto zařízení</string>
 </resources>
