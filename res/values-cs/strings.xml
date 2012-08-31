@@ -645,4 +645,8 @@
     <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
     <string name="phone_number_label">Vlastní tel. číslo</string>
     <string name="phone_number_summary">Nastavit telefonní číslo tohoto zařízení</string>
+    <string name="national_roaming">Národní datový roaming</string>
+    <string name="national_roaming_enable">Používat datové služby při národním roamingu </string>
+    <string name="national_roaming_disable">Nepoužívat datové služby při národním roamingu</string>
+    <string name="type_unknown">Neznámý volající</string>
 </resources>
