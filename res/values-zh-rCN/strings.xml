@@ -168,7 +168,14 @@
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"首选网络模式：仅限 CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"首选网络模式：仅限 EvDo"</string>
     <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"首选网络模式：LTE/CDMA"</string>
+    <string name="preferred_network_mode_lte_gsm_summary">"首选网络模式：LTE / WCDMA / GSM"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">"首选网络模式：LTE / CDMA / EvDo"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">"首选网络模式：LTE / CMDA / EvDo / GSM/WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
+    <item>"仅 LTE"</item>
+    <item>"LTE/CMDA/EvDo/GSM/WCDMA"</item>
+    <item>"LTE/WCDMA/GSM"</item>
+    <item>"LTE/CDMA/EvDo"</item>
     <item msgid="5543794538185064048">"LTE/CDMA"</item>
     <item msgid="3273348576277144124">"仅 EvDo"</item>
     <item msgid="454610224530856274">"CDMA，无 EvDo 功能"</item>
@@ -179,14 +186,19 @@
     <item msgid="8508331239546115206">"首选 GSM/WCDMA"</item>
   </string-array>
   <string-array name="preferred_network_mode_choices_lte">
+    <item>"仅 LTE"</item>
+    <item>"LTE/CMDA/EvDo/GSM/WCDMA"</item>
     <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="5541716989029928208">"CDMA/EvDo 自动选择"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"已启用数据流量"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"允许通过移动网络存取数据"</string>
     <string name="roaming" msgid="8871412572928323707">"移动数据网络漫游"</string>
     <string name="roaming_enable" msgid="7331106985174381987">"漫游时连接到移动数据网络服务"</string>
     <string name="roaming_disable" msgid="1843417228755568110">"漫游时连接到移动数据网络服务"</string>
+    <string name="national_roaming">全国漫游</string>
+    <string name="national_roaming_enable">当全国漫游时允许连接移动数据网络</string>
+    <string name="national_roaming_disable">当全国漫游时禁止连接移动数据网络</string>
     <string name="roaming_reenable_message" msgid="8913735676127858115">"移动数据网络连接已断开，因为您已离开本地网络并关闭了移动数据网络漫游功能。"</string>
     <string name="roaming_warning" msgid="7820963598559553967">"是否要允许移动数据网络漫游？这可能产生大量漫游费！"</string>
     <string name="gsm_umts_options" msgid="6538311689850981686">"GSM/UMTS 选项"</string>
@@ -332,6 +344,8 @@
     <string name="ring_delay_summary">选择铃声延迟时间</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"启用自动重拨模式"</string>
+    <string name="exit_to_home_screen_title">通话结束后返回主屏幕</string>
+    <string name="exit_to_home_screen_summary">通话结束后返回主屏幕而不是返回通话记录</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
@@ -621,8 +635,6 @@
     <string name="description_target_answer" msgid="7205604197797472471">"接听"</string>
     <string name="description_target_send_sms" msgid="2098326025587950144">"发送短信"</string>
     <string name="description_target_decline" msgid="4789834364389731957">"拒绝"</string>
-    <string name="per_change_mobile_network">更改网络（2G/3G）</string>
-    <string name="per_change_mobile_network_desc">可以在任何时候切换2G或3G数据，3G速度更快但消耗更多电量，费用也更高。</string>
     <string name="voicemail_notification_vibrate_when_title" msgid="8361970092063604886">"振动"</string>
     <string name="voicemail_notification_vibarte_when_dialog_title" msgid="5739583146522136440">"振动"</string>
     <string name="voicemail_notification_ringtone_title" msgid="2512535133814478358">"铃声"</string>
@@ -639,6 +651,9 @@
     <string name="noise_suppression_title">噪声抑制</string>
     <string name="noise_suppression_summary">抑制通话时的环境噪声</string>
     <!-- End Noise suppression -->
+    <string name="phone_number_label">本机号码</string>
+    <string name="phone_number_summary">设置当前设备的电话号码</string>
+
     <string name="perm_change_mobile_network">2G／3G移动网络切换</string>
     <string name="perm_change_mobile_network_desc">获得该权限的应用程序可以在任何时候在2G/3G移动网络之间切换。使用3G网络存取资料的速度会比较快，但是也会相应消耗比较多的电量并消耗您更多金钱。</string>
 </resources>
