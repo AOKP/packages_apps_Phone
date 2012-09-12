@@ -20,7 +20,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.app.VibrationPickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +36,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
+import android.media.VibrationPattern;
 import android.net.Uri;
 import android.net.sip.SipManager;
 import android.os.AsyncResult;
@@ -63,6 +67,7 @@ import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.cdma.TtyIntent;
 import com.android.phone.sip.SipSharedPreferences;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -164,6 +169,8 @@ public class CallFeaturesSetting extends PreferenceActivity
 
     private static final String BUTTON_RINGTONE_KEY    = "button_ringtone_key";
     private static final String BUTTON_VIBRATE_ON_RING = "button_vibrate_on_ring";
+    private static final String BUTTON_VIBRATION_KEY =
+            "button_vibration_key";
     private static final String BUTTON_PLAY_DTMF_TONE  = "button_play_dtmf_tone";
     private static final String BUTTON_DTMF_KEY        = "button_dtmf_settings";
     private static final String BUTTON_RETRY_KEY       = "button_auto_retry_key";
@@ -193,6 +200,8 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final int EVENT_FORWARDING_GET_COMPLETED = 502;
 
     private static final int MSG_UPDATE_RINGTONE_SUMMARY = 1;
+    private static final int VIB_OK = 10;
+    private static final int VIB_CANCEL = 11;
 
     // preferred TTY mode
     // Phone.TTY_MODE_xxx
@@ -244,14 +253,27 @@ public class CallFeaturesSetting extends PreferenceActivity
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MSG_UPDATE_RINGTONE_SUMMARY:
-                mRingtonePreference.setSummary((CharSequence) msg.obj);
-                break;
+                case MSG_UPDATE_RINGTONE_SUMMARY:
+                    mRingtonePreference.setSummary((CharSequence) msg.obj);
+                    break;
+                case VIB_OK:
+                    VibrationPattern mPattern = (VibrationPattern) msg.obj;
+                    if (mPattern == null) {
+                        break;
+                    }
+                    mVibrationPreference.setSummary(mPattern.getName());
+                    Settings.System.putString(getContentResolver(),
+                            Settings.System.PHONE_VIBRATION, mPattern.getUri().toString());
+                    break;
+                case VIB_CANCEL:
+                default:
+                    break;
             }
         }
     };
 
     private Preference mRingtonePreference;
+    private Preference mVibrationPreference;
     private CheckBoxPreference mVibrateWhenRinging;
     /** Whether dialpad plays DTMF tone or not. */
     private CheckBoxPreference mPlayDtmfTone;
@@ -526,6 +548,12 @@ public class CallFeaturesSetting extends PreferenceActivity
                 // This should let the preference use default behavior in the xml.
                 return false;
             }
+        } else if (preference == mVibrationPreference) {
+            String uriString = VibrationPattern.getPhoneVibration(getApplicationContext());
+            DialogFragment newFragment = VibrationPickerDialog.newInstance(mRingtoneLookupComplete, false,
+                        uriString);
+            newFragment.show(getFragmentManager(), "dialog");
+            return true;
         }
         return false;
     }
@@ -1515,6 +1543,7 @@ public class CallFeaturesSetting extends PreferenceActivity
         }
 
         mRingtonePreference = findPreference(BUTTON_RINGTONE_KEY);
+        mVibrationPreference = findPreference(BUTTON_VIBRATION_KEY);
         mVibrateWhenRinging = (CheckBoxPreference) findPreference(BUTTON_VIBRATE_ON_RING);
         mPlayDtmfTone = (CheckBoxPreference) findPreference(BUTTON_PLAY_DTMF_TONE);
         mButtonDTMF = (ListPreference) findPreference(BUTTON_DTMF_KEY);
@@ -1652,6 +1681,7 @@ public class CallFeaturesSetting extends PreferenceActivity
                 }
             }
         }
+        lookupVibrationName();
         updateVoiceNumberField();
         mVMProviderSettingsForced = false;
         createSipCallSettings();
@@ -1794,6 +1824,7 @@ public class CallFeaturesSetting extends PreferenceActivity
         }
 
         lookupRingtoneName();
+        lookupVibrationName();
     }
 
     /**
@@ -1816,6 +1847,11 @@ public class CallFeaturesSetting extends PreferenceActivity
      */
     private void lookupRingtoneName() {
         new Thread(mRingtoneLookupRunnable).start();
+    }
+
+    private void lookupVibrationName() {
+        String uriString = VibrationPattern.getPhoneVibration(getApplicationContext());
+        mVibrationPreference.setSummary(new VibrationPattern(Uri.parse(uriString), getApplicationContext()).getName());
     }
 
     private boolean isAirplaneModeOn() {
