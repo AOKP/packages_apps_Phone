@@ -34,6 +34,13 @@
             android:title="@string/vibrate_on_ring_title"
             android:persistent="false"
             android:defaultValue="false" />
+
+        <Preference
+            android:key="button_vibration_key"
+            android:title="@string/vibration_title"
+            android:dependency="button_vibrate_on_ring"
+            android:persistent="false"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
   <PreferenceCategory

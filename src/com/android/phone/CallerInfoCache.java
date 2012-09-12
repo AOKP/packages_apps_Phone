@@ -65,29 +65,35 @@ public class CallerInfoCache {
         Data.DATA1,                  // 0
         Phone.NORMALIZED_NUMBER,     // 1
         Data.CUSTOM_RINGTONE,        // 2
-        Data.SEND_TO_VOICEMAIL       // 3
+        Data.SEND_TO_VOICEMAIL,      // 3
+        Data.CUSTOM_VIBRATION        // 4
     };
 
     private static final int INDEX_NUMBER            = 0;
     private static final int INDEX_NORMALIZED_NUMBER = 1;
     private static final int INDEX_CUSTOM_RINGTONE   = 2;
     private static final int INDEX_SEND_TO_VOICEMAIL = 3;
+    private static final int INDEX_CUSTOM_VIBRATION  = 4;
 
     private static final String SELECTION = "("
-            + "(" + Data.CUSTOM_RINGTONE + " IS NOT NULL OR " + Data.SEND_TO_VOICEMAIL + "=1)"
+            + "(" + Data.CUSTOM_RINGTONE + " IS NOT NULL OR "
+            + Data.CUSTOM_VIBRATION + " IS NOT NULL OR "
+            + Data.SEND_TO_VOICEMAIL + "=1)"
             + " AND " + Data.DATA1 + " IS NOT NULL)";
 
     public static class CacheEntry {
         public final String customRingtone;
+        public final String customVibration;
         public final boolean sendToVoicemail;
-        public CacheEntry(String customRingtone, boolean shouldSendToVoicemail) {
+        public CacheEntry(String customRingtone, boolean shouldSendToVoicemail, String customVibration) {
             this.customRingtone = customRingtone;
+            this.customVibration = customVibration;
             this.sendToVoicemail = shouldSendToVoicemail;
         }
 
         @Override
         public String toString() {
-            return "ringtone: " + customRingtone + ", " + sendToVoicemail;
+            return "ringtone: " + customRingtone + ", " + "vibration: " + customVibration + "," + sendToVoicemail;
         }
     }
 
@@ -227,12 +233,13 @@ public class CallerInfoCache {
                         normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
                     }
                     final String customRingtone = cursor.getString(INDEX_CUSTOM_RINGTONE);
+                    final String customVibration = cursor.getString(INDEX_CUSTOM_VIBRATION);
                     final boolean sendToVoicemail = cursor.getInt(INDEX_SEND_TO_VOICEMAIL) == 1;
 
                     if (PhoneNumberUtils.isUriNumber(number)) {
                         // SIP address case
                         putNewEntryWhenAppropriate(
-                                newNumberToEntry, number, customRingtone, sendToVoicemail);
+                                newNumberToEntry, number, customRingtone, sendToVoicemail, customVibration);
                     } else {
                         // PSTN number case
                         // Each normalized number may or may not have full content of the number.
@@ -247,7 +254,7 @@ public class CallerInfoCache {
                                 ? normalizedNumber.substring(length - 7, length)
                                         : normalizedNumber;
                         putNewEntryWhenAppropriate(
-                                newNumberToEntry, key, customRingtone, sendToVoicemail);
+                                newNumberToEntry, key, customRingtone, sendToVoicemail, customVibration);
                     }
                 }
 
@@ -281,18 +288,18 @@ public class CallerInfoCache {
     }
 
     private void putNewEntryWhenAppropriate(HashMap<String, CacheEntry> newNumberToEntry,
-            String numberOrSipAddress, String customRingtone, boolean sendToVoicemail) {
+            String numberOrSipAddress, String customRingtone, boolean sendToVoicemail, String customVibration) {
         if (newNumberToEntry.containsKey(numberOrSipAddress)) {
             // There may be duplicate entries here and we should prioritize
             // "send-to-voicemail" flag in any case.
             final CacheEntry entry = newNumberToEntry.get(numberOrSipAddress);
             if (!entry.sendToVoicemail && sendToVoicemail) {
                 newNumberToEntry.put(numberOrSipAddress,
-                        new CacheEntry(customRingtone, sendToVoicemail));
+                        new CacheEntry(customRingtone, sendToVoicemail, customVibration));
             }
         } else {
             newNumberToEntry.put(numberOrSipAddress,
-                    new CacheEntry(customRingtone, sendToVoicemail));
+                    new CacheEntry(customRingtone, sendToVoicemail, customVibration));
         }
     }
 

@@ -34,9 +34,11 @@ import android.app.ActivityManagerNative;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothProfile;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.media.VibrationPattern;
 import android.net.Uri;
 import android.os.AsyncResult;
 import android.os.Handler;
@@ -567,6 +569,8 @@ public class CallNotifier extends Handler
         if (shouldStartQuery) {
             // Reset the ringtone to the default first.
             mRinger.setCustomRingtoneUri(Settings.System.DEFAULT_RINGTONE_URI);
+            String vibUriString = VibrationPattern.getPhoneVibration(mApplication);
+            mRinger.setCustomVibrationUri(Uri.parse(vibUriString));
 
             // query the callerinfo to try to get the ringer.
             PhoneUtils.CallerInfoToken cit = PhoneUtils.startGetCallerInfo(
@@ -946,6 +950,13 @@ public class CallNotifier extends Handler
                     if (DBG) log("custom ringtone found, setting up ringer.");
                     Ringer r = ((CallNotifier) cookie).mRinger;
                     r.setCustomRingtoneUri(ci.contactRingtoneUri);
+                }
+
+                // set the vibration uri to prepare for the ring.
+                if (ci.contactVibrationUri != null) {
+                    if (DBG) log("custom vibration found, setting up ringer.");
+                    Ringer r = ((CallNotifier) cookie).mRinger;
+                    r.setCustomVibrationUri(ci.contactVibrationUri);
                 }
                 // ring, and other post-ring actions.
                 onCustomRingQueryComplete();
