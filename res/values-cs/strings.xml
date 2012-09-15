@@ -649,4 +649,6 @@
     <string name="national_roaming_enable">Používat datové služby při národním roamingu </string>
     <string name="national_roaming_disable">Nepoužívat datové služby při národním roamingu</string>
     <string name="type_unknown">Neznámý volající</string>
+    <string name="exit_to_home_screen_title">Po ukončení hovoru návrat na domovoskou obrazovku</string>
+    <string name="exit_to_home_screen_summary">Po ukončení hovoru skočit na domovskou obrazovku místo na výpis hovorů</string>
 </resources>
