@@ -66,7 +66,7 @@ public class CallerInfoCache {
         Phone.NORMALIZED_NUMBER,     // 1
         Data.CUSTOM_RINGTONE,        // 2
         Data.SEND_TO_VOICEMAIL,      // 3
-        // Data.CUSTOM_VIBRATION        // 4
+        Data.CUSTOM_VIBRATION        // 4
     };
 
     private static final int INDEX_NUMBER            = 0;
