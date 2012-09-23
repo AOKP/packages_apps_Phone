@@ -652,4 +652,6 @@
     <string name="exit_to_home_screen_title">Po ukončení hovoru návrat na domovoskou obrazovku</string>
     <string name="exit_to_home_screen_summary">Po ukončení hovoru skočit na domovskou obrazovku místo na výpis hovorů</string>
     <string name="vibration_title">Vibrace</string>
+    <string name="mwi_notification_title">Indikátor čekající zprávy</string>
+    <string name="mwi_notification_summary">Zobrazit indikátor čkající zprávy v hlasové schránce</string>
 </resources>
