@@ -1525,4 +1525,16 @@
 
     <string name="perm_change_mobile_network">Change network (2G/3G)</string>
     <string name="perm_change_mobile_network_desc">Application with this permission can, at any time, change between 2G data and 3G data. 3G is faster, consumes more battery, and can also cost you more money.</string>
+
+    <!-- Advanced Settings -->
+    <string name="advanced_setting">Advanced Settings</string>
+    <string name="vibrate_outgoing">Vibrate on answer</string>
+    <string name="vibrate_outgoing_sum">Vibrate when an outgoing call is answered</string>
+    <string name="vibrate_45">Vibrate every 45 seconds</string>
+    <string name="vibrate_45_sum">Vibrates at the 45 second mark of every minute during outgoing calls</string>
+    <string name="vibrate_hangup">Vibrate on hangup</string>
+    <string name="vibrate_hangup_sum">Vibrate when a call has ended</string>
+    <string name="vibrate_call_waiting">Vibrate call waiting</string>
+    <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
+    <!-- End Advanced Settings -->
 </resources>
