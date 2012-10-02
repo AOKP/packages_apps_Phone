@@ -43,6 +43,33 @@
             android:defaultValue="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+      android:key="pref_advanced_settings"
+      android:title="@string/advanced_setting">
+
+      <CheckBoxPreference
+          android:key="button_vibrate_outgoing"
+          android:title="@string/vibrate_outgoing"
+          android:persistent="true"
+          android:summary="@string/vibrate_outgoing_sum"/>
+      <CheckBoxPreference
+          android:key="button_vibrate_45"
+          android:title="@string/vibrate_45"
+          android:persistent="true"
+          android:summary="@string/vibrate_45_sum"/>
+      <CheckBoxPreference
+          android:key="button_vibrate_hangup"
+          android:title="@string/vibrate_hangup"
+          android:persistent="true"
+          android:summary="@string/vibrate_hangup_sum"/>
+      <CheckBoxPreference
+          android:key="button_vibrate_call_waiting"
+          android:title="@string/vibrate_call_waiting"
+          android:persistent="true"
+          android:summary="@string/vibrate_call_waiting_sum"/>
+    </PreferenceCategory>
+    
+
   <PreferenceCategory
       android:key="button_misc_category_key"
       android:title="@string/other_settings"
