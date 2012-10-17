@@ -654,4 +654,6 @@
     <string name="vibration_title">Vibrace</string>
     <string name="mwi_notification_title">Indikátor čekající zprávy</string>
     <string name="mwi_notification_summary">Zobrazit indikátor čkající zprávy v hlasové schránce</string>
+    <string name="landscape_mode_title">Zapnout režim na šířku</string>
+    <string name="landscape_mode_summary">Zapnout režim na šířku (pokud je zapnut senzor)</string>
 </resources>
