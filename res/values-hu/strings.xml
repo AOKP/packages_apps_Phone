@@ -330,6 +330,8 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"TTY-mód beállítása"</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"Automatikus újrapróbálkozás"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"Automatikus újrapróbálkozás-mód bekapcsolása"</string>
+    <string name="exit_to_home_screen_title">Kezdőképernyőre lépés hívás végén</string>
+    <string name="exit_to_home_screen_summary">Kilép a kezdőképernyőre hívás végén, nem megy az Előzményekre</string>
     <string name="menu_add" msgid="1882023737425114762">"Névjegy hozzáadása"</string>
     <string name="menu_edit" msgid="7143003705504672374">"Névjegy szerkesztése"</string>
     <string name="menu_delete" msgid="3977150783449642851">"Névjegy törlése"</string>
@@ -630,4 +632,13 @@
     <!-- Dialer UI Settings -->
     <string name="dialer_ui_settings_title">Tárcsázó beállítás</string>
     <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
+     <!-- Noise suppression -->
+    <string name="noise_suppression_title">Zaj elnyomás</string>
+    <string name="noise_suppression_summary">Zaj elnyomás engedélyezése hivás közben</string>
+    <!-- End Noise suppression -->
+
+    <string name="phone_number_label">Saját szám</string>
+    <string name="phone_number_summary">Beállítja a telefonszámot a készülékhez</string>
+    <string name="landscape_mode_title">Fekvőmód engedélyezése</string>
+    <string name="landscape_mode_summary">Engedélyezi a fekvőmódot (ha a szenzor engedi)</string>
 </resources>
