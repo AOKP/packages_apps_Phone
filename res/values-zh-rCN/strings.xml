@@ -348,6 +348,8 @@
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"启用自动重拨模式"</string>
     <string name="exit_to_home_screen_title">通话结束后返回主屏幕</string>
     <string name="exit_to_home_screen_summary">通话结束后返回主屏幕而不是返回通话记录</string>
+    <string name="landscape_mode_title">启用旋转</string>
+    <string name="landscape_mode_summary">允许通话界面旋转（如果传感器启用）</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
