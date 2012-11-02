@@ -976,6 +976,10 @@ public class InCallTouchUi extends FrameLayout
 
     }
 
+    @Override
+    public void onTargetChange(View view, int whichHandle) {
+    }
+
     /**
      * Handles "Answer" and "Reject" actions for an incoming call.
      * We get this callback from the incoming call widget
