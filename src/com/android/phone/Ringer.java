@@ -35,6 +35,8 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
 
+import java.util.Calendar;
+
 import com.android.internal.telephony.Phone;
 /**
  * Ringer manager for the Phone app.
