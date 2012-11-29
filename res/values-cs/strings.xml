@@ -643,4 +643,13 @@
     <string name="national_roaming">Národní datový roaming</string>
     <string name="national_roaming_enable">Připojit k datové síti během národního roamingu</string>
     <string name="national_roaming_disable">Nepřipojovat k datové síti během národního roamingu</string>
+  <string name="advanced_setting">Rozšířené nastavení</string>
+  <string name="vibrate_outgoing">Vibrace při odpovědi</string>
+  <string name="vibrate_outgoing_sum">Vibrace pokud druhá strana zvedne hovor</string>
+  <string name="vibrate_60">Vibrace každých 60 sekund</string>
+  <string name="vibrate_60_sum">Při odchozím hovoru vibrovat každých 60 sekund</string>
+  <string name="vibrate_hangup">Vibrace po zavěšení</string>
+  <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
+  <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
+  <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
 </resources>
