@@ -646,4 +646,13 @@
     <string name="noise_suppression_title">Potlačení šumu</string>
     <string name="noise_suppression_summary">Zapnout potlačení šumu u hovorů</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Vyzvánění a vibrace"</string>
+    <string name="advanced_setting">Rozšířené nastavení</string>
+    <string name="vibrate_outgoing">Vibrace při odpovědi</string>
+    <string name="vibrate_outgoing_sum">Vibrace pokud druhá strana zvedne hovor</string>
+    <string name="vibrate_60">Vibrace každých 60 sekund</string>
+    <string name="vibrate_60_sum">Při odchozím hovoru vibrovat každých 60 sekund</string>
+    <string name="vibrate_hangup">Vibrace po zavěšení</string>
+    <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
+    <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
+    <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
 </resources>
