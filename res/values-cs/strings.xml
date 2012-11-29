@@ -622,4 +622,14 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrace při vyzvánění"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tóny při dotyku číselníku"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Vyzvánění"</string>
+
+  <string name="advanced_setting">Rozšířené nastavení</string>
+  <string name="vibrate_outgoing">Vibrace při odpovědi</string>
+  <string name="vibrate_outgoing_sum">Vibrace pokud druhá strana zvedne hovor</string>
+  <string name="vibrate_60">Vibrace každých 60 sekund</string>
+  <string name="vibrate_60_sum">Při odchozím hovoru vibrovat každých 60 sekund</string>
+  <string name="vibrate_hangup">Vibrace po zavěšení</string>
+  <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
+  <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
+  <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
 </resources>

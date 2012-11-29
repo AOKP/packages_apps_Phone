@@ -72,6 +72,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import android.preference.PreferenceManager;
 /**
  * Misc utilities for the Phone app.
  */
@@ -385,6 +386,51 @@ public class PhoneUtils {
         if (DBG) log("==> hungup = " + hungup);
 
         return hungup;
+    }
+
+    static Call getCurrentCall(Phone phone) {
+        Call ringing = phone.getRingingCall();
+        Call fg = phone.getForegroundCall();
+        Call bg = phone.getBackgroundCall();
+        if (!ringing.isIdle()) {
+            return ringing;
+        }
+        if (!fg.isIdle()) {
+            return fg;
+        }
+        if (!bg.isIdle()) {
+            return bg;
+        }
+        return fg;
+    }
+
+    static Connection getConnection(Phone phone, Call call) {
+        if (call == null) {
+            return null;
+        }
+        if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA) {
+            return call.getLatestConnection();
+        }
+        return call.getEarliestConnection();
+    }
+
+    static class PhoneSettings {
+        static boolean vibOn60Secs(Context context) {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                      .getBoolean("button_vibrate_60", false);
+        }
+        static boolean vibHangup(Context context) {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                      .getBoolean("button_vibrate_hangup", false);
+        }
+        static boolean vibOutgoing(Context context) {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                      .getBoolean("button_vibrate_outgoing", false);
+        }
+        static boolean vibCallWaiting(Context context) {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+                      .getBoolean("button_vibrate_call_waiting", false);
+        }
     }
 
     static boolean hangupRingingCall(Call ringing) {
