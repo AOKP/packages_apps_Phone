@@ -112,4 +112,7 @@
 
     <!-- If true, removes the Voice Privacy option from Call Settings -->
     <bool name="config_voice_privacy_disable">false</bool>
+
+    <!-- LTE/CDMA network mode to use for toggleLTE(true). -->
+    <integer name="toggleLTE_lte_cdma_nt_mode">-1</integer>
 </resources>

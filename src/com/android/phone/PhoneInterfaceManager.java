@@ -293,7 +293,14 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
         int network = -1;
         boolean usesQcLte = SystemProperties.getBoolean(
                         "ro.config.qc_lte_network_modes", false);
-        if (usesQcLte) {
+
+        if (getLteOnGsmMode() != 0) {
+            if (on) {
+                network = Phone.NT_MODE_LTE_GSM_WCDMA;
+            } else {
+                network = Phone.NT_MODE_WCDMA_PREF;
+            }
+        } else if (usesQcLte) {
             if (on) {
                 network = PhoneConstants.NT_MODE_LTE_CDMA_EVDO;
             } else {
@@ -882,5 +889,9 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
      */
     public int getLteOnCdmaMode() {
         return mPhone.getLteOnCdmaMode();
+    }
+
+    public int getLteOnGsmMode() {
+        return mPhone.getLteOnGsmMode();
     }
 }
