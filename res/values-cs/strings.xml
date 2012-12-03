@@ -168,8 +168,12 @@
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Upřednostňovaný režim sítě: pouze CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Upřednostňovaný režim sítě: pouze EvDo"</string>
     <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Upřednostňovaný režim sítě: LTE / CDMA"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Upřednostňovaný režim sítě: LTE / CDMA / EvDo</string>
+    <string name="preferred_network_mode_lte_gsm_summary">Upřednostňovaný režim sítě: LTE / GSM / WCDMA</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Upřednostňovaný režim sítě: LTE / CMDA / EvDo / GSM / WCDMA</string>
+    <string name="preferred_network_mode_lte_wcdma_summary">Upřednostňovaný režim sítě: LTE / WCDMA</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
+    <item msgid="5543794538185064048">"Všechny"</item>
     <item msgid="3273348576277144124">"Pouze EvDo"</item>
     <item msgid="454610224530856274">"CDMA bez EvDo"</item>
     <item msgid="648505122852496166">"CDMA/EvDo – automaticky"</item>
@@ -179,9 +183,16 @@
     <item msgid="8508331239546115206">"GSM/WCDMA – upřednostňováno"</item>
   </string-array>
   <string-array name="preferred_network_mode_choices_lte">
+    <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
+    <item>LTE/CDMA/EvDo</item>
     <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="5541716989029928208">"CDMA/EvDo - automaticky"</item>
   </string-array>
+    <string-array name="preferred_network_mode_choices_lte_gsm">
+        <item>LTE/WCDMA</item>
+        <item>LTE/GSM/WCDMA</item>
+        <item>GSM/WCDMA - upřednostňováno</item>
+    </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Dat. přenosy aktivovány"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Aktivovat datový přístup prostřednictvím mobilní sítě"</string>
     <string name="roaming" msgid="8871412572928323707">"Datový roaming"</string>
@@ -622,4 +633,11 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrace při vyzvánění"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tóny při dotyku číselníku"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Vyzvánění"</string>
+    <string name="vibration_title">Vibrace telefonu</string>
+    <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
+    <string name="dialer_ui_settings_summary">Nastavení číselníku vytáčení</string>
+    <string name="exit_to_home_screen_title">Návrat na předchozí aktivitu</string>
+    <string name="exit_to_home_screen_summary">Vrátit se k poslední prováděné aktivitě po ukončení hovoru (místo výpisu hovorů)</string>
+    <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
+    <string name="landscape_mode_summary">Zapnout automatickou rotaci obrazovky (pokud je senzor aktivní)</string>
 </resources>
