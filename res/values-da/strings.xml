@@ -628,4 +628,17 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrer ved opringning"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tastaturtoner"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Ringetone"</string>
+    <string name="vibration_title">Telefon vibration</string>
+
+    <!-- Added features -->
+    <string name="exit_to_home_screen_title">Afslut til forrige aktivitet ved afsluttet opkald</string>
+    <string name="exit_to_home_screen_summary">Afslut til forrige aktivitet ved afsluttet opkald i stedet for at gå til opkaldslog</string>
+    <string name="landscape_mode_title">Aktiver Landskab</string>
+    <string name="landscape_mode_summary">Aktiver Landskab Mode (hvis sensor er aktiveret)</string>
+
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Nummerblok indstillinger</string>
+    <string name="dialer_ui_settings_summary">Indstillinger for nummerblok</string>
+
+
 </resources>
