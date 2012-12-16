@@ -35,6 +35,13 @@
         android:summaryOn="@string/roaming_enable"
         android:summaryOff="@string/roaming_disable"/>
 
+    <CheckBoxPreference
+        android:key="button_national_roaming_key"
+        android:title="@string/national_roaming"
+        android:persistent="false"
+        android:summaryOn="@string/national_roaming_enable"
+        android:summaryOff="@string/national_roaming_disable"/>
+
     <PreferenceScreen
         android:key="button_data_usage_key"
         android:title="@string/throttle_data_usage"
