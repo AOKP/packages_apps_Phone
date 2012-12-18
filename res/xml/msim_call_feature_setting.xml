@@ -75,4 +75,10 @@
         android:entries="@array/dtmf_tone_entries"
         android:entryValues="@array/dtmf_tone_values"/>
 
+    <PreferenceScreen
+        android:key="button_xdivert"
+        android:title="@string/xdivert_title"
+        android:summary="@string/xdivert_summary"
+        android:persistent="false">
+    </PreferenceScreen>
 </PreferenceScreen>

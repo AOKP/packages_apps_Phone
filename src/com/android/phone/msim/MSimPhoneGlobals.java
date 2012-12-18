@@ -243,6 +243,8 @@ public class MSimPhoneGlobals extends PhoneGlobals {
             // in.)
             notifier = MSimCallNotifier.init(this, phone, ringer, callLogger);
 
+            XDivertUtility.init(this, phone, (MSimCallNotifier)notifier, this);
+
             // register for ICC status
             for (int i = 0; i < MSimTelephonyManager.getDefault().getPhoneCount(); i++) {
                 IccCard sim = getPhone(i).getIccCard();
