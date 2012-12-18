@@ -640,4 +640,7 @@
     <string name="exit_to_home_screen_summary">Vrátit se k poslední prováděné aktivitě po ukončení hovoru (místo výpisu hovorů)</string>
     <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
     <string name="landscape_mode_summary">Zapnout automatickou rotaci obrazovky (pokud je senzor aktivní)</string>
+    <string name="national_roaming">Národní datový roaming</string>
+    <string name="national_roaming_enable">Připojit k datové síti během národního roamingu</string>
+    <string name="national_roaming_disable">Nepřipojovat k datové síti během národního roamingu</string>
 </resources>
