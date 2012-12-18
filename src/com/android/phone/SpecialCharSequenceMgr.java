@@ -207,7 +207,15 @@ public class SpecialCharSequenceMgr {
         if ((input.startsWith("**04") || input.startsWith("**05"))
                 && input.endsWith("#")) {
             PhoneGlobals app = PhoneGlobals.getInstance();
-            boolean isMMIHandled = app.phone.handlePinMmi(input);
+            Phone phone = app.phone;
+
+            if (app instanceof com.android.phone.MSimPhoneGlobals) {
+                // In multisim case, handle PIN/PUK MMI commands on
+                // voice preferred sub.
+                int voiceSub = app.getVoiceSubscription();
+                phone = app.getPhone(voiceSub);
+            }
+            boolean isMMIHandled = phone.handlePinMmi(input);
 
             // if the PUK code is recognized then indicate to the
             // phone app that an attempt to unPUK the device was
