@@ -168,6 +168,10 @@
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"首选网络模式：仅限 CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"首选网络模式：仅限 EvDo"</string>
     <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"首选网络模式：LTE/CDMA"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">"首选网络模式：LTE / CDMA / EvDo"</string>
+    <string name="preferred_network_mode_lte_gsm_summary">"首选网络模式：LTE / GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">"首选网络模式：LTE / CMDA / EvDo / GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary">"首选网络模式：LTE / WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
     <item msgid="5543794538185064048">"LTE/CDMA"</item>
     <item msgid="3273348576277144124">"仅 EvDo"</item>
@@ -179,8 +183,15 @@
     <item msgid="8508331239546115206">"首选 GSM/WCDMA"</item>
   </string-array>
   <string-array name="preferred_network_mode_choices_lte">
+    <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
+    <item>LTE/CDMA/EvDo</item>
     <item msgid="7002474529872452266">"LTE/CDMA"</item>
     <item msgid="5541716989029928208">"CDMA"</item>
+  </string-array>
+  <string-array name="preferred_network_mode_choices_lte_gsm">
+    <item>LTE/WCDMA</item>
+    <item>LTE/GSM/WCDMA</item>
+    <item>"首选 GSM/WCDMA"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"启用数据网络"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"允许通过移动网络存取数据"</string>
@@ -330,6 +341,10 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"启用自动重拨模式"</string>
+    <string name="exit_to_home_screen_title">通话结束后返回主屏幕</string>
+    <string name="exit_to_home_screen_summary">通话结束后返回主屏幕而不是返回通话记录</string>
+    <string name="landscape_mode_title">启用旋转</string>
+    <string name="landscape_mode_summary">允许通话界面旋转（如果传感器启用）</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
@@ -504,6 +519,8 @@
     <string name="voicemail_settings" msgid="72448049107749316">"设置"</string>
     <string name="voicemail_number_not_set" msgid="6724904736891087856">"&lt;未设置&gt;"</string>
     <string name="other_settings" msgid="3672912580359716394">"其他通话设置"</string>
+    <string name="dialer_ui_settings_title">拨号器设置</string>
+    <string name="dialer_ui_settings_summary">是否开启传感器，是否开启T9搜索</string>
     <string name="calling_via_template" msgid="4839419581866928142">"通过<xliff:g id="PROVIDER_NAME">%s</xliff:g>进行通话"</string>
     <string name="contactPhoto" msgid="4713193418046639466">"联系人照片"</string>
     <string name="goPrivate" msgid="865837794424530980">"私聊"</string>
@@ -619,7 +636,11 @@
     <item msgid="1458182414036878616">"永不"</item>
   </string-array>
     <string name="ringtone_title" msgid="6374978286202084684">"手机铃声"</string>
+    <string name="vibration_title">振动效果</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"响铃时振动"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"拨号键盘触摸音效"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"铃声"</string>
+    <string name="national_roaming">全国漫游</string>
+    <string name="national_roaming_enable">当全国漫游时允许连接移动数据网络</string>
+    <string name="national_roaming_disable">当全国漫游时禁止连接移动数据网络</string>
 </resources>
