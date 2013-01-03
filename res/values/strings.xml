@@ -971,6 +971,12 @@
     <!-- Title for the dialog used to display CDMA DisplayInfo -->
     <string name="network_message">Network message</string>
 
+    <!-- Shown in "Managed Roaming" dialog when registration is denied with rejCode 10. -->
+    <string name="managed_roaming_title">Managed Roaming</string>
+    <string name="managed_roaming_dialog_content">Network with Limited Service found. Do you want to initiate a Network Search?</string>
+    <string name="managed_roaming_dialog_ok_button">Yes</string>
+    <string name="managed_roaming_dialog_cancel_button">No</string>
+
     <!-- OTA-specific strings -->
     <!-- Title shown on OTA screen -->
     <string name="ota_title_activate">Activate your phone</string>
