@@ -204,15 +204,23 @@
               don't have an icon in the downward direction so the whole
               bottom area of this widget is just wasted space.
     -->
-    <com.android.internal.widget.multiwaveview.GlowPadView
-        android:id="@+id/incomingCallWidget"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:background="@color/incall_call_banner_background">
+
+    <com.android.internal.widget.multiwaveview.GlowPadView
+        android:id="@+id/incomingCallWidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="20dip"
         android:layout_marginBottom="-46dp"
-        android:background="@color/incall_call_banner_background"
         android:visibility="gone"
+        android:layout_gravity="center_horizontal"
         android:gravity="top"
 
         prvandroid:targetDrawables="@array/incoming_call_widget_3way_targets"
@@ -228,5 +236,6 @@
         prvandroid:glowRadius="@*android:dimen/glowpadview_glow_radius"
         prvandroid:pointDrawable="@*android:drawable/ic_lockscreen_glowdot"
         />
+    </FrameLayout>
 
 </com.android.phone.InCallTouchUi>
