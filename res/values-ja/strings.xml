@@ -622,4 +622,15 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"着信時のバイブレーション"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"ダイヤルパッドのタッチ操作音"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"着信音"</string>
+    <string name="vibration_title">着信バイブレーション</string>
+    <string name="dialer_ui_settings_title">ダイヤルパッド設定</string>
+    <string name="dialer_ui_settings_summary">@null</string>
+    <string name="exit_to_home_screen_title">通話終了後に元の画面に戻る</string>
+    <string name="exit_to_home_screen_summary">通話終了後に通話履歴画面を表示せずに元の画面に戻る</string>
+    <string name="landscape_mode_title">横画面を有効</string>
+    <string name="landscape_mode_summary">横画面モードを有効にする (自動回転有効時)</string>
+    <string name="national_roaming">国内データローミング</string>
+    <string name="national_roaming_enable">国内ローミング時にデータサービスに接続する</string>
+    <string name="national_roaming_disable">国内ローミング時にデータサービスに接続しない</string>
+
 </resources>
