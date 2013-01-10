@@ -330,6 +330,8 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"TTY-mód beállítása"</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"Automatikus újrapróbálkozás"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"Automatikus újrapróbálkozás-mód bekapcsolása"</string>
+    <string name="exit_to_home_screen_title">Kezdőképernyőre lépés hívás végén</string>
+    <string name="exit_to_home_screen_summary">Kilép a kezdőképernyőre hívás végén, nem megy az Előzményekre</string>
     <string name="menu_add" msgid="1882023737425114762">"Névjegy hozzáadása"</string>
     <string name="menu_edit" msgid="7143003705504672374">"Névjegy szerkesztése"</string>
     <string name="menu_delete" msgid="3977150783449642851">"Névjegy törlése"</string>
@@ -622,4 +624,11 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Csengetéskor rezegjen"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tárcsázó érintési hangjai"</string>
     <string name="preference_category_ringtone" msgid="9007490591910078324">"Csengőhang"</string>
+    <string name="landscape_mode_title">Fekvőmód engedélyezése</string>
+    <string name="landscape_mode_summary">Engedélyezi a fekvőmódot (ha a szenzor engedi)</string>
+
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Tárcsázó beállítás</string>
+    <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
+    <string name="vibration_title">Telefon rezgés</string>
 </resources>
