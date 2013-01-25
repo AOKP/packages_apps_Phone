@@ -115,6 +115,7 @@
             <provider android:name="MSimIccProvider"
                       android:authorities="iccmsim"
                       android:multiprocess="true"
+                      android:exported="true"
                       android:readPermission="android.permission.READ_CONTACTS"
                       android:writePermission="android.permission.WRITE_CONTACTS" />
 
@@ -158,6 +159,24 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.item/sim-contact" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ContactScreenActivity"
+            android:label="@string/ContactScreen">
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="ExportContactsToSim"
+            android:label="@string/ExportContactScreen">
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
