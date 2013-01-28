@@ -643,4 +643,6 @@
     <string name="national_roaming">Národní datový roaming</string>
     <string name="national_roaming_enable">Připojit k datové síti během národního roamingu</string>
     <string name="national_roaming_disable">Nepřipojovat k datové síti během národního roamingu</string>
+    <string name="noise_suppression_title">Potlačení šumu</string>
+    <string name="noise_suppression_summary">Zapnout potlačení šumu u hovorů</string>
 </resources>
