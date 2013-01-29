@@ -42,10 +42,11 @@ static jobject mediaHandlerObject = NULL;
 
 static jint dpl_init(JNIEnv *e, jobject o) {
     ALOGD("%s", __func__);
+    jint error = -1;
     if (vt_apis && vt_apis->initImsThinClient) {
-        vt_apis->initImsThinClient();
+        error = vt_apis->initImsThinClient();
     }
-    return 0;
+    return error;
 }
 
 static void dpl_deinit(JNIEnv *e, jobject o) {

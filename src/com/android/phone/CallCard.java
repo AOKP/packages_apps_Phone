@@ -751,11 +751,13 @@ public class CallCard extends LinearLayout
         }
         int callType = getVideoCallType(call);
         switch (state) {
-            case DIALING: // These are an intentional fall through(s)
-            case ALERTING:
-                initVideoCall(callType);
+            case INCOMING:
                 break;
 
+            case DIALING: // These are an intentional fall through(s)
+                          // showVideoCallWidgets is added for DIALING to
+                          // support early media
+            case ALERTING:
             case ACTIVE:
                 initVideoCall(callType);
 

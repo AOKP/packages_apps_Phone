@@ -80,8 +80,12 @@ public class MediaHandler extends Handler {
         System.loadLibrary("vt_jni");
     }
 
-    /*
+    /**
      * Initialize Media
+     * @return
+       DPL_INIT_SUCCESSFUL         0  initialization is successful.
+       DPL_INIT_FAILURE   -1  error in initialization of QMI or other components.
+       DPL_INIT_MULTIPLE   -2  trying to initialize an already initialized library.
      */
     public int init() {
         if (!mInitCalledFlag) {
@@ -133,7 +137,7 @@ public class MediaHandler extends Handler {
      * @param st
      */
     public static void setSurface(SurfaceTexture st) {
-        Log.d(TAG, "setSurface(" + st + ")");
+        Log.d(TAG, "setSurface(SurfaceTexture " + st + ")");
         mSurface = st;
         nativeSetSurface(st);
     }

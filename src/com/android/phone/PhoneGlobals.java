@@ -1873,7 +1873,7 @@ public class PhoneGlobals extends ContextWrapper
     private void handleCallStateChanged() {
         if (mCM.isImsPhoneActive()) {
             int error = mVideoCallManager.mediaInit();
-            if (error == 0) {
+            if (error == VideoCallManager.MEDIA_INIT_SUCCESS) {
                 mIsMediaInitialized = true;
                 mVideoCallManager.setFarEndSurface();
             } else {

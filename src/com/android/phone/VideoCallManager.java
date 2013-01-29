@@ -50,6 +50,8 @@ public class VideoCallManager {
     private CameraHandler mCameraHandler;
     private MediaHandler mMediaHandler;
 
+    public static final int MEDIA_INIT_SUCCESS = 0;
+
     /** @hide */
     private VideoCallManager(Context context) {
         log("Instantiating VideoCallManager");
