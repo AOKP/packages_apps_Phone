@@ -435,6 +435,11 @@ public class PhoneUtils {
                     .getString("button_voice_quality_key", "0");
             return Integer.parseInt(conf);
         }
+        static int flipAction(Context context) {
+            String s = PreferenceManager.getDefaultSharedPreferences(context)
+                      .getString("flip_action", "0");
+            return Integer.parseInt(s);
+        }
     }
 
     static boolean hangupRingingCall(Call ringing) {

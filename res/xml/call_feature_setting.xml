@@ -47,6 +47,14 @@
     android:key="pref_advanced_settings"
     android:title="@string/advanced_setting">
 
+    <ListPreference
+        android:key="flip_action"
+        android:title="@string/flip_action_title"
+        android:dialogTitle="@string/flip_action_dialog_title"
+        android:entries="@array/flip_action_setting_entries"
+        android:entryValues="@array/flip_action_setting_values"
+        android:defaultValue="0" />
+
     <CheckBoxPreference
         android:key="button_vibrate_outgoing"
         android:title="@string/vibrate_outgoing"
