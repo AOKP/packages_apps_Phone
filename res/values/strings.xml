@@ -1074,7 +1074,10 @@
 
     <!-- For incoming calls, this is a string we can get from a CDMA network instead of
          the actual phone number, to indicate there's no number present.  DO NOT TRANSLATE. -->
-    <string name="absent_num" translatable="false">ABSENT NUMBER</string>
+    <string-array name="absent_num" translatable="false">
+        <item>ABSENT NUMBER</item>
+        <item>ABSENTNUMBER</item>
+    </string-array>
 
     <!-- Preference for Voicemail service provider under "Voicemail" settings.
          [CHAR LIMIT=40] -->
@@ -1455,8 +1458,16 @@
     <!-- Dialog title for the vibration settings for voice mail notifications [CHAR LIMIT=40]-->
     <string name="voicemail_notification_vibarte_when_dialog_title" msgid="8995274609647451109">Vibrate</string>
 
-    <!-- Voicemail ringtone title [CHAR LIMIT=40] -->
-    <string name="voicemail_notification_ringtone_title">Ringtone</string>
+    <!-- Voicemail ringtone title. The user clicks on this preference to select
+         which sound to play when a voicemail notification is received.
+         [CHAR LIMIT=40] -->
+    <string name="voicemail_notification_ringtone_title">Sound</string>
+
+    <!--  The string used to describe a notification if it is the default one in the system. For
+          example, if the user selects the default notification, it will appear as something like
+          Default sound(Capella) in the notification summary.
+          [CHAR LIMIT=40] -->
+    <string name="default_notification_description">Default sound (<xliff:g id="default_sound_title">%1$s</xliff:g>)</string>
 
     <!-- The vibrate notification modes for voicemail notifications -->
     <string-array name="voicemail_notification_vibrate_when_entries">
@@ -1491,10 +1502,6 @@
          [CHAR LIMIT=40] -->
     <string name="dtmf_tone_enable_title">Dial pad touch tones</string>
 
-    <!-- Title for the category "ringtone", which is shown above ringote settings
-         [CHAR LIMIT=40] -->
-    <string name="preference_category_ringtone">Ringtone</string>
-
     <!-- CYANOGENMOD ADDITIONS START -->
 
     <!-- Mobile network settings screen, setting check box name -->
@@ -1511,4 +1518,5 @@
     <string name="noise_suppression_summary">Enable noise suppression for calls</string>
     <!-- End Noise suppression -->
 
+    <string name="preference_category_ringtone">Ringtone &amp; Vibrate</string>
 </resources>
