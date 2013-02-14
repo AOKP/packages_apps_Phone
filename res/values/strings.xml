@@ -364,8 +364,6 @@
     <string name="preferred_network_mode_evdo_only_summary">Preferred network mode: EvDo only</string>
     <!-- Mobile network settings, summary for preferred network mode LTE / CDMA[CHAR LIMIT=100] -->
     <string name="preferred_network_mode_lte_cdma_summary">Preferred network mode: LTE / CDMA</string>
-    <!-- Mobile network settings, summary for preferred network mode LTE / CDMA / EvDo [CHAR LIMIT=100] -->
-    <string name="preferred_network_mode_lte_cdma_evdo_summary">Preferred network mode: LTE / CDMA / EvDo</string>
     <!-- Mobile network settings, summary for preferred network mode LTE / GSM/WCDMA [CHAR LIMIT=100] -->
     <string name="preferred_network_mode_lte_gsm_summary">Preferred network mode: LTE / GSM/WCDMA</string>
     <!-- Mobile network settings, summary for preferred network mode LTE / CMDA / EvDo / GSM/WCDMA [CHAR LIMIT=100] -->
@@ -373,8 +371,25 @@
     <!-- Mobile network settings, summary for preferred network mode LTE / WCDMA [CHAR LIMIT=100] -->
     <string name="preferred_network_mode_lte_wcdma_summary">Preferred network mode: LTE / WCDMA</string>
 
+    <!-- Mobile network settings, summary for preferred network mode CDMA/EvDo/GSM/WCDMA[CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary">Preferred network mode: CDMA/EvDo/GSM/WCDMA</string>
+    <!-- Mobile network settings, summary for preferred network mode LTE [CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_summary">Preferred network mode: LTE </string>
+    <!-- Mobile network settings, summary for preferred network mode GSM/WCDMA/LTE [CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary">Preferred network mode: GSM/WCDMA/LTE</string>
+    <!-- Mobile network settings, summary for preferred network mode CDMA+LTE/EVDO[CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Preferred network mode: CDMA+LTE/EVDO</string>
+    <!-- Mobile network settings, summary for preferred network mode Global[CHAR LIMIT=100] -->
+    <string name="preferred_network_mode_global_summary">Preferred network mode: Global</string>
+
+
     <string-array name="preferred_network_mode_choices">
+        <item>LTE / WCDMA</item>
+        <item>LTE</item>
         <item>Global</item>
+        <item>GSM/WCDMA/LTE</item>
+        <item>CDMA + LTE/EvDo</item>
+        <item>CDMA/EvDo/GSM/WCDMA</item>
         <item>EvDo only</item>
         <item>CDMA w/o EvDo</item>
         <item>CDMA/EvDo auto</item>
@@ -384,6 +399,11 @@
         <item>GSM/WCDMA preferred</item>
     </string-array>
     <string-array name="preferred_network_mode_values"  translatable="false">
+        <item>"12"</item>
+        <item>"11"</item>
+        <item>"10"</item>
+        <item>"9"</item>
+        <item>"8"</item>
         <item>"7"</item>
         <item>"6"</item>
         <item>"5"</item>
@@ -1074,7 +1094,10 @@
 
     <!-- For incoming calls, this is a string we can get from a CDMA network instead of
          the actual phone number, to indicate there's no number present.  DO NOT TRANSLATE. -->
-    <string name="absent_num" translatable="false">ABSENT NUMBER</string>
+    <string-array name="absent_num" translatable="false">
+        <item>ABSENT NUMBER</item>
+        <item>ABSENTNUMBER</item>
+    </string-array>
 
     <!-- Preference for Voicemail service provider under "Voicemail" settings.
          [CHAR LIMIT=40] -->
@@ -1455,8 +1478,16 @@
     <!-- Dialog title for the vibration settings for voice mail notifications [CHAR LIMIT=40]-->
     <string name="voicemail_notification_vibarte_when_dialog_title" msgid="8995274609647451109">Vibrate</string>
 
-    <!-- Voicemail ringtone title [CHAR LIMIT=40] -->
-    <string name="voicemail_notification_ringtone_title">Ringtone</string>
+    <!-- Voicemail ringtone title. The user clicks on this preference to select
+         which sound to play when a voicemail notification is received.
+         [CHAR LIMIT=40] -->
+    <string name="voicemail_notification_ringtone_title">Sound</string>
+
+    <!--  The string used to describe a notification if it is the default one in the system. For
+          example, if the user selects the default notification, it will appear as something like
+          Default sound(Capella) in the notification summary.
+          [CHAR LIMIT=40] -->
+    <string name="default_notification_description">Default sound (<xliff:g id="default_sound_title">%1$s</xliff:g>)</string>
 
     <!-- The vibrate notification modes for voicemail notifications -->
     <string-array name="voicemail_notification_vibrate_when_entries">
@@ -1491,9 +1522,9 @@
          [CHAR LIMIT=40] -->
     <string name="dtmf_tone_enable_title">Dial pad touch tones</string>
 
-    <!-- Title for the category "ringtone", which is shown above ringote settings
+    <!-- Title for the category "ringtone", which is shown above ringtone and vibration
+         related settings.
          [CHAR LIMIT=40] -->
-    <string name="preference_category_ringtone">Ringtone</string>
 
     <!-- CYANOGENMOD ADDITIONS START -->
 
@@ -1511,4 +1542,5 @@
     <string name="noise_suppression_summary">Enable noise suppression for calls</string>
     <!-- End Noise suppression -->
 
+    <string name="preference_category_ringtone">Ringtone &amp; Vibrate</string>
 </resources>
