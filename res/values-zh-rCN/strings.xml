@@ -643,5 +643,7 @@
     <string name="national_roaming">全国漫游</string>
     <string name="national_roaming_enable">当全国漫游时允许连接移动数据网络</string>
     <string name="national_roaming_disable">当全国漫游时禁止连接移动数据网络</string>
+    <string name="noise_suppression_title">噪音抑制</string>
+    <string name="noise_suppression_summary">可在通话时抑制噪音</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"铃声和振动"</string>
 </resources>
