@@ -77,6 +77,10 @@
     <string name="apn_settings" msgid="9043423184895642077">"アクセスポイント名"</string>
     <string name="settings_label" msgid="3876743539816984008">"ネットワーク設定"</string>
     <string name="voicemail" msgid="8693759337917898954">"ボイスメール"</string>
+    <!-- Call settings screen, message wait indicator name -->
+    <string name="mwi_notification_title">メッセージ受信インジケーター</string>
+    <!-- Call settings screen, message wait indicator summary -->
+    <string name="mwi_notification_summary">ボイスメールをメッセージ受信インジケーターで通知する</string>
     <string name="voicemail_abbreviated" msgid="2215592488517217448">"VM:"</string>
     <string name="networks" msgid="8873030692174541976">"通信事業者"</string>
     <string name="call_settings" msgid="6112441768261754562">"通話設定"</string>
@@ -189,6 +193,11 @@
         <item>LTE/CDMA/EV-DO</item>
         <item>LTE/CDMA</item>
         <item>CDMA/EV-DO自動</item>
+  </string-array>
+  <string-array name="preferred_network_mode_choices_lte_gsm">
+      <item>LTE/WCDMA</item>
+      <item>LTE/GSM/WCDMA</item>
+      <item>GSM/WCDMAを優先</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"データ通信を有効にする"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"モバイルネットワーク経由のデータアクセスを有効にする"</string>
