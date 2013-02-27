@@ -276,7 +276,11 @@ public class MobileNetworkSettings extends PreferenceActivity
 
         // upon resumption from the sub-activity, make sure we re-enable the
         // preferences.
+        // TODO: BUG: This will reenable all preferences, including ones that
+        // are supposed to be disabled (operator selection button is one example)
         getPreferenceScreen().setEnabled(true);
+        // TODO: Call this to redisable preferences due to bug above
+        if (mGsmUmtsOptions != null) mGsmUmtsOptions.onResume();
 
         ConnectivityManager cm =
                 (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);

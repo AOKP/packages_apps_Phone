@@ -2,7 +2,8 @@
  * Copyright (C) 2008 The Android Open Source Project
  * Copyright (c) 2011-2013 The Linux Foundation. All rights reserved.
  *
- * Not a Contribution.
+ * Not a Contribution, Apache license notifications and license are retained
+ * for attribution purposes only
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,26 +75,36 @@ public class GsmUmtsOptions {
         enableScreen();
     }
 
+    public void onResume() {
+        updateOperatorSelectionVisibility();
+    }
+
     public void enableScreen() {
         if (mPhone.getPhoneType() != PhoneConstants.PHONE_TYPE_GSM) {
-            log("Not a GSM phone");
+            log("Not a GSM phone, disabling GSM preferences (apn, use2g, select operator)");
             mButtonAPNExpand.setEnabled(false);
             mButtonOperatorSelectionExpand.setEnabled(false);
             mButtonPrefer2g.setEnabled(false);
         }
-        if (mButtonOperatorSelectionExpand != null) {
-            if (mPhone.getPhoneType() != PhoneConstants.PHONE_TYPE_GSM) {
+        updateOperatorSelectionVisibility();
+    }
+
+    private void updateOperatorSelectionVisibility() {
+        log("updateOperatorSelectionVisibility.");
+        if (mButtonOperatorSelectionExpand == null) {
+            android.util.Log.e(LOG_TAG, "mButtonOperatorSelectionExpand is null");
+            return;
+        }
+        if (!mPhone.isManualNetSelAllowed()) {
+            log("Manual network selection not allowed.Disabling Operator Selection menu.");
+            mButtonOperatorSelectionExpand.setEnabled(false);
+        } else if (mPrefActivity.getResources().getBoolean(R.bool.csp_enabled)) {
+            if (mPhone.isCspPlmnEnabled()) {
+                log("[CSP] Enabling Operator Selection menu.");
+                mButtonOperatorSelectionExpand.setEnabled(true);
+            } else {
+                log("[CSP] Disabling Operator Selection menu.");
                 mButtonOperatorSelectionExpand.setEnabled(false);
-            } else if (!mPhone.isManualNetSelAllowed()) {
-                mButtonOperatorSelectionExpand.setEnabled(false);
-            } else if (mPrefActivity.getResources().getBoolean(R.bool.csp_enabled)) {
-                if (mPhone.isCspPlmnEnabled()) {
-                    log("[CSP] Enabling Operator Selection menu.");
-                    mButtonOperatorSelectionExpand.setEnabled(true);
-                } else {
-                    log("[CSP] Disabling Operator Selection menu.");
-                    mButtonOperatorSelectionExpand.setEnabled(false);
-                }
             }
         }
     }
