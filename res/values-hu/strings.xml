@@ -631,7 +631,32 @@
     <string name="dialer_ui_settings_title">Tárcsázó beállítás</string>
     <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
     <string name="vibration_title">Telefon rezgés</string>
-    <string name="preference_category_ringtone" msgid="5197960752529332721">"Csengőhang és rezgés"</string>
-    <string name="perm_change_mobile_network">Hálózat módosítása (2G/3G)</string>
-    <string name="perm_change_mobile_network_desc">Az ilyen engedéllyel rendelkező alkalmazás, bármikor válthat 2G és 3G közt. A 3G gyorsabb, jobban meríti az akkumulátort, és több pénzbe is kerülhet a nagyobb adatforgalom miatt.</string>
+
+    <!-- CYANOGENMOD ADDITIONS START -->
+
+    <!-- Mobile network settings screen, setting check box name -->
+    <string name="national_roaming">Nemzetközi adat barangolás</string>
+    <!-- Mobile network settings screen, setting summary text when check box is selected -->
+    <string name="national_roaming_enable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
+    <!-- Mobile network settings screen, setting summary text when check box is clear -->
+    <string name="national_roaming_disable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
+
+    <!-- CYANOGENMOD ADDITIONS END -->
+
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Zaj elnyomás</string>
+    <string name="noise_suppression_summary">Zaj elnyomás engedélyezése hívás közben</string>
+    <!-- End Noise suppression -->
+
+    <string name="preference_category_ringtone">Csengés &amp; Rezgés</string>
+    <!-- Advanced Settings -->
+    <string name="advanced_setting">Haladó beállítások</string>
+    <string name="vibrate_outgoing">Rezgés válasznál</string>
+    <string name="vibrate_outgoing_sum">Rezeg, ha felveszed a bejövő hívást</string>
+    <string name="vibrate_60">60 mp-ként rezeg</string>
+    <string name="vibrate_60_sum">Kimenő hívásnál 60 mp-ként rezeg jelzésként</string>
+    <string name="vibrate_hangup">Rezgés a végén</string>
+    <string name="vibrate_hangup_sum">Rezeg a hívás végénél</string>
+    <string name="vibrate_call_waiting">Rezgés hívás várakoztatásnál</string>
+    <string name="vibrate_call_waiting_sum">Rezeg, ha hívás várakoztatás van</string>
 </resources>
