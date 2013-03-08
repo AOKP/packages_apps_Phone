@@ -645,9 +645,18 @@
     <string name="national_roaming">全国漫游</string>
     <string name="national_roaming_enable">当全国漫游时允许连接移动数据网络</string>
     <string name="national_roaming_disable">当全国漫游时禁止连接移动数据网络</string>
+    <string name="perm_change_mobile_network">2G／3G移动网络切换</string>
+    <string name="perm_change_mobile_network_desc">获得该权限的应用程序可以在任何时候在2G/3G移动网络之间切换。使用3G网络数据存取速度较快，但相应的会消耗较多的电量和资费。</string>
     <string name="noise_suppression_title">噪音抑制</string>
     <string name="noise_suppression_summary">可在通话时抑制噪音</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"铃声和振动"</string>
-    <string name="perm_change_mobile_network">2G／3G移动网络切换</string>
-    <string name="perm_change_mobile_network_desc">获得该权限的应用程序可以在任何时候在2G/3G移动网络之间切换。使用3G网络存取资料的速度会比较快，但是也会相应消耗比较多的电量并消耗您更多金钱。</string>
+    <string name="advanced_setting">高级设置</string>
+    <string name="vibrate_outgoing">接通时振动</string>
+    <string name="vibrate_outgoing_sum">当拨出电话被接听时振动提示</string>
+    <string name="vibrate_60">分钟提示振动</string>
+    <string name="vibrate_60_sum">当拨出电话时每分钟振动提示</string>
+    <string name="vibrate_hangup">挂断时振动</string>
+    <string name="vibrate_hangup_sum">当结束通话时振动提示</string>
+    <string name="vibrate_call_waiting">等待时振动</string>
+    <string name="vibrate_call_waiting_sum">当通话等待时振动提示</string>
 </resources>
