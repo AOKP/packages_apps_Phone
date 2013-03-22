@@ -210,7 +210,7 @@
         android:layout_gravity="center|bottom"
         android:orientation="vertical"
         android:gravity="bottom"
-        android:background="@color/incall_call_banner_background">
+        android:background="@color/transparent">
 
     <com.android.internal.widget.multiwaveview.GlowPadView
         android:id="@+id/incomingCallWidget"
