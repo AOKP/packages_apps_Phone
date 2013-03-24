@@ -345,6 +345,8 @@
     <string name="voice_privacy_summary" msgid="3159383389833516214">"拡張プライバシーモードを有効にする"</string>
     <string name="tty_mode_option_title" msgid="9033098925144434669">"TTYモード"</string>
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"TTYモードの設定"</string>
+    <string name="ring_delay_title">着信遅延</string>
+    <string name="ring_delay_summary">着信遅延を選択する</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"自動再試行"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"自動再試行モードを有効にする"</string>
     <string name="exit_to_home_screen_title">通話終了後に元の画面に戻る</string>
@@ -476,6 +478,15 @@
     <item msgid="1937509904407445684">"TTY HCO"</item>
     <item msgid="5644925873488772224">"TTY VCO"</item>
   </string-array>
+
+    <!-- Ring Delay entries.  -->
+    <string-array name="ring_delay_entries">
+        <item>着信遅延なし</item>
+        <item>3秒</item>
+        <item>6秒</item>
+        <item>9秒</item>
+    </string-array>
+
     <string name="dtmf_tones_title" msgid="5163153771291340803">"DTMFトーン"</string>
     <string name="dtmf_tones_summary" msgid="3351820372864020331">"DTMFトーンの長さを設定します"</string>
   <string-array name="dtmf_tone_entries">
@@ -651,6 +662,10 @@
     <string name="national_roaming_enable">国内ローミング時にデータサービスに接続する</string>
     <string name="national_roaming_disable">国内ローミング時にデータサービスに接続しない</string>
 
+    <!-- Permission for notification-bar network toggle -->
+    <string name="perm_change_mobile_network">ネットワークを変更(2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">この権限を許可されたアプリケーションは、いつでも2G/3Gデータの切り替えが可能です。3Gは高速ですが、バッテリ消費が増加します。また、キャリアの課金も増加することがあります。</string>
+
     <!-- Noise suppression -->
     <string name="noise_suppression_title">ノイズ抑制</string>
     <string name="noise_suppression_summary">通話ノイズを抑制する</string>
@@ -669,6 +684,4 @@
     <string name="vibrate_call_waiting">呼出中のバイブレーション</string>
     <string name="vibrate_call_waiting_sum">呼び出し中にバイブレーションする</string>
 
-    <string name="perm_change_mobile_network">ネットワークを変更(2G/3G)</string>
-    <string name="perm_change_mobile_network_desc">この権限を許可されたアプリケーションは、いつでも2G/3Gデータの切り替えが可能です。3Gは高速ですが、バッテリ消費が増加します。また、キャリアの課金も増加することがあります。</string>
 </resources>
