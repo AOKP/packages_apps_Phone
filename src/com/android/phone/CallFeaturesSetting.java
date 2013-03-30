@@ -193,6 +193,8 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
     private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
 
+    private static final String BUTTON_VOICE_QUALITY_KEY = "button_voice_quality_key";
+
     private static final String VM_NUMBERS_SHARED_PREFERENCES_NAME = "vm_numbers";
 
     private static final String BUTTON_SIP_CALL_OPTIONS =
@@ -304,6 +306,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private ListPreference mButtonSipCallOptions;
     private CheckBoxPreference mMwiNotification;
     private ListPreference mVoicemailProviders;
+    private ListPreference mButtonVoiceQuality;
     private PreferenceScreen mVoicemailSettings;
     private Preference mVoicemailNotificationRingtone;
     private CheckBoxPreference mVoicemailNotificationVibrate;
@@ -647,9 +650,21 @@ public class CallFeaturesSetting extends PreferenceActivity
             mButtonRingDelay.setSummary(mButtonRingDelay.getEntry());
         } else if (preference == mButtonSipCallOptions) {
             handleSipCallOptionsChange(objValue);
+        } else if (preference == mButtonVoiceQuality) {
+            if (mButtonVoiceQuality != null) {
+                updateVoiceQualitySummary((String) objValue);
+            }
         }
         // always let the preference setting proceed.
         return true;
+    }
+
+    private void updateVoiceQualitySummary(String action) {
+        int i = Integer.parseInt(action);
+        if (mButtonVoiceQuality != null) {
+            String[] entries = getResources().getStringArray(R.array.voice_quality_entries);
+            mButtonVoiceQuality.setSummary(getString(R.string.voice_quality_summary, entries[i]));
+        }
     }
 
     @Override
@@ -1587,6 +1602,8 @@ public class CallFeaturesSetting extends PreferenceActivity
         mButtonRingDelay = (ListPreference) findPreference(BUTTON_RING_DELAY_KEY);
         mButtonNoiseSuppression = (CheckBoxPreference) findPreference(BUTTON_NOISE_SUPPRESSION_KEY);
         mVoicemailProviders = (ListPreference) findPreference(BUTTON_VOICEMAIL_PROVIDER_KEY);
+        mButtonVoiceQuality = (ListPreference) findPreference(BUTTON_VOICE_QUALITY_KEY);
+
         if (mVoicemailProviders != null) {
             mVoicemailProviders.setOnPreferenceChangeListener(this);
             mVoicemailSettings = (PreferenceScreen)findPreference(BUTTON_VOICEMAIL_SETTING_KEY);
@@ -1667,6 +1684,10 @@ public class CallFeaturesSetting extends PreferenceActivity
             }
         }
 
+        if (mButtonVoiceQuality != null) {
+            mButtonVoiceQuality.setOnPreferenceChangeListener(this);
+        }
+
         if (!getResources().getBoolean(R.bool.world_phone)) {
             Preference options = prefSet.findPreference(BUTTON_CDMA_OPTIONS);
             if (options != null)
@@ -1688,6 +1709,11 @@ public class CallFeaturesSetting extends PreferenceActivity
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
             }
+        }
+
+        if (TextUtils.isEmpty(getResources().getString(R.string.voice_quality_param))) {
+            prefSet.removePreference(mButtonVoiceQuality);
+            mButtonVoiceQuality = null;
         }
 
         // create intent to bring up contact list
@@ -1892,6 +1918,10 @@ public class CallFeaturesSetting extends PreferenceActivity
         if (mButtonNoiseSuppression != null) {
             int nsp = Settings.System.getInt(getContentResolver(), Settings.System.NOISE_SUPPRESSION, 1);
             mButtonNoiseSuppression.setChecked(nsp != 0);
+        }
+
+        if (mButtonVoiceQuality != null) {
+            updateVoiceQualitySummary(mButtonVoiceQuality.getValue());
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(

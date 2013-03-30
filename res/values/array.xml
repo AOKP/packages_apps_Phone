@@ -98,4 +98,18 @@
         <item>@null</item>
     </array>
 
+    <string-array translatable="false" name="voice_quality_entries">
+        <item>@string/voice_quality_entry_normal</item>
+        <item>@string/voice_quality_entry_clear</item>
+        <item>@string/voice_quality_entry_crisp</item>
+        <item>@string/voice_quality_entry_bright</item>
+    </string-array>
+
+    <string-array translatable="false" name="voice_quality_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
 </resources>
