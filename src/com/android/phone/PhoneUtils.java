@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
+ * Blacklist - Copyright (C) 2013 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +25,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -391,20 +393,16 @@ public class PhoneUtils {
 
     static class PhoneSettings {
         static boolean vibOn60Secs(Context context) {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                      .getBoolean("button_vibrate_60", false);
+            return getPrefs(context).getBoolean("button_vibrate_60", false);
         }
         static boolean vibHangup(Context context) {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                      .getBoolean("button_vibrate_hangup", false);
+            return getPrefs(context).getBoolean("button_vibrate_hangup", false);
         }
         static boolean vibOutgoing(Context context) {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                      .getBoolean("button_vibrate_outgoing", false);
+            return getPrefs(context).getBoolean("button_vibrate_outgoing", false);
         }
         static boolean vibCallWaiting(Context context) {
-            return PreferenceManager.getDefaultSharedPreferences(context)
-                      .getBoolean("button_vibrate_call_waiting", false);
+            return getPrefs(context).getBoolean("button_vibrate_call_waiting", false);
         }
 
         /* Voice quality filter */
@@ -434,6 +432,18 @@ public class PhoneUtils {
             String conf = PreferenceManager.getDefaultSharedPreferences(context)
                     .getString("button_voice_quality_key", "0");
             return Integer.parseInt(conf);
+        }
+        static boolean isBlacklistEnabled(Context context) {
+            return getPrefs(context).getBoolean("button_enable_blacklist", false);
+        }
+        static boolean isBlacklistNotifyEnabled(Context context) {
+            return getPrefs(context).getBoolean("button_nofify", false);
+        }
+        static boolean isBlacklistRegexEnabled(Context context) {
+            return getPrefs(context).getBoolean("button_blacklist_regex", false);
+        }
+        private static SharedPreferences getPrefs(Context context) {
+            return PreferenceManager.getDefaultSharedPreferences(context);
         }
     }
 
@@ -1650,7 +1660,11 @@ public class PhoneUtils {
             // return it to the user.
 
             cit = new CallerInfoToken();
-            cit.currentInfo = (CallerInfo) userDataObject;
+            if (userDataObject instanceof String) { // only blacklist will cause this, so just ignore this.
+                cit.currentInfo = new CallerInfo();
+            } else {
+                cit.currentInfo = (CallerInfo) userDataObject;
+            }
             cit.asyncQuery = null;
             cit.isFinal = true;
             // since the query is already done, call the listener.
