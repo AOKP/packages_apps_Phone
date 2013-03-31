@@ -1565,4 +1565,28 @@
     <string name="vibrate_hangup_sum">Vibrate when a call has ended</string>
     <string name="vibrate_call_waiting">Vibrate call waiting</string>
     <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
+
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Blacklist</string>
+    <string name="enable_blacklist_title">Enable blacklist</string>
+    <string name="blacklist_summary_disabled">Disabled</string>
+    <string name="blacklist_summary">Incoming calls from phone numbers in the blacklist will be blocked</string>
+    <string name="blacklist_notify">Show notification</string>
+    <string name="blacklist_regex_title">Use wildcards</string>
+    <string name="blacklist_regex_summary">Use . as a wildcard and * for repetition. E.g. 123.* blocks numbers starting with 123 and .*123.* blocks numbers containing 123</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Add phone number</string>
+    <string name="add_to_blacklist">Add to blacklist</string>
+    <string name="add_to_blacklist_message">Future calls from %s will be blocked</string>
+    <string name="remove_blacklist_number_title">Remove number</string>
+    <string name="remove_blacklist_number">Do you want to remove %s from the blacklist?</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Blocked a call from %s</string>
+    <string name="unblock_number">Unblock</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Blacklist</string>
+
 </resources>
