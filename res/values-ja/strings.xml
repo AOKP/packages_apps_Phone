@@ -673,6 +673,15 @@
 
     <string name="preference_category_ringtone" msgid="5197960752529332721">"着信音とバイブレーション"</string>
 
+    <!-- Voice quality filter -->
+    <string name="voice_quality_preferences_title">音声品質</string>
+    <string name="voice_quality_summary">現在の音声プロファイル: <xliff:g id="action">%s</xliff:g></string>
+    <!-- Do not remove those, they're used from overlays -->
+    <string name="voice_quality_entry_normal">ノーマル</string>
+    <string name="voice_quality_entry_clear">クリア</string>
+    <string name="voice_quality_entry_crisp">クリスプ</string>
+    <string name="voice_quality_entry_bright">ブライト</string>
+
     <!-- Advanced Settings -->
     <string name="advanced_setting">拡張設定</string>
     <string name="vibrate_outgoing">応答時のバイブレーション</string>
