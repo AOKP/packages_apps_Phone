@@ -439,6 +439,9 @@ public class PhoneUtils {
         static boolean isBlacklistNotifyEnabled(Context context) {
             return getPrefs(context).getBoolean("button_nofify", false);
         }
+        static boolean isBlacklistPrivateNumberEnabled(Context context) {
+            return getPrefs(context).getBoolean("button_blacklist_private_numbers", false);
+        }
         static boolean isBlacklistRegexEnabled(Context context) {
             return getPrefs(context).getBoolean("button_blacklist_regex", false);
         }
