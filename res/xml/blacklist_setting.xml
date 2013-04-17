@@ -13,6 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:phone="http://schemas.android.com/apk/res/com.android.phone"
     android:key="button_blacklist"
@@ -29,7 +30,8 @@
 
     <CheckBoxPreference
         android:key="button_blacklist_private_numbers"
-        android:title="@string/blacklist_private_numbers"
+        android:title="@string/blacklist_private_numbers_title"
+        android:summary="@string/blacklist_private_numbers_summary"
         android:dependency="button_enable_blacklist" />
 
     <CheckBoxPreference
