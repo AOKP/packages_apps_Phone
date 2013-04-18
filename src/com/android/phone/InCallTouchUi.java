@@ -195,7 +195,9 @@ public class InCallTouchUi extends FrameLayout
 
         // Blacklist functionality
         mAddBlacklistButton = (ImageButton) mInCallControls.findViewById(R.id.addBlacklistButton);
-        mAddBlacklistButton.setOnClickListener(this);
+        if (mAddBlacklistButton != null) {
+            mAddBlacklistButton.setOnClickListener(this);
+        }
 
         // TODO: Back when these buttons had text labels, we changed
         // the label of mSwapButton for CDMA as follows:
@@ -548,10 +550,10 @@ public class InCallTouchUi extends FrameLayout
         updateAudioButton(inCallControlState);
 
         // "Add to black list"
-        if (PhoneUtils.PhoneSettings.isBlacklistEnabled(getContext())) {
-            mAddBlacklistButton.setVisibility(View.VISIBLE);
-        } else {
-            mAddBlacklistButton.setVisibility(View.GONE);
+        if (mAddBlacklistButton != null) {
+            boolean visible = PhoneUtils.PhoneSettings.isBlacklistEnabled(getContext()) &&
+                    inCallControlState.canBlacklistCall;
+            mAddBlacklistButton.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
         // "Hold" / "Swap":
