@@ -1197,10 +1197,20 @@ public class CallNotifier extends Handler
             final boolean isEmergencyNumber =
                     PhoneNumberUtils.isLocalEmergencyNumber(number, mApplication);
             // Set the "type" to be displayed in the call log (see constants in CallLog.Calls)
+            int rejectToMiss = 0;
+            rejectToMiss = android.provider.Settings.System.getInt(mApplication.getContentResolver(),
+                            android.provider.Settings.System.REJECT_TO_MISS, 0);
+
             final int callLogType;
             if (c.isIncoming()) {
-                callLogType = (cause == Connection.DisconnectCause.INCOMING_MISSED ?
-                               Calls.MISSED_TYPE : Calls.INCOMING_TYPE);
+            	if (rejectToMiss == 0){
+                    callLogType = (cause == Connection.DisconnectCause.INCOMING_MISSED ?
+                            Calls.MISSED_TYPE : Calls.INCOMING_TYPE);
+            	} else {
+            		callLogType = ( (cause == Connection.DisconnectCause.INCOMING_MISSED) ||	
+            				(cause == Connection.DisconnectCause.INCOMING_REJECTED) ?
+            						Calls.MISSED_TYPE : Calls.INCOMING_TYPE);
+            	}
             } else {
                 callLogType = Calls.OUTGOING_TYPE;
             }
