@@ -1565,4 +1565,10 @@
     <string name="vibrate_hangup_sum">Vibrate when a call has ended</string>
     <string name="vibrate_call_waiting">Vibrate call waiting</string>
     <string name="vibrate_call_waiting_sum">Vibrate on call waiting</string>
+
+    <!-- Reject calls listed as missed -->
+    <string name="reject_to_miss">Rejected calls are missed calls</string>
+    <string name="reject_to_miss_summary_on">Rejected calls are Missed calls in Log</string>
+    <string name="reject_to_miss_summary_off">Rejected calls are Received calls in Log</string>
+
 </resources>

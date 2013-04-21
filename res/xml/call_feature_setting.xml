@@ -68,7 +68,7 @@
         android:persistent="true"
         android:summary="@string/vibrate_call_waiting_sum"/>
   </PreferenceCategory>
-  
+
   <PreferenceCategory
       android:key="button_misc_category_key"
       android:title="@string/other_settings"
@@ -182,6 +182,14 @@
         android:title="@string/hac_mode_title"
         android:persistent="true"
         android:summary="@string/hac_mode_summary"/>
+
+     <CheckBoxPreference
+        android:key="button_reject_to_miss_key"
+        android:title="@string/reject_to_miss"
+        android:summaryOn="@string/reject_to_miss_summary_on"
+        android:summaryOff="@string/reject_to_miss_summary_off"
+        android:persistent="true"
+        android:summary="@string/reject_to_miss_summary_on"/>
 
      <CheckBoxPreference
         android:key="button_exit_to_home_screen_key"
