@@ -177,6 +177,8 @@ public class CallFeaturesSetting extends PreferenceActivity
             "button_voicemail_notification_ringtone_key";
     private static final String BUTTON_FDN_KEY   = "button_fdn_key";
     private static final String BUTTON_RESPOND_VIA_SMS_KEY   = "button_respond_via_sms_key";
+    
+    private static final String BUTTON_REJECT_TO_MISS_KEY = "button_reject_to_miss_key";
 
     private static final String BUTTON_RINGTONE_KEY    = "button_ringtone_key";
     private static final String BUTTON_VIBRATE_ON_RING = "button_vibrate_on_ring";
@@ -302,6 +304,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private ListPreference mButtonDTMF;
     private ListPreference mButtonTTY;
     private ListPreference mButtonRingDelay;
+    private CheckBoxPreference mButtonRejectToMiss;
     private CheckBoxPreference mButtonNoiseSuppression;
     private ListPreference mButtonSipCallOptions;
     private CheckBoxPreference mMwiNotification;
@@ -535,6 +538,10 @@ public class CallFeaturesSetting extends PreferenceActivity
             Settings.System.putInt(mPhone.getContext().getContentResolver(),
                     Settings.System.NOISE_SUPPRESSION, nsp);
             return true;
+        } else if (preference == mButtonRejectToMiss){
+        	android.provider.Settings.System.putInt(mPhone.getContext().getContentResolver(),
+                    android.provider.Settings.System.REJECT_TO_MISS,
+                    mButtonRejectToMiss.isChecked() ? 1 : 0);
         } else if (preference == mButtonAutoRetry) {
             android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
                     android.provider.Settings.Global.CALL_AUTO_RETRY,
@@ -1595,6 +1602,7 @@ public class CallFeaturesSetting extends PreferenceActivity
             }
         }
 
+        mButtonRejectToMiss = (CheckBoxPreference) findPreference(BUTTON_REJECT_TO_MISS_KEY);
         mButtonDTMF = (ListPreference) findPreference(BUTTON_DTMF_KEY);
         mButtonAutoRetry = (CheckBoxPreference) findPreference(BUTTON_RETRY_KEY);
         mButtonHAC = (CheckBoxPreference) findPreference(BUTTON_HAC_KEY);
@@ -1682,6 +1690,10 @@ public class CallFeaturesSetting extends PreferenceActivity
                 prefSet.removePreference(mButtonNoiseSuppression);
                 mButtonNoiseSuppression = null;
             }
+        }
+        
+        if (mButtonRejectToMiss != null) {
+        	mButtonRejectToMiss.setOnPreferenceChangeListener(this);
         }
 
         if (mButtonVoiceQuality != null) {
@@ -1918,6 +1930,12 @@ public class CallFeaturesSetting extends PreferenceActivity
         if (mButtonNoiseSuppression != null) {
             int nsp = Settings.System.getInt(getContentResolver(), Settings.System.NOISE_SUPPRESSION, 1);
             mButtonNoiseSuppression.setChecked(nsp != 0);
+        }
+        
+        if (mButtonRejectToMiss != null) {
+        	int rejectToMiss = Settings.System.getInt(getContentResolver(),
+                    Settings.System.REJECT_TO_MISS, 0);
+        	mButtonRejectToMiss.setChecked(rejectToMiss != 0);
         }
 
         if (mButtonVoiceQuality != null) {
