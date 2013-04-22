@@ -42,7 +42,10 @@ import android.provider.ContactsContract.PhoneLookup;
 import android.provider.Settings;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.ServiceState;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -57,6 +60,7 @@ import com.android.internal.telephony.PhoneBase;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.TelephonyCapabilities;
 
+import java.util.ArrayList;
 
 /**
  * NotificationManager-related utility code for the Phone app.
@@ -91,6 +95,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
     static final int CALL_FORWARD_NOTIFICATION = 6;
     static final int DATA_DISCONNECTED_ROAMING_NOTIFICATION = 7;
     static final int SELECTED_OPERATOR_FAIL_NOTIFICATION = 8;
+    static final int BLACKLISTED_CALL_NOTIFICATION = 9;
 
     /** The singleton NotificationMgr instance. */
     private static NotificationMgr sInstance;
@@ -109,8 +114,34 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
 
     public StatusBarHelper statusBarHelper;
 
-    // used to track the missed call counter, default to 0.
-    private int mNumberMissedCalls = 0;
+    // used to track missed calls
+    private static class MissedCallInfo {
+        String name;
+        String number;
+        long date;
+
+        MissedCallInfo(String name, String number, long date) {
+            this.name = name;
+            this.number = number;
+            this.date = date;
+        }
+    };
+    private ArrayList<MissedCallInfo> mMissedCalls = new ArrayList<MissedCallInfo>();
+
+    // used to track blacklisted calls
+    private static class BlacklistedCallInfo {
+        String number;
+        long date;
+        int matchType;
+
+        BlacklistedCallInfo(String number, long date, int matchType) {
+            this.number = number;
+            this.date = date;
+            this.matchType = matchType;
+        }
+    };
+    private ArrayList<BlacklistedCallInfo> mBlacklistedCalls =
+            new ArrayList<BlacklistedCallInfo>();
 
     // Currently-displayed resource IDs for some status bar icons (or zero
     // if no notification is active):
@@ -500,53 +531,63 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
                 + ", date: " + date);
         }
 
-        // title resource id
-        int titleResId;
-        // the text in the notification's line 1 and 2.
-        String expandedText, callName;
-
-        // increment number of missed calls.
-        mNumberMissedCalls++;
-
         // get the name for the ticker text
         // i.e. "Missed call from <caller name or number>"
+        String callName;
         if (name != null && TextUtils.isGraphic(name)) {
             callName = name;
-        } else if (!TextUtils.isEmpty(number)){
+        } else if (!TextUtils.isEmpty(number)) {
             callName = number;
         } else {
             // use "unknown" if the caller is unidentifiable.
             callName = mContext.getString(R.string.unknown);
         }
 
-        // display the first line of the notification:
-        // 1 missed call: call name
-        // more than 1 missed call: <number of calls> + "missed calls"
-        if (mNumberMissedCalls == 1) {
-            titleResId = R.string.notification_missedCallTitle;
-            expandedText = callName;
-        } else {
-            titleResId = R.string.notification_missedCallsTitle;
-            expandedText = mContext.getString(R.string.notification_missedCallsMsg,
-                    mNumberMissedCalls);
-        }
+        // keep track of the call, keeping list sorted from newest to oldest
+        mMissedCalls.add(0, new MissedCallInfo(callName, number, date));
 
         Notification.Builder builder = new Notification.Builder(mContext);
         builder.setSmallIcon(android.R.drawable.stat_notify_missed_call)
                 .setTicker(mContext.getString(R.string.notification_missedCallTicker, callName))
                 .setWhen(date)
-                .setContentTitle(mContext.getText(titleResId))
-                .setContentText(expandedText)
                 .setContentIntent(PendingIntent.getActivity(mContext, 0, callLogIntent, 0))
                 .setAutoCancel(true)
                 .setDeleteIntent(createClearMissedCallsIntent());
+
+        // display the first line of the notification:
+        // 1 missed call: call name
+        // more than 1 missed call: <number of calls> + "missed calls" (+ list of calls)
+        if (mMissedCalls.size() == 1) {
+            builder.setContentTitle(mContext.getText(R.string.notification_missedCallTitle));
+            builder.setContentText(callName);
+        } else {
+            String message = mContext.getString(R.string.notification_missedCallsMsg,
+                    mMissedCalls.size());
+
+            builder.setContentTitle(mContext.getText(R.string.notification_missedCallsTitle));
+            builder.setContentText(message);
+
+            Notification.InboxStyle style = new Notification.InboxStyle(builder);
+
+            for (MissedCallInfo info : mMissedCalls) {
+                style.addLine(formatSingleCallLine(info.name, info.date));
+
+                // only keep number if equal for all calls in order to hide actions
+                // if the calls came from different numbers
+                if (!TextUtils.equals(number, info.number)) {
+                    number = null;
+                }
+            }
+            style.setBigContentTitle(message);
+            style.setSummaryText(" ");
+            builder.setStyle(style);
+        }
 
         // Simple workaround for issue 6476275; refrain having actions when the given number seems
         // not a real one but a non-number which was embedded by methods outside (like
         // PhoneUtils#modifyForSpecialCnapCases()).
         // TODO: consider removing equals() checks here, and modify callers of this method instead.
-        if (mNumberMissedCalls == 1
-                && !TextUtils.isEmpty(number)
+        if (!TextUtils.isEmpty(number)
                 && !TextUtils.equals(number, mContext.getString(R.string.private_num))
                 && !TextUtils.equals(number, mContext.getString(R.string.unknown))){
             if (DBG) log("Add actions with the number " + number);
@@ -566,13 +607,32 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
             }
         } else {
             if (DBG) {
-                log("Suppress actions. number: " + number + ", missedCalls: " + mNumberMissedCalls);
+                log("Suppress actions. number: " + number + ", missedCalls: " + mMissedCalls.size());
             }
         }
 
         Notification notification = builder.getNotification();
         configureLedNotification(notification);
         mNotificationManager.notify(MISSED_CALL_NOTIFICATION, notification);
+    }
+
+    private static final RelativeSizeSpan TIME_SPAN = new RelativeSizeSpan(0.7f);
+
+    private CharSequence formatSingleCallLine(String caller, long date) {
+        int flags = DateUtils.FORMAT_SHOW_TIME;
+        if (!DateUtils.isToday(date)) {
+            flags |= DateUtils.FORMAT_SHOW_WEEKDAY;
+        }
+
+        SpannableStringBuilder lineBuilder = new SpannableStringBuilder();
+        lineBuilder.append(caller);
+        lineBuilder.append("  ");
+
+        int timeIndex = lineBuilder.length();
+        lineBuilder.append(DateUtils.formatDateTime(mContext, date, flags));
+        lineBuilder.setSpan(TIME_SPAN, timeIndex, lineBuilder.length(), 0);
+
+        return lineBuilder;
     }
 
     /** Returns an intent to be invoked when the missed call notification is cleared. */
@@ -588,9 +648,88 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      * @see ITelephony.cancelMissedCallsNotification()
      */
     void cancelMissedCallNotification() {
-        // reset the number of missed calls to 0.
-        mNumberMissedCalls = 0;
+        // reset the list of missed calls
+        mMissedCalls.clear();
         mNotificationManager.cancel(MISSED_CALL_NOTIFICATION);
+    }
+
+    /* package */ void notifyBlacklistedCall(String number, long date, int matchType) {
+        if (!PhoneUtils.PhoneSettings.isBlacklistNotifyEnabled(mContext)) {
+            return;
+        }
+
+        if (VDBG) {
+            log("notifyBlacklistedCall(). number: " + number
+                + ", match type: " + matchType + ", date: " + date);
+        }
+
+        // keep track of the call, keeping list sorted from newest to oldest
+        mBlacklistedCalls.add(0, new BlacklistedCallInfo(number, date, matchType));
+
+        PendingIntent blSettingsIntent = PendingIntent.getActivity(mContext,
+                0, new Intent(mContext, BlacklistSetting.class), 0);
+
+        Notification.Builder builder = new Notification.Builder(mContext);
+        builder.setSmallIcon(R.drawable.ic_block_contact_holo_dark)
+                .setContentIntent(blSettingsIntent)
+                .setContentTitle(mContext.getString(R.string.blacklist_title))
+                .setWhen(date)
+                .setDeleteIntent(createClearMissedCallsIntent());
+
+        // Add the 'Remove block' notification action only for MATCH_LIST items since
+        // MATCH_REGEX items does not have an associated specific number to unblock
+        boolean addUnblockAction = true;
+
+        if (mBlacklistedCalls.size() == 1) {
+            String message = number.equals(Blacklist.PRIVATE_NUMBER)
+                    ? mContext.getString(R.string.blacklist_notification_private_number)
+                    : mContext.getString(R.string.blacklist_notification, number);
+            builder.setContentText(message);
+
+            if (matchType != Blacklist.MATCH_LIST) {
+                addUnblockAction = false;
+            }
+        } else {
+            String message = mContext.getString(R.string.blacklist_notification_multiple,
+                    mBlacklistedCalls.size());
+
+            builder.setContentText(message);
+
+            Notification.InboxStyle style = new Notification.InboxStyle(builder);
+
+            for (BlacklistedCallInfo info : mBlacklistedCalls) {
+                style.addLine(formatSingleCallLine(info.number, info.date));
+
+                if (!TextUtils.equals(number, info.number)) {
+                    addUnblockAction = false;
+                } else if (info.matchType != Blacklist.MATCH_LIST) {
+                    addUnblockAction = false;
+                }
+            }
+            style.setBigContentTitle(message);
+            style.setSummaryText(" ");
+            builder.setStyle(style);
+        }
+
+        if (addUnblockAction) {
+            CharSequence action = mContext.getText(R.string.unblock_number);
+            builder.addAction(R.drawable.ic_unblock_contact_holo_dark,
+                    mContext.getString(R.string.unblock_number),
+                    PhoneGlobals.getUnblockNumberFromNotificationPendingIntent(mContext, number));
+        }
+
+        mNotificationManager.notify(BLACKLISTED_CALL_NOTIFICATION, builder.getNotification());
+    }
+
+    private PendingIntent createClearBlacklistedCallsIntent() {
+        Intent intent = new Intent(mContext, ClearMissedCallsService.class);
+        intent.setAction(ClearMissedCallsService.ACTION_CLEAR_BLACKLISTED_CALLS);
+        return PendingIntent.getService(mContext, 0, intent, 0);
+    }
+
+    void cancelBlacklistedCallNotification() {
+        mBlacklistedCalls.clear();
+        mNotificationManager.cancel(BLACKLISTED_CALL_NOTIFICATION);
     }
 
     private void notifySpeakerphone() {

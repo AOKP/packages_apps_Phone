@@ -437,7 +437,8 @@ public class CallNotifier extends Handler
             c.setUserData(BLACKLIST);
             try {
                 c.hangup();
-                showBlacklistNotification(number, listType);
+                mApplication.notificationMgr.notifyBlacklistedCall(number,
+                        c.getCreateTime(), listType);
             } catch (CallStateException e) {
                 e.printStackTrace();
             }
@@ -2200,37 +2201,5 @@ public class CallNotifier extends Handler
 
     private void log(String msg) {
         Log.d(LOG_TAG, msg);
-    }
-
-    private void showBlacklistNotification(String number, int listType) {
-        Context ctx = mApplication.getApplicationContext();
-        if (!PhoneUtils.PhoneSettings.isBlacklistNotifyEnabled(ctx)) {
-            return;
-        }
-
-        // Build the basic notification
-        Resources res = ctx.getResources();
-        Notification.Builder builder = new Notification.Builder(ctx);
-        builder.setSmallIcon(R.drawable.ic_block_contact_holo_dark);
-        builder.setContentTitle(res.getString(R.string.blacklist_title));
-        String message = number.equals(Blacklist.PRIVATE_NUMBER)
-                ? res.getString(R.string.blacklist_notification_private_number)
-                : res.getString(R.string.blacklist_notification, number);
-        builder.setContentText(message);
-
-        // Add the 'Remove block' notification action only for MATCH_LIST items since
-        // MATCH_REGEX items does not have an associated specific number to unblock
-        if (listType == Blacklist.MATCH_LIST) {
-            Intent intent = new Intent(PhoneGlobals.REMOVE_BLACKLIST);
-            intent.putExtra(PhoneGlobals.EXTRA_NUMBER, number);
-            PendingIntent pi = PendingIntent.getBroadcast(ctx, 0, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            CharSequence action = ctx.getText(R.string.unblock_number);
-            builder.addAction(R.drawable.ic_unblock_contact_holo_dark, action, pi);
-        }
-
-        // Post the notification
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(PhoneGlobals.BL_NOTIFICATION_ID, builder.build());
     }
 }

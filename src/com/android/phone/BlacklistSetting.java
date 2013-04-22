@@ -78,6 +78,7 @@ public class BlacklistSetting extends PreferenceActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        PhoneGlobals.getInstance().notificationMgr.cancelBlacklistedCallNotification();
         updateBlacklist();
     }
 
