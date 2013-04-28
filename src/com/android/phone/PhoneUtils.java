@@ -442,6 +442,9 @@ public class PhoneUtils {
         static boolean isBlacklistPrivateNumberEnabled(Context context) {
             return getPrefs(context).getBoolean("button_blacklist_private_numbers", false);
         }
+        static boolean isBlacklistUnknownNumberEnabled(Context context) {
+            return getPrefs(context).getBoolean("button_blacklist_unknown_numbers", false);
+        }
         static boolean isBlacklistRegexEnabled(Context context) {
             return getPrefs(context).getBoolean("button_blacklist_regex", false);
         }

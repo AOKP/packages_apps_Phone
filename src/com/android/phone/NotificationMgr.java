@@ -564,8 +564,9 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
             String message = mContext.getString(R.string.notification_missedCallsMsg,
                     mMissedCalls.size());
 
-            builder.setContentTitle(mContext.getText(R.string.notification_missedCallsTitle));
-            builder.setContentText(message);
+            builder.setContentTitle(mContext.getText(R.string.notification_missedCallsTitle))
+                    .setContentText(message)
+                    .setNumber(mMissedCalls.size());
 
             Notification.InboxStyle style = new Notification.InboxStyle(builder);
 
@@ -677,13 +678,22 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
                 .setDeleteIntent(createClearMissedCallsIntent());
 
         // Add the 'Remove block' notification action only for MATCH_LIST items since
-        // MATCH_REGEX items does not have an associated specific number to unblock
+        // MATCH_REGEX and MATCH_PRIVATE items does not have an associated specific number
+        // to unblock, and MATCH_UNKNOWN unblock for a single number does not make sense.
         boolean addUnblockAction = true;
 
         if (mBlacklistedCalls.size() == 1) {
-            String message = number.equals(Blacklist.PRIVATE_NUMBER)
-                    ? mContext.getString(R.string.blacklist_notification_private_number)
-                    : mContext.getString(R.string.blacklist_notification, number);
+            String message;
+            switch (matchType) {
+                case Blacklist.MATCH_PRIVATE:
+                    message = mContext.getString(R.string.blacklist_notification_private_number);
+                    break;
+                case Blacklist.MATCH_UNKNOWN:
+                    message = mContext.getString(R.string.blacklist_notification_unknown_number, number);
+                    break;
+                default:
+                    message = mContext.getString(R.string.blacklist_notification, number);
+            }
             builder.setContentText(message);
 
             if (matchType != Blacklist.MATCH_LIST) {
@@ -693,12 +703,17 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
             String message = mContext.getString(R.string.blacklist_notification_multiple,
                     mBlacklistedCalls.size());
 
-            builder.setContentText(message);
+            builder.setContentText(message)
+                    .setNumber(mBlacklistedCalls.size());
 
             Notification.InboxStyle style = new Notification.InboxStyle(builder);
 
             for (BlacklistedCallInfo info : mBlacklistedCalls) {
-                style.addLine(formatSingleCallLine(info.number, info.date));
+                // Takes care of displaying "Private" instead of "0000"
+                String numberString = Blacklist.PRIVATE_NUMBER.equals(info.number)
+                        ? mContext.getString(R.string.blacklist_notification_list_private)
+                        : info.number;
+                style.addLine(formatSingleCallLine(numberString, info.date));
 
                 if (!TextUtils.equals(number, info.number)) {
                     addUnblockAction = false;

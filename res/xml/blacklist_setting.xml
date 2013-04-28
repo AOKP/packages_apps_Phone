@@ -33,6 +33,12 @@
         android:dependency="button_enable_blacklist" />
 
     <CheckBoxPreference
+        android:key="button_blacklist_unknown_numbers"
+        android:title="@string/blacklist_unknown_numbers_title"
+        android:summary="@string/blacklist_unknown_numbers_summary"
+        android:dependency="button_blacklist_private_numbers" />
+
+    <CheckBoxPreference
         android:key="button_blacklist_regex"
         android:title="@string/blacklist_regex_title"
         android:summary="@string/blacklist_regex_summary"
