@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -35,6 +36,7 @@ import android.view.MenuItem;
  * Blacklist settings UI for the Phone app.
  */
 public class BlacklistSetting extends PreferenceActivity implements
+    Preference.OnPreferenceChangeListener,
     EditPhoneNumberPreference.OnDialogClosedListener,
     EditPhoneNumberPreference.GetDefaultNumberListener {
 
@@ -42,6 +44,8 @@ public class BlacklistSetting extends PreferenceActivity implements
     private static final boolean DBG = false;
 
     private static final String BUTTON_ADD_BLACKLIST_NUMBER = "button_add_blacklist_number";
+    private static final String BUTTON_BLACKLIST_PRIVATE    = "button_blacklist_private_numbers";
+    private static final String BUTTON_BLACKLIST_UNKNOWN    = "button_blacklist_unknown_numbers";
     private static final String CATEGORY_BLACKLIST          = "cat_blacklist";
 
     private static final String NUM_PROJECTION[] = {
@@ -52,6 +56,8 @@ public class BlacklistSetting extends PreferenceActivity implements
 
     private EditPhoneNumberPreference mButtonAddBlacklistNumber;
     private PreferenceCategory mCatBlacklist;
+    private CheckBoxPreference mBlacklistPrivate;
+    private CheckBoxPreference mBlacklistUnknown;
     private Blacklist mBlacklist;
 
     @Override
@@ -66,6 +72,10 @@ public class BlacklistSetting extends PreferenceActivity implements
         mButtonAddBlacklistNumber.setParentActivity(this, ADD_BLACKLIST_ID, this);
         mButtonAddBlacklistNumber.setDialogOnClosedListener(this);
         mCatBlacklist = (PreferenceCategory) prefSet.findPreference(CATEGORY_BLACKLIST);
+        mBlacklistPrivate = (CheckBoxPreference) prefSet.findPreference(BUTTON_BLACKLIST_PRIVATE);
+        mBlacklistPrivate.setOnPreferenceChangeListener(this);
+        mBlacklistUnknown = (CheckBoxPreference) prefSet.findPreference(BUTTON_BLACKLIST_UNKNOWN);
+
         mBlacklist = PhoneGlobals.getInstance().blackList;
 
         ActionBar actionBar = getActionBar();
@@ -101,6 +111,18 @@ public class BlacklistSetting extends PreferenceActivity implements
             return true;
         }
     };
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object objValue) {
+        if (preference == mBlacklistPrivate) {
+            boolean checked = (Boolean) objValue;
+            if (!checked) {
+                mBlacklistUnknown.setChecked(false);
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public void onDialogClosed(EditPhoneNumberPreference preference, int buttonClicked) {
