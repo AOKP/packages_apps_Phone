@@ -556,6 +556,10 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
             retStr = getResources().getString(R.string.set_sub_deactivate_not_supported);
         } else if (status.equals(SubscriptionManager.SUB_ACTIVATE_FAILED)) {
             retStr = getResources().getString(R.string.set_sub_activate_failed);
+        } else if (status.equals(SubscriptionManager.SUB_GLOBAL_ACTIVATE_FAILED)) {
+            retStr = getResources().getString(R.string.set_sub_global_activate_failed);
+        } else if (status.equals(SubscriptionManager.SUB_GLOBAL_DEACTIVATE_FAILED)) {
+            retStr = getResources().getString(R.string.set_sub_global_deactivate_failed);
         } else if (status.equals(SubscriptionManager.SUB_ACTIVATE_NOT_SUPPORTED)) {
             retStr = getResources().getString(R.string.set_sub_activate_not_supported);
         } else if (status.equals(SubscriptionManager.SUB_NOT_CHANGED)) {

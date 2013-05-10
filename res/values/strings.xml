@@ -1863,6 +1863,10 @@
     <string name="set_sub_deactivate_success">Deactivate success</string>
     <!-- Set Subscription screen: Subscription activate failed -->
     <string name="set_sub_activate_failed">Activate failed</string>
+    <!-- Set Subscription screen: Subscription Global activate failed -->
+    <string name="set_sub_global_activate_failed">Activate global failed</string>
+    <!-- Set Subscription screen: Subscription Global deactivate failed -->
+    <string name="set_sub_global_deactivate_failed">Deactivate global failed</string>
     <!-- Set Subscription screen: Subscription deactivate failed -->
     <string name="set_sub_deactivate_failed">Deactivate failed</string>
     <!-- Set Subscription screen: Subscription activate not supported -->
