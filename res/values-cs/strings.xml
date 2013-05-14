@@ -671,4 +671,31 @@
     <string name="voice_quality_entry_clear">Čistý</string>
     <string name="voice_quality_entry_crisp">Ostrý</string>
     <string name="voice_quality_entry_bright">Živý</string>
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Blacklist</string>
+    <string name="enable_blacklist_title">Zapnout blacklist</string>
+    <string name="blacklist_summary_disabled">Vypnut</string>
+    <string name="blacklist_summary">Příchozí hovory z telefonních čísel v blacklistu budou blokovány</string>
+    <string name="blacklist_notify">Zobrazit upozornění</string>
+    <string name="blacklist_private_numbers_title">Skrytá čísla</string>
+    <string name="blacklist_private_numbers_summary">Blokovat příchozí hovory ze skrytých čísel</string>
+    <string name="blacklist_unknown_numbers_title">Neznámá čísla</string>
+    <string name="blacklist_unknown_numbers_summary">Blokovat příchozí hovory z čísel, které nejsou v seznamu kontaktů</string>
+    <string name="blacklist_regex_title">Použít zástupné znaky</string>
+    <string name="blacklist_regex_summary">Použít . jako zástupný znak, * pro opakování. Např. 123.* zablokuje čísla začínající na 123 a .*123.* zablokuje čísla obsahující 123</string>  
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Přidat telefonní číslo</string>
+    <string name="add_to_blacklist">Přidat na blacklist</string>
+    <string name="add_to_blacklist_message">Budoucí hovory z %s budou blokovány</string>
+    <string name="remove_blacklist_number_title">Odstranit číslo</string>
+    <string name="remove_blacklist_number">Opravdu odstranit %s z blacklistu?</string>
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Zablokován hovor z %s</string>
+    <string name="blacklist_notification_private_number">Zablokován hovor ze skrytého čísla</string>
+    <string name="blacklist_notification_list_private">Skryté</string>
+    <string name="blacklist_notification_unknown_number">Zablokováno neznámé číslo %s</string>
+    <string name="blacklist_notification_multiple">Počet zablokovaných hovorů: <xliff:g id="count">%d</xliff:g></string>
+    <string name="unblock_number">Odblokovat</string>
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Blacklist</string>
 </resources>
