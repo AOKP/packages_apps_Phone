@@ -96,6 +96,18 @@ interface IImsService {
     boolean isVTModifyAllowed();
 
     /**
+     * The system notifies about the failure (e.g. timeout) of the previous request to
+     * change the type of the connection by re-sending the modify connection type request
+     * with the status set to fail. After receiving an indication of call modify request
+     * it will be possible to query for the status of the request.(see
+     * {@link CallManager#registerForConnectionTypeChangeRequest(Handler, int, Object)}
+     * ) If no request has been received, this function returns false, no error.
+     *
+     * @return true if the proposed connection type request failed (e.g. timeout).
+     */
+    boolean getProposedConnectionFailed(int connIndex);
+
+    /**
      * Returns true if the current phone supports the ability to add participant
      *
      */
