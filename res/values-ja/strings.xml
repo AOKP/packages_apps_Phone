@@ -693,4 +693,35 @@
     <string name="vibrate_call_waiting">呼出中のバイブレーション</string>
     <string name="vibrate_call_waiting_sum">呼び出し中にバイブレーションする</string>
 
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">ブラックリスト</string>
+    <string name="enable_blacklist_title">ブラックリストを有効</string>
+    <string name="blacklist_summary_disabled">無効</string>
+    <string name="blacklist_summary">ブラックリストに登録した電話番号を着信拒否する</string>
+    <string name="blacklist_notify">通知を表示</string>
+    <string name="blacklist_private_numbers_title">番号非通知</string>
+    <string name="blacklist_private_numbers_summary">番号非通知を着信拒否する</string>
+    <string name="blacklist_unknown_numbers_title">不明な電話番号</string>
+    <string name="blacklist_unknown_numbers_summary">連絡帳に登録していない電話番号を着信拒否する</string>
+    <string name="blacklist_regex_title">ワイルドカードを使用</string>
+    <string name="blacklist_regex_summary">. をワイルドカード、* を繰り返しとして使う。例: 123.* は 123 から始まる番号を着信拒否、.*123.* は 123を含む番号を着信拒否します。</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">電話番号を追加</string>
+    <string name="add_to_blacklist">ブラックリストに追加</string>
+    <string name="add_to_blacklist_message">今後 %s を着信拒否する</string>
+    <string name="remove_blacklist_number_title">電話番号を削除</string>
+    <string name="remove_blacklist_number">ブラックリストから %s を削除しますか？</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">%s を着信拒否しました。</string>
+    <string name="blacklist_notification_private_number">非通知を着信拒否しました。</string>
+    <string name="blacklist_notification_list_private">非通知</string>
+    <string name="blacklist_notification_unknown_number">不明な番号 %s を着信拒否しました。</string>
+    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g>回の着信拒否</string>
+    <string name="unblock_number">着信拒否解除</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">ブラックリスト</string>
+
 </resources>
