@@ -659,4 +659,6 @@
     <string name="vibrate_hangup_sum">Rezeg a hívás végénél</string>
     <string name="vibrate_call_waiting">Rezgés hívás várakoztatásnál</string>
     <string name="vibrate_call_waiting_sum">Rezeg, ha hívás várakoztatás van</string>
+    <string name="ring_delay_title">Csöngés késleltetés</string>
+    <string name="ring_delay_summary">Válasz csengés késleltetést</string>
 </resources>
