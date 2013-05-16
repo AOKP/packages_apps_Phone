@@ -661,4 +661,35 @@
     <string name="vibrate_call_waiting_sum">Rezeg, ha hívás várakoztatás van</string>
     <string name="ring_delay_title">Csöngés késleltetés</string>
     <string name="ring_delay_summary">Válasz csengés késleltetést</string>
+
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Feketelista</string>
+    <string name="enable_blacklist_title">Feketelista engedélyezése</string>
+    <string name="blacklist_summary_disabled">Tiltás</string>
+    <string name="blacklist_summary">Bejövő hívások a feketelistán blokkolva lesznek</string>
+    <string name="blacklist_notify">Értesítés mutatása</string>
+    <string name="blacklist_private_numbers_title">Magán számok</string>
+    <string name="blacklist_private_numbers_summary">Magán számok blokkolása</string>
+    <string name="blacklist_unknown_numbers_title">Ismeretlen számok</string>
+    <string name="blacklist_unknown_numbers_summary">Kontakt listán nem szereplő számok blokkolása</string>
+    <string name="blacklist_regex_title">Helyettesítő karakterek használata</string>
+    <string name="blacklist_regex_summary">Használj .-ot és *-ot, Például 123.* blokkolja az 123-mal kezdödő számokat. *123.* blokkolja az 123-t tartalmazóakat.</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Szám hozzáadása</string>
+    <string name="add_to_blacklist">Feketelistához adja</string>
+    <string name="add_to_blacklist_message">Hívások innen %s blokkolva lesznek</string>
+    <string name="remove_blacklist_number_title">Szám eltávolítása</string>
+    <string name="remove_blacklist_number">El akarod távolítani %s a fekete listáról?</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Blokkolja innen a hívásokat %s</string>
+    <string name="blacklist_notification_private_number">Blokkolja a hívást magánszámról</string>
+    <string name="blacklist_notification_list_private">Magán</string>
+    <string name="blacklist_notification_unknown_number">Blokkolja ismeretlen számról %s</string>
+    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> hívások blokkolva</string>
+    <string name="unblock_number">Feloldás</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Feketelista</string>
 </resources>
