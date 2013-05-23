@@ -349,7 +349,7 @@
     <string name="deleting_fdn_contact" msgid="5669163206349319969">"Выполняется удаление номера ограниченного набора…"</string>
     <string name="fdn_contact_deleted" msgid="7154162327112259569">"Номер ограниченного набора удален."</string>
     <string name="pin2_invalid" msgid="5470854099230755944">"Разрешенный номер не обновлен, так как введен неверный PIN-код."</string>
-    <string name="fdn_invalid_number" msgid="1494755047900009147">"Разрешенный номер не обновлен, т. к. не может содержать более 20 цифр."</string>
+    <string name="fdn_invalid_number" msgid="1494755047900009147">"Разрешенный номер не обновлен, т. к. не может содержать более 20 цифр."</string>
     <string name="pin2_or_fdn_invalid" msgid="6025144083384701197">"Список разрешенных номеров не обновлен. Указан неверный PIN2 или номер телефона."</string>
     <string name="simContacts_emptyLoading" msgid="2203331234764498011">"Считывание с SIM-карты…"</string>
     <string name="simContacts_empty" msgid="5270660846489561932">"На SIM-карте нет контактов."</string>
@@ -625,4 +625,42 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Вибросигнал и рингтон"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Звук клавиш"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Рингтон и вибросигнал"</string>
+    <string name="mwi_notification_title">Индикатор ожидания </string>
+    <string name="mwi_notification_summary">Показывать уведомления голосовой почты индикатора ожидающих сообщений</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Предпочтительная сеть: LTE / CDMA / EvDo</string>
+    <string name="preferred_network_mode_lte_gsm_summary">Предпочтительная сеть: LTE / GSM/WCDMA</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Предпочтительная сеть: LTE / CMDA / EvDo / GSM/WCDMA</string>
+    <string name="preferred_network_mode_lte_wcdma_summary">Предпочтительная сеть: LTE / WCDMA</string>
+    <string name="throttle_time_frame_subtext">%1$d٪ цикла истекло.Следующий период начнется в течение %2$d days (%3$s)</string>
+    <string name="ring_delay_title">Задержка звонка</string>
+    <string name="ring_delay_summary">Выбрать задержку звонка</string>
+    <string name="exit_to_home_screen_title">Выход к посл.активности</string>
+    <string name="exit_to_home_screen_summary">Выход к предыдущей активности экрана по окончании звонка вместо журнала звонка</string>
+    <string name="landscape_mode_title">Включить ландш.режим</string>
+    <string name="landscape_mode_summary">Включить ландшафтный режим (если активирован датчик)</string>
+    <string name="dialer_ui_settings_title">Настройки кнопок</string>
+    <string name="dialer_ui_settings_summary">Настройки наборника</string>
+    <string name="vibration_title">Вибросигнал</string>
+    <string name="national_roaming">Национальный роуминг</string>
+    <string name="national_roaming_enable">Подключаться к службам передачи данных в национальном роуминге</string>
+    <string name="national_roaming_disable">Не подключаться к службам передачи данных в национальном роуминге</string>
+    <string name="perm_change_mobile_network">Изменение сети (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Приложение, имеющее данное разрешение, может в любое время переключать режимы связи между 2G и 3G. Режим 3G имеет более высокую скорость и большее потребление энергии, также может требовать и больших денежных затрат</string>
+    <string name="noise_suppression_title">Шумоподавление</string>
+    <string name="noise_suppression_summary">Включить шумоподавление для звонков</string>
+    <string name="voice_quality_preferences_title">Качество голоса</string>
+    <string name="voice_quality_summary">Голосовой профиль установлен на: %s</string>
+    <string name="voice_quality_entry_normal">Нормально</string>
+    <string name="voice_quality_entry_clear">Ясно</string>
+    <string name="voice_quality_entry_crisp">Звонко</string>
+    <string name="voice_quality_entry_bright">Чисто</string>
+    <string name="advanced_setting">Дополнительные настройки</string>
+    <string name="vibrate_outgoing">Вибрация при ответе</string>
+    <string name="vibrate_outgoing_sum">Вибрация при ответе на входящий вызов</string>
+    <string name="vibrate_60">Вибрация каждые 60 секунд</string>
+    <string name="vibrate_60_sum">Вибрация на каждой отметке в 60 секунд каждой минуты при исходящих вызовах</string>
+    <string name="vibrate_hangup">Вибрация по окончании</string>
+    <string name="vibrate_hangup_sum">Вибрация, когда звонок окончен</string>
+    <string name="vibrate_call_waiting">Вибрация при ожидании</string>
+    <string name="vibrate_call_waiting_sum">Вибрация при параллельном вызове</string>
 </resources>
