@@ -680,7 +680,8 @@
     <string name="blacklist_summary_disabled">已禁用</string>
     <string name="blacklist_summary">黑名单中号码的来电将被阻止。</string>
     <string name="blacklist_notify">显示通知</string>
-    <string name="blacklist_private_numbers_title">私有号码</string>
+    <string name="blacklist_private_numbers_title">隐藏号码</string>
+    <string name="blacklist_private_numbers_summary">阻止的来电号码是隐藏的呼叫</string>
     <string name="blacklist_unknown_numbers_title">未知号码</string>
     <string name="blacklist_unknown_numbers_summary">阻止的来电号码不在联系人列表中</string>
     <string name="blacklist_regex_title">使用通配符</string>
@@ -695,8 +696,8 @@
 
     <!-- Blacklist notifications -->
     <string name="blacklist_notification">阻止了 %s 的来电</string>
-    <string name="blacklist_notification_private_number">一个私有号码被阻止</string>
-    <string name="blacklist_notification_list_private">私有</string>
+    <string name="blacklist_notification_private_number">一个隐藏号码被阻止</string>
+    <string name="blacklist_notification_list_private">隐藏</string>
     <string name="blacklist_notification_unknown_number">阻止了未知号码 %s 的来电</string>
     <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> 来电被阻止</string>
     <string name="unblock_number">不阻止</string>
