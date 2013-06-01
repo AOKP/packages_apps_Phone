@@ -78,6 +78,7 @@ import com.android.server.sip.SipService;
 
 import org.codeaurora.ims.IImsService;
 import static com.android.internal.telephony.MSimConstants.DEFAULT_SUBSCRIPTION;
+import org.codeaurora.ims.csvt.ICsvtService;
 
 /**
  * Global state for the telephony subsystem when running in the primary
@@ -189,6 +190,7 @@ public class PhoneGlobals extends ContextWrapper
     static boolean sVoiceCapable = true;
 
     public static IImsService mImsService;
+    public static ICsvtService mCsvtService;
 
     private boolean mIsMediaInitialized = false;
 
@@ -480,6 +482,8 @@ public class PhoneGlobals extends ContextWrapper
 
             createImsService();
 
+            createCsvtService();
+
             // Create the NotificationMgr singleton, which is used to display
             // status bar icons and control other status bar behavior.
             notificationMgr = NotificationMgr.init(this);
@@ -681,7 +685,7 @@ public class PhoneGlobals extends ContextWrapper
    }
 
     public void createImsService() {
-        if (PhoneUtils.isCallOnImsEnabled()) {
+        if ( PhoneUtils.isCallOnImsEnabled() ) {
             try {
                 // send intent to start ims service n get phone from ims service
                 boolean bound = bindService(new Intent("org.codeaurora.ims.IImsService"),
@@ -702,6 +706,32 @@ public class PhoneGlobals extends ContextWrapper
 
         public void onServiceDisconnected(ComponentName arg0) {
             Log.w(LOG_TAG,"Ims Service onServiceDisconnected");
+        }
+    };
+
+    public void createCsvtService() {
+        // feature.
+        if (PhoneUtils.isCallOnCsvtEnabled()) {
+            try {
+                Intent intent = new Intent("org.codeaurora.ims.csvt.ICsvtService");
+                boolean bound = bindService(intent,
+                        mCsvtServiceConnection, Context.BIND_AUTO_CREATE);
+                Log.d(LOG_TAG, "ICsvtService bound request : " + bound);
+            } catch (NoClassDefFoundError e) {
+                Log.w(LOG_TAG, "Ignoring ICsvtService class not found exception "
+            + e);
+            }
+        }
+    }
+
+    private static ServiceConnection mCsvtServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mCsvtService = ICsvtService.Stub.asInterface(service);
+            Log.d(LOG_TAG,"Csvt Service Connected: " + mCsvtService);
+        }
+
+        public void onServiceDisconnected(ComponentName arg0) {
+            Log.w(LOG_TAG,"Csvt Service onServiceDisconnected");
         }
     };
 
