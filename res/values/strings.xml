@@ -1175,6 +1175,8 @@
     <!-- Text for the onscreen "Subscription" button that lets you switch
          between the available scubscriptions [CHAR LIMIT=20] -->
     <string name="onscreenSwitchText">Switch Subscription</string>
+    <!-- Text for the onscreen "Add Participant" button -->
+    <string name="onscreenAddParticipant">Add Participant</string>
 
     <!-- Menu item label in SIM Contacts: Import a single contact entry from the SIM card -->
     <string name="importSimEntry">Import</string>

@@ -202,6 +202,12 @@
                     android:src="@drawable/ic_merge_holo_dark"
                     android:background="@drawable/btn_compound_vt"
                     android:contentDescription="@string/onscreenModifyCallText" />
+
+                <Button android:id="@+id/addParticipant"
+                    style="@style/InCallButton"
+                    android:background="@drawable/btn_compound_addparticipant"
+                    android:contentDescription="@string/onscreenAddParticipant"
+                    />
             </LinearLayout>
 
             <View

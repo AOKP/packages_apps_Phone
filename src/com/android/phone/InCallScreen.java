@@ -108,6 +108,10 @@ public class InCallScreen extends Activity
     // TODO: Should be EXTRA_SHOW_DIALPAD for consistency.
     static final String SHOW_DIALPAD_EXTRA = "com.android.phone.ShowDialpad";
 
+    /** Identifier for the "Add Participant" intent extra. */
+    static final String ADD_CALL_MODE_KEY = "add_call_mode";
+    static final String ADD_PARTICIPANT_KEY = "add_participant";
+
     /**
      * Intent extra to specify the package name of the gateway
      * provider.  Used to get the name displayed in the in-call screen
@@ -3161,6 +3165,9 @@ public class InCallScreen extends Activity
                 setInCallScreenMode(InCallScreenMode.MANAGE_CONFERENCE);
                 requestUpdateScreen();
                 break;
+            case R.id.addParticipant:
+                onAddParticipant();
+                break;
 
             default:
                 Log.w(LOG_TAG, "handleOnscreenButtonClick: unexpected ID " + id);
@@ -4313,6 +4320,25 @@ public class InCallScreen extends Activity
             } catch (CallStateException e) {
                 Log.e("videocall", "onModifyCall CallStateException " + e);
             }
+        }
+    }
+
+    private void onAddParticipant() {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // when we request the dialer come up, we also want to inform
+        // it that we're going through the "add participant" option from the
+        // InCallScreen.
+        intent.putExtra(ADD_CALL_MODE_KEY, true);
+        intent.putExtra(ADD_PARTICIPANT_KEY, true);
+        try {
+            mApp.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // This is rather rare but possible.
+            // Note: this method is used even when the phone is encrypted. At that moment
+            // the system may not find any Activity which can accept this Intent.
+            Log.e(LOG_TAG, "Activity for adding calls isn't found.");
         }
     }
 

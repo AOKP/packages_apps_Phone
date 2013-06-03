@@ -109,6 +109,7 @@ public class InCallTouchUi extends FrameLayout
     private CompoundButton mHoldButton;
     private ImageButton mSwapButton;
     private View mHoldSwapSpacer;
+    private Button mAddParticipant;
 
     // "Extra button row"
     private ViewStub mExtraButtonRow;
@@ -217,6 +218,9 @@ public class InCallTouchUi extends FrameLayout
         mSwapButton.setOnClickListener(this);
         mSwapButton.setOnLongClickListener(this);
         mHoldSwapSpacer = mInCallControls.findViewById(R.id.holdSwapSpacer);
+        mAddParticipant = (Button) mInCallControls.findViewById(R.id.addParticipant);
+        mAddParticipant.setOnClickListener(this);
+        mAddParticipant.setOnLongClickListener(this);
 
         // TODO: Back when these buttons had text labels, we changed
         // the label of mSwapButton for CDMA as follows:
@@ -427,6 +431,7 @@ public class InCallTouchUi extends FrameLayout
             case R.id.swapButton:
             case R.id.cdmaMergeButton:
             case R.id.manageConferenceButton:
+            case R.id.addParticipant:
                 // Clicks on the regular onscreen buttons get forwarded
                 // straight to the InCallScreen.
                 mInCallScreen.handleOnscreenButtonClick(id);
@@ -563,6 +568,13 @@ public class InCallTouchUi extends FrameLayout
             mModifyCallButton.setEnabled(inCallControlState.modifyCallEnabled);
         } else {
             mModifyCallButton.setVisibility(View.GONE);
+        }
+
+        if (inCallControlState.addParticipantVisible) {
+            mAddParticipant.setVisibility(View.VISIBLE);
+            mAddParticipant.setEnabled(inCallControlState.addParticipantEnabled);
+        } else {
+            mAddParticipant.setVisibility(View.GONE);
         }
 
         // "Dialpad": Enabled only when it's OK to use the dialpad in the
