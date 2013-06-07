@@ -84,10 +84,10 @@ public class InCallTouchUi extends FrameLayout
      * null if we haven't been initialized yet *or* after the InCallScreen
      * activity has been destroyed.
      */
-    private InCallScreen mInCallScreen;
+    protected InCallScreen mInCallScreen;
 
     // Phone app instance
-    private PhoneGlobals mApp;
+    protected PhoneGlobals mApp;
 
     // UI containers / elements
     private GlowPadView mIncomingCallWidget;  // UI used for an incoming call
@@ -95,7 +95,7 @@ public class InCallTouchUi extends FrameLayout
     private boolean mIncomingCallWidgetShouldBeReset = true;
 
     /** UI elements while on a regular call (bottom buttons, DTMF dialpad) */
-    private View mInCallControls;
+    protected View mInCallControls;
     private boolean mShowInCallControlsDuringHidingAnimation;
 
     //
@@ -478,7 +478,7 @@ public class InCallTouchUi extends FrameLayout
      * Updates the enabledness and "checked" state of the buttons on the
      * "inCallControls" panel, based on the current telephony state.
      */
-    private void updateInCallControls(CallManager cm) {
+    protected void updateInCallControls(CallManager cm) {
         int phoneType = cm.getActiveFgCall().getPhone().getPhoneType();
 
         // Note we do NOT need to worry here about cases where the entire

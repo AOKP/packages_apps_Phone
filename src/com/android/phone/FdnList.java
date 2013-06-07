@@ -1,5 +1,8 @@
 /*
  * Copyright (C) 2007 The Android Open Source Project
+ * Copyright (c) 2011-2013 The Linux Foundation. All rights reserved.
+ *
+ * Not a Contribution.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +24,13 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
 /**
  * FDN List UI for the Phone app.
  */
@@ -34,8 +39,8 @@ public class FdnList extends ADNList {
     private static final int MENU_EDIT = 2;
     private static final int MENU_DELETE = 3;
 
-    private static final String INTENT_EXTRA_NAME = "name";
-    private static final String INTENT_EXTRA_NUMBER = "number";
+    protected static final String INTENT_EXTRA_NAME = "name";
+    protected static final String INTENT_EXTRA_NUMBER = "number";
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -116,7 +121,7 @@ public class FdnList extends ADNList {
         editSelected(position);
     }
 
-    private void addContact() {
+    protected void addContact() {
         // if we don't put extras "name" when starting this activity, then
         // EditFdnContactScreen treats it like add contact.
         Intent intent = new Intent();
@@ -137,7 +142,7 @@ public class FdnList extends ADNList {
     /**
      * Edit the item at the selected position in the list.
      */
-    private void editSelected(int position) {
+    protected void editSelected(int position) {
         if (mCursor.moveToPosition(position)) {
             String name = mCursor.getString(NAME_COLUMN);
             String number = mCursor.getString(NUMBER_COLUMN);
@@ -150,7 +155,7 @@ public class FdnList extends ADNList {
         }
     }
 
-    private void deleteSelected() {
+    protected void deleteSelected() {
         if (mCursor.moveToPosition(getSelectedItemPosition())) {
             String name = mCursor.getString(NAME_COLUMN);
             String number = mCursor.getString(NUMBER_COLUMN);
@@ -161,5 +166,10 @@ public class FdnList extends ADNList {
             intent.putExtra(INTENT_EXTRA_NUMBER, number);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void log(String msg) {
+        Log.d(TAG, "[FdnList] " + msg);
     }
 }

@@ -40,6 +40,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.provider.Settings;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.ServiceState;
 import android.text.TextUtils;
@@ -672,7 +673,14 @@ public class PhoneUtils {
 
         // Remember if the phone state was in IDLE state before this call.
         // After calling CallManager#dial(), getState() will return different state.
-        final boolean initiallyIdle = app.mCM.getState() == PhoneConstants.State.IDLE;
+        boolean initiallyIdle = false;
+        if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
+            for (int i = 0; i < MSimTelephonyManager.getDefault().getPhoneCount(); i++) {
+                initiallyIdle = initiallyIdle || (app.mCM.getState(i) == PhoneConstants.State.IDLE);
+            }
+        } else {
+            initiallyIdle = app.mCM.getState() == PhoneConstants.State.IDLE;
+        }
 
         // If VT/VS cal is initiated, perform dpl media init.
         // If media init fails then make a voice call instead of VT
@@ -2215,7 +2223,7 @@ public class PhoneUtils {
      * state of the Phone.
      */
     /* package */ static boolean okToSwapCalls(CallManager cm) {
-        int phoneType = cm.getDefaultPhone().getPhoneType();
+        int phoneType = cm.getFgPhone().getPhoneType();
         if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
             // CDMA: "Swap" is enabled only when the phone reaches a *generic*.
             // state by either accepting a Call Waiting or by merging two calls
@@ -2599,12 +2607,13 @@ public class PhoneUtils {
      * @param number the phone number, or SIP address.
      */
     public static Phone pickPhoneBasedOnNumber(CallManager cm,
-            String scheme, String number, String primarySipUri) {
+            String scheme, String number, String primarySipUri, int subscription) {
         if (DBG) {
             log("pickPhoneBasedOnNumber: scheme " + scheme
                     + ", number " + toLogSafePhoneNumber(number)
                     + ", sipUri "
-                    + (primarySipUri != null ? Uri.parse(primarySipUri).toSafeString() : "null"));
+                    + (primarySipUri != null ? Uri.parse(primarySipUri).toSafeString() : "null")
+                    + ", subscription" + subscription);
         }
 
         if (primarySipUri != null) {
@@ -2619,7 +2628,7 @@ public class PhoneUtils {
             if (phone != null) return phone;
         }
 
-        return cm.getDefaultPhone();
+        return PhoneGlobals.getInstance().getPhone(subscription);
     }
 
     public static Phone getSipPhoneFromUri(CallManager cm, String target) {
@@ -2654,7 +2663,8 @@ public class PhoneUtils {
      * meaning the call is the first real incoming call the phone is having.
      */
     public static boolean isRealIncomingCall(Call.State state) {
-        return (state == Call.State.INCOMING && !PhoneGlobals.getInstance().mCM.hasActiveFgCall());
+        return (state == Call.State.INCOMING &&
+                !PhoneGlobals.getInstance().mCM.hasActiveFgCallAnyPhone());
     }
 
     private static boolean sVoipSupported = false;
@@ -2994,4 +3004,73 @@ public class PhoneUtils {
         return extras;
     }
 
+    /**
+     * Set the given subscription as current active subscription i.e currently on
+     * which voice call is active(with state OFFHOOK/RINGING) and which needs to be
+     * visible to user.
+     *
+     * @param subscription the sub id which needs to be active one.
+     */
+    public static void setActiveSubscription(int subscription) {
+        PhoneGlobals.getInstance().mCM.setActiveSubscription(subscription);
+    }
+
+    /**
+     * Returns the current active subscription id on which voice call is
+     * active and visible to user.
+     */
+    public static int getActiveSubscription() {
+        return PhoneGlobals.getInstance().mCM.getActiveSubscription();
+    }
+
+    /**
+     * This method checks whether any other subscription currently has active
+    *  voice call(with state OFFHOOK/RINGING) other than provided subscription,
+    *  if yes it returns true.
+     */
+    public static boolean isAnyOtherSubActive(int subscription) {
+        boolean state = false;
+        int count = MSimTelephonyManager.getDefault().getPhoneCount();
+        CallManager cm = MSimPhoneGlobals.getInstance().mCM;
+
+        Log.d(LOG_TAG, "is other sub active = " + subscription + count);
+        for (int i = 0; i < count; i++) {
+            Log.d(LOG_TAG, "Count ** " + i);
+            if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
+                Log.d(LOG_TAG, "got other active sub  = " + i );
+                state = true;
+                break;
+            }
+        }
+        return state;
+    }
+
+    /**
+     * This method checks whether any other subscription currently has active voice
+     * call(with state OFFHOOK/RINGING) other than provided subscription, if yes
+     * it makes that other subscription as active subscription i.e user visible subscription.
+     *
+     * @param subscription is the current active subscription.
+     */
+    public static void switchToOtherActiveSub(int subscription) {
+        int count = MSimTelephonyManager.getDefault().getPhoneCount();
+        CallManager cm = MSimPhoneGlobals.getInstance().mCM;
+
+        Log.d(LOG_TAG, "in switch to other active sub = " + subscription + count);
+        for (int i = 0; i < count; i++) {
+            Log.d(LOG_TAG, "Count  ******  " + i);
+            if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
+                setActiveSubscription(i);
+                switchToLocalHold(i, true);
+                Log.d(LOG_TAG, "Switchin to other active sub  = " + i );
+                break;
+            }
+        }
+    }
+
+    // This method is called when user does which SUB from UI.
+    public static void switchToLocalHold(int subscription, boolean switchTo) {
+        Log.d(LOG_TAG, "Switch to local hold  = " );
+        MSimPhoneGlobals.getInstance().mCM.switchToLocalHold(subscription, switchTo);
+    }
 }

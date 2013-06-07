@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Not a Contribution
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +26,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import com.android.internal.telephony.TelephonyIntents;
-import com.android.internal.telephony.Phone;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.android.internal.telephony.Phone;
+import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.telephony.TelephonyCapabilities;
 
 /**
@@ -178,8 +182,13 @@ public class SpecialCharSequenceMgr {
                 int index = Integer.parseInt(input.substring(0, len-1));
                 Intent intent = new Intent(Intent.ACTION_PICK);
 
-                intent.setClassName("com.android.phone",
-                                    "com.android.phone.SimContacts");
+                if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
+                    intent.setClassName("com.android.phone",
+                                        "com.android.phone.MSimContacts");
+                } else {
+                    intent.setClassName("com.android.phone",
+                                        "com.android.phone.SimContacts");
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("index", index);
                 PhoneGlobals.getInstance().startActivity(intent);

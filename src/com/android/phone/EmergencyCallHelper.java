@@ -386,10 +386,12 @@ public class EmergencyCallHelper extends Handler {
         // airplane mode" sequence from the beginning again!)
 
         registerForDisconnect();  // Get notified when this call disconnects
+        int sub = mApp.getVoiceSubscriptionInService();
+        Phone phone = mApp.getPhone(sub);
 
         if (DBG) log("- placing call to '" + mNumber + "'...");
         int callStatus = PhoneUtils.placeCall(mApp,
-                                              mPhone,
+                                              phone,
                                               mNumber,
                                               null,  // contactUri
                                               true,  // isEmergencyCall

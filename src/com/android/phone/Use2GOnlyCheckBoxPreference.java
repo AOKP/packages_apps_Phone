@@ -30,8 +30,8 @@ import com.android.internal.telephony.Phone;
 public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
     private static final String LOG_TAG = "Use2GOnlyCheckBoxPreference";
 
-    private Phone mPhone;
-    private MyHandler mHandler;
+    private static Phone mPhone;
+    private static MyHandler mHandler;
 
     public Use2GOnlyCheckBoxPreference(Context context) {
         this(context, null);
@@ -62,11 +62,20 @@ public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
 
         int networkType = isChecked() ? Phone.NT_MODE_GSM_ONLY : getDefaultNetworkMode();
         Log.i(LOG_TAG, "set preferred network type="+networkType);
-        android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
-                android.provider.Settings.Global.PREFERRED_NETWORK_MODE, networkType);
+        android.telephony.MSimTelephonyManager.putIntAtIndex(
+                mPhone.getContext().getContentResolver(),
+                android.provider.Settings.Global.PREFERRED_NETWORK_MODE,
+                mPhone.getSubscription(), networkType);
         mPhone.setPreferredNetworkType(networkType, mHandler
                 .obtainMessage(MyHandler.MESSAGE_SET_PREFERRED_NETWORK_TYPE));
    }
+
+    public static void updatePhone(Phone phone) {
+        Log.i(LOG_TAG, "updatePhone subscription :" + phone.getSubscription());
+        mPhone = phone;
+        mPhone.getPreferredNetworkType(
+                 mHandler.obtainMessage(MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
+    }
 
     private class MyHandler extends Handler {
 
@@ -93,8 +102,10 @@ public class Use2GOnlyCheckBoxPreference extends CheckBoxPreference {
                 int type = ((int[])ar.result)[0];
                 Log.i(LOG_TAG, "get preferred network type="+type);
                 setChecked(type == Phone.NT_MODE_GSM_ONLY);
-                android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
-                        android.provider.Settings.Global.PREFERRED_NETWORK_MODE, type);
+                android.telephony.MSimTelephonyManager.putIntAtIndex(
+                        mPhone.getContext().getContentResolver(),
+                        android.provider.Settings.Global.PREFERRED_NETWORK_MODE,
+                        mPhone.getSubscription(), type);
             } else {
                 // Weird state, disable the setting
                 Log.i(LOG_TAG, "get preferred network type, exception="+ar.exception);

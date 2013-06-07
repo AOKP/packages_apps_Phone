@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ *
  * Not a Contribution.
  *
  * Copyright (C) 2008 The Android Open Source Project
@@ -37,6 +38,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,6 +48,10 @@ import android.widget.ProgressBar;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.TelephonyCapabilities;
+import com.codeaurora.telephony.msim.MSimPhoneFactory;
+import com.codeaurora.telephony.msim.SubscriptionManager;
+
+import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
 
 /**
  * OutgoingCallBroadcaster receives CALL and CALL_PRIVILEGED Intents, and
@@ -82,6 +88,9 @@ public class OutgoingCallBroadcaster extends Activity
     public static final String EXTRA_CALL_TYPE = "android.phone.extra.CALL_TYPE";
     public static final String EXTRA_CALL_DOMAIN = "android.phone.extra.CALL_DOMAIN";
 
+    /** the key used to specify subscription to be used for emergency calls */
+    private static final String BLUETOOTH = "Bluetooth";
+
     /**
      * Identifier for intent extra for sending an empty Flash message for
      * CDMA networks. This message is used by the network to simulate a
@@ -104,6 +113,9 @@ public class OutgoingCallBroadcaster extends Activity
     /** Note message codes < 100 are reserved for the PhoneApp. */
     private static final int EVENT_OUTGOING_CALL_TIMEOUT = 101;
     private static final int OUTGOING_CALL_TIMEOUT_THRESHOLD = 2000; // msec
+
+    private int mSubscription;
+
     /**
      * ProgressBar object with "spinner" style, which will be shown if we take more than
      * {@link #EVENT_OUTGOING_CALL_TIMEOUT} msec to handle the incoming Intent.
@@ -314,6 +326,7 @@ public class OutgoingCallBroadcaster extends Activity
 
         Intent newIntent = new Intent(Intent.ACTION_CALL, uri);
         newIntent.putExtra(EXTRA_ACTUAL_NUMBER_TO_DIAL, number);
+        newIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
         PhoneUtils.checkAndCopyPhoneProviderExtras(intent, newIntent);
         PhoneUtils.copyImsExtras(intent, newIntent);
 
@@ -440,8 +453,31 @@ public class OutgoingCallBroadcaster extends Activity
          */
         otaCleanup();
 
-        String action = intent.getAction();
+        boolean promptEnabled = MSimPhoneFactory.isPromptEnabled();
         String number = PhoneNumberUtils.getNumberFromIntent(intent, this);
+        if (MSimTelephonyManager.getDefault().isMultiSimEnabled() && promptEnabled &&
+               (activeSubCount() > 1) && (!isIntentFromBluetooth(intent)) &&
+                       (!isSIPCall(number, intent))) {
+            Log.d(TAG, "Start multisimdialer activity and get the sub selected by user");
+            Intent intentMSim = new Intent(this, MSimDialerActivity.class);
+            intentMSim.setData(intent.getData());
+            intentMSim.setAction(intent.getAction());
+            int requestCode = 1;
+            startActivityForResult(intentMSim, requestCode);
+        } else {
+            mSubscription = intent.getIntExtra(SUBSCRIPTION_KEY,
+                    PhoneGlobals.getInstance().getVoiceSubscription());
+            PhoneUtils.setActiveSubscription(mSubscription);
+            Log.d(TAG, "subscription when there is (from Extra):" + mSubscription);
+            processMSimIntent(intent);
+        }
+    }
+
+    private void processMSimIntent(Intent intent) {
+        String action = intent.getAction();
+        intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
+        String number = PhoneNumberUtils.getNumberFromIntent(intent, this);
+        Log.d(TAG, "outGoingcallBroadCaster action is "+ action + " number = " + number);
         // Check the number, don't convert for sip uri
         // TODO put uriNumber under PhoneNumberUtils
         if (number != null) {
@@ -546,6 +582,7 @@ public class OutgoingCallBroadcaster extends Activity
                                                    "com.android.dialer.DialtactsActivity");
                 invokeFrameworkDialer.setAction(Intent.ACTION_DIAL);
                 invokeFrameworkDialer.setData(intent.getData());
+                invokeFrameworkDialer.putExtra(SUBSCRIPTION_KEY, mSubscription);
 
                 if (DBG) Log.v(TAG, "onCreate(): calling startActivity for Dialer: "
                                + invokeFrameworkDialer);
@@ -553,6 +590,8 @@ public class OutgoingCallBroadcaster extends Activity
                 finish();
                 return;
             }
+            intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
+            Log.d(TAG, "for non emergency call,sub is  :" + mSubscription);
             callNow = false;
         } else if (Intent.ACTION_CALL_EMERGENCY.equals(action)) {
             // ACTION_CALL_EMERGENCY case: this is either a CALL_PRIVILEGED
@@ -569,6 +608,9 @@ public class OutgoingCallBroadcaster extends Activity
                 finish();
                 return;
             }
+            int sub = PhoneGlobals.getInstance().getVoiceSubscriptionInService();
+            intent.putExtra(SUBSCRIPTION_KEY, sub);
+            Log.d(TAG, "Attempting emergency call on sub :" + sub);
             callNow = true;
         } else {
             Log.e(TAG, "Unhandled Intent " + intent + ". Finish the Activity immediately.");
@@ -599,6 +641,7 @@ public class OutgoingCallBroadcaster extends Activity
             } else {
                 Log.i(TAG, "onCreate: null or empty number, setting callNow=true...");
                 callNow = true;
+                intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
             }
         }
 
@@ -675,6 +718,7 @@ public class OutgoingCallBroadcaster extends Activity
         broadcastIntent.putExtra(EXTRA_DIAL_CONFERENCE_URI,
                 intent.getBooleanExtra((EXTRA_DIAL_CONFERENCE_URI), false));
 
+        broadcastIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
         // Need to raise foreground in-call UI as soon as possible while allowing 3rd party app
         // to intercept the outgoing call.
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
@@ -787,6 +831,54 @@ public class OutgoingCallBroadcaster extends Activity
         // DIALOG_NOT_VOICE_CAPABLE is the only dialog we ever use (so far
         // at least), and canceling it is just like hitting "OK".
         finish();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Collect subscription data from the intent and use it
+        if (resultCode == RESULT_CANCELED) {
+            Log.d(TAG, "activity cancelled or backkey pressed ");
+            finish();
+        } else if (resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            mSubscription = extras.getInt(SUBSCRIPTION_KEY);
+            Log.d(TAG, "subscription selected from multiSimDialer" + mSubscription);
+            processMSimIntent(data);
+        }
+    }
+
+    private int activeSubCount() {
+        SubscriptionManager subManager = SubscriptionManager.getInstance();
+        int count = subManager.getActiveSubscriptionsCount();
+        if (DBG) Log.v(TAG, "count of subs activated " + count);
+        return count;
+    }
+
+    private boolean  isIntentFromBluetooth(Intent intent) {
+        boolean btIntent = false;
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if ((extras.getString(BLUETOOTH) != null) && (extras.getString(BLUETOOTH).
+                    equals("true"))) {
+                btIntent = true;
+                Log.d(TAG, "isIntentFromBluetooth " + btIntent + "intent :"
+                    + extras.getString(BLUETOOTH));
+            }
+        }
+        return btIntent;
+    }
+
+    private boolean isSIPCall(String number, Intent intent) {
+        boolean sipCall = false;
+        String scheme = "";
+        if (intent.getData() != null) {
+            scheme =  intent.getData().getScheme();
+            if ((scheme != null) && ("sip".equals(scheme) ||
+                    PhoneNumberUtils.isUriNumber(number))) {
+                sipCall = true;
+            }
+        }
+        Log.d(TAG, "isSIPCall : " + sipCall);
+        return sipCall;
     }
 
     /**

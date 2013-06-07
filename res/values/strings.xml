@@ -470,6 +470,11 @@
     <string name="roaming_warning">Allow data roaming? You may incur significant roaming charges!</string>
     <string name="gsm_umts_options">GSM/UMTS Options</string>
     <string name="cdma_options">CDMA Options</string>
+    <string name="mobile_network_setting">Mobile Network Settings</string>
+    <string name="network_settings_sel_sub">SUBS Settings</string>
+    <string name="network_manage_settings">Network Settings</string>
+    <string name="title_data_settings">Data Settings</string>
+    <string name="summary_manage_subscriptions">Manage Network settings of each subscriptions</string>
 
     <!-- Screen option on the mobile network settings to go into data usage settings -->
     <string name="throttle_data_usage">Data usage</string>
@@ -649,6 +654,31 @@
     <string name="cdma_activate_device">Activate device</string>
     <!-- Preference title for launching an account manager page for prepaid LTE [CHAR LIMIT=30] -->
     <string name="cdma_lte_data_service">Set up data service</string>
+
+    <!-- Call Independent services screen title-->
+    <string name="call_ind_services">Call Independent Services</string>
+    <!-- button name for launching sub1, sub2 screen for Multi Sim Functionality-->
+    <string name="callind_multi_sim">SUBS Settings</string>
+    <!-- button name for direct launch of Call Feature screen for Single Sim Functionality -->
+    <string name="callind">Call Feature Settings</string>
+
+    <!-- multi sub one, setting option name -->
+    <string name="sub1">Subscription 1</string>
+    <!-- multi mode settings screen, setting summary text -->
+    <string name="sub1_summary">Manage Subscription 1</string>
+    <!-- multi sub two, setting option name -->
+    <string name="sub2">Subscription 2</string>
+    <!-- multi mode settings screen, setting summary text -->
+    <string name="sub2_summary">Manage Subscription 2</string>
+    <!-- multi sub three, setting option name -->
+    <string name="sub3">Subscription 3</string>
+    <!-- multi mode settings screen, setting summary text -->
+    <string name="sub3_summary">Manage Subscription 3</string>
+
+    <!-- dual prompt, setting option name -->
+    <string name="prompt">Prompt</string>
+    <!-- dual mode settings screen, setting summary text -->
+    <string name="prompt_user">Prompt User</string>
 
     <!-- FDN settings strings -->
     <!-- Call settings screen, setting option name -->
@@ -1012,6 +1042,9 @@
     <!-- Text for the onscreen "Audio" button that lets you switch
          between speaker / bluetooth / earpiece [CHAR LIMIT=10] -->
     <string name="onscreenAudioText">Audio</string>
+    <!-- Text for the onscreen "Subscription" button that lets you switch
+         between the available scubscriptions [CHAR LIMIT=20] -->
+    <string name="onscreenSwitchText">Switch Subscription</string>
 
     <!-- Menu item label in SIM Contacts: Import a single contact entry from the SIM card -->
     <string name="importSimEntry">Import</string>
@@ -1634,4 +1667,64 @@
          related settings.
          [CHAR LIMIT=40] -->
     <string name="preference_category_ringtone">Ringtone &amp; Vibrate</string>
+    <!-- Set Subscription screen: set subscription option name -->
+    <string name="set_subscription">Select subscriptions</string>
+    <!-- Set Subscription screen: label Card 1 -->
+    <string name="card_01">Card 1 / SUB 1</string>
+    <!-- Set Subscription screen: label Card 2 -->
+    <string name="card_02">Card 2 / SUB 2</string>
+    <!-- Set Subscription screen: label Card 3 -->
+    <string name="card_03">Card 3 / SUB 3</string>
+
+    <!-- Set dual dialer for MultiSim -->
+    <string name="place_a_call1">Subscription 1</string>
+    <string name="place_a_call2">Subscription 2</string>
+    <string name="place_a_call3">Subscription 3</string>
+    <string name="count_down">Seconds: </string>
+    <string name="call_number">To: </string>
+    <string name="cancel_call">Cancel</string>
+
+    <!-- Set Subscription screen: Message shown in error dialog -->
+    <string name="set_subscription_error_atleast_one">Select atleast one subscription</string>
+    <!-- Set Subscription screen: label sub 1 -->
+    <string name="sub_1">SUB 1</string>
+    <!-- Set Subscription screen: label sub 2 -->
+    <string name="sub_2">SUB 2</string>
+    <!-- Set Subscription screen: label sub 3 -->
+    <string name="sub_3">SUB 3</string>
+    <!-- Set Subscription screen: Progress message -->
+    <string name="set_uicc_subscription_progress">Set subscription in progress...</string>
+    <!-- Set Subscription screen: Set subscriptio success -->
+    <string name="set_sub_success">Set subscription success</string>
+    <!-- Set Subscription screen: Set subscriptio success -->
+    <string name="set_sub_failed">Set subscription failed</string>
+    <!-- Set Subscription screen: Subscription 1 -->
+    <string name="set_sub_1">Subscription 1: </string>
+    <!-- Set Subscription screen: Subscription 2 -->
+    <string name="set_sub_2">Subscription 2: </string>
+    <!-- Set Subscription screen: Subscription 3 -->
+    <string name="set_sub_3">Subscription 3: </string>
+    <!-- Set Subscription screen: Subscription activate success -->
+    <!-- Set Subscription screen: Subscription activate success -->
+    <string name="set_sub_activate_success">Activate success</string>
+    <!-- Set Subscription screen: Subscription deactivate success -->
+    <string name="set_sub_deactivate_success">Deactivate success</string>
+    <!-- Set Subscription screen: Subscription activate failed -->
+    <string name="set_sub_activate_failed">Activate failed</string>
+    <!-- Set Subscription screen: Subscription deactivate failed -->
+    <string name="set_sub_deactivate_failed">Deactivate failed</string>
+    <!-- Set Subscription screen: Subscription activate not supported -->
+    <string name="set_sub_activate_not_supported">Activate not supported</string>
+    <!-- Set Subscription screen: Subscription deactivate not supported -->
+    <string name="set_sub_deactivate_not_supported">Deactivate not supported</string>
+    <!-- Set Subscription screen: No change in subscription -->
+    <string name="set_sub_no_change">No change in Subscription</string>
+    <!-- Set Subscription screen: New cards available -->
+    <string name="new_cards_available">New card available. Please configure subscriptions.</string>
+    <!-- Set Subscription screen: Configure subscription dialog title -->
+    <string name="config_sub_title">Configure Subscriptions</string>
+    <!-- Set Subscription screen: Deactivate All subscription not supported -->
+    <string name="deact_all_sub_not_supported">Deactivation of All the subscriptions is not supported.</string>
+    <!-- Set Subscription screen: Deactivate All subscription not supported -->
+    <string name="set_sub_not_supported_phone_in_call">Activate or Deactivate subscription is not allowed while phone in call.</string>
 </resources>

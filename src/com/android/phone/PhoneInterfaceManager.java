@@ -911,4 +911,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
         return mPhone.getIccCard().getIccPin1RetryCount();
     }
 
+    public void setPhone(Phone phone) {
+        mPhone = phone;
+    }
 }

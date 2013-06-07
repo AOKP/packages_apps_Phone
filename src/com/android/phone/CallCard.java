@@ -102,7 +102,7 @@ public class CallCard extends LinearLayout
     /** Container for info about the current call(s) */
     private ViewGroup mCallInfoContainer;
     /** Primary "call info" block (the foreground or ringing call) */
-    private ViewGroup mPrimaryCallInfo;
+    protected ViewGroup mPrimaryCallInfo;
     /** "Call banner" for the primary call */
     private ViewGroup mPrimaryCallBanner;
     /** Secondary "call info" block (the background "on hold" call) */
@@ -378,7 +378,7 @@ public class CallCard extends LinearLayout
     /**
      * Updates the UI for the state where the phone is in use, but not ringing.
      */
-    private void updateForegroundCall(CallManager cm) {
+    protected void updateForegroundCall(CallManager cm) {
         if (DBG) log("updateForegroundCall()...");
         // if (DBG) PhoneUtils.dumpCallManager();
 
@@ -425,7 +425,7 @@ public class CallCard extends LinearLayout
      * Updates the UI for the state where an incoming call is ringing (or
      * call waiting), regardless of whether the phone's already offhook.
      */
-    private void updateRingingCall(CallManager cm) {
+    protected void updateRingingCall(CallManager cm) {
         if (DBG) log("updateRingingCall()...");
 
         Call ringingCall = cm.getFirstActiveRingingCall();
@@ -1185,6 +1185,7 @@ public class CallCard extends LinearLayout
             return;
         }
 
+        Phone phone = call.getPhone();
         Call.State state = call.getState();
         switch (state) {
             case HOLDING:
@@ -1231,7 +1232,7 @@ public class CallCard extends LinearLayout
                 // CDMA: This is because in CDMA when the user originates the second call,
                 // although the Foreground call state is still ACTIVE in reality the network
                 // put the first call on hold.
-                if (mApplication.phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA) {
+                if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA) {
                     showSecondaryCallInfo();
 
                     List<Connection> connections = call.getConnections();
@@ -1995,7 +1996,7 @@ public class CallCard extends LinearLayout
         return true;
     }
 
-    private void dispatchPopulateAccessibilityEvent(AccessibilityEvent event, View view) {
+    protected void dispatchPopulateAccessibilityEvent(AccessibilityEvent event, View view) {
         List<CharSequence> eventText = event.getText();
         int size = eventText.size();
         view.dispatchPopulateAccessibilityEvent(event);
