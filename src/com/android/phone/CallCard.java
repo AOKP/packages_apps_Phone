@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+ * Not a Contribution, Apache license notifications and license are retained
+ * for attribution purposes only.
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -377,7 +381,8 @@ public class CallCard extends LinearLayout
                 displaySecondaryCallStatus(cm, bgCall);
             }
         } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
             displaySecondaryCallStatus(cm, bgCall);
         }
     }
@@ -531,7 +536,8 @@ public class CallCard extends LinearLayout
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                 conn = call.getLatestConnection();
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                  || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 conn = call.getEarliestConnection();
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -669,7 +675,8 @@ public class CallCard extends LinearLayout
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                 conn = call.getLatestConnection();
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                  || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 conn = call.getEarliestConnection();
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -1431,7 +1438,8 @@ public class CallCard extends LinearLayout
             showImage(mPhoto, R.drawable.picture_dialing);
             mName.setText(R.string.card_title_in_call);
         } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
             // Normal GSM (or possibly SIP?) conference call.
             // Display the "conference call" image as the contact photo.
             // TODO: Better visual treatment for contact photos in a
@@ -1530,7 +1538,8 @@ public class CallCard extends LinearLayout
                     if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                         conn = call.getLatestConnection();
                     } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                            || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                            || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                            || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                         conn = call.getEarliestConnection();
                     } else {
                         throw new IllegalStateException("Unexpected phone type: " + phoneType);

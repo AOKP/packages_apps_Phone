@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Not a Contribution
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,6 +75,7 @@ import com.android.phone.common.CallLogAsync;
 import com.android.phone.OtaUtils.CdmaOtaScreenState;
 import com.android.server.sip.SipService;
 
+import com.qualcomm.ims.IImsService;
 /**
  * Global state for the telephony subsystem when running in the primary
  * phone process.
@@ -163,6 +167,7 @@ public class PhoneGlobals extends ContextWrapper
     // A few important fields we expose to the rest of the package
     // directly (rather than thru set/get methods) for efficiency.
     Phone phone;
+    Phone phoneIms;
     CallController callController;
     InCallUiState inCallUiState;
     CallerInfoCache callerInfoCache;
@@ -178,6 +183,8 @@ public class PhoneGlobals extends ContextWrapper
     boolean mShowBluetoothIndication = false;
     static int mDockState = Intent.EXTRA_DOCK_STATE_UNDOCKED;
     static boolean sVoiceCapable = true;
+
+    public static IImsService mImsService;
 
     // Internal PhoneApp Call state tracker
     CdmaPhoneCallState cdmaPhoneCallState;
@@ -457,6 +464,8 @@ public class PhoneGlobals extends ContextWrapper
             mCM = CallManager.getInstance();
             mCM.registerPhone(phone);
 
+            createImsService();
+
             // Create the NotificationMgr singleton, which is used to display
             // status bar icons and control other status bar behavior.
             notificationMgr = NotificationMgr.init(this);
@@ -647,6 +656,31 @@ public class PhoneGlobals extends ContextWrapper
                                       CallFeaturesSetting.HAC_VAL_OFF);
         }
    }
+
+    public void createImsService() {
+        if (PhoneUtils.isCallOnImsEnabled()) {
+            try {
+                // send intent to start ims service n get phone from ims service
+                boolean bound = bindService(new Intent("com.qualcomm.ims.IImsService"),
+                        ImsServiceConnection, Context.BIND_AUTO_CREATE);
+                Log.d(LOG_TAG, "IMSService bound request : " + bound);
+            } catch (NoClassDefFoundError e) {
+                Log.w(LOG_TAG, "Ignoring IMS class not found exception " + e);
+            }
+        }
+    }
+
+    private static ServiceConnection ImsServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //Get handle to IImsService.Stub.asInterface(service);
+            mImsService = IImsService.Stub.asInterface(service);
+            Log.d(LOG_TAG,"Ims Service Connected" + mImsService);
+        }
+
+        public void onServiceDisconnected(ComponentName arg0) {
+            Log.w(LOG_TAG,"Ims Service onServiceDisconnected");
+        }
+    };
 
     public void onConfigurationChanged(Configuration newConfig) {
         if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
@@ -1074,15 +1108,17 @@ public class PhoneGlobals extends ContextWrapper
         //
         boolean isRinging = (state == PhoneConstants.State.RINGING);
         boolean isDialing = (phone.getForegroundCall().getState() == Call.State.DIALING);
+        boolean isVideoCallActive = PhoneUtils.isImsVideoCallActive(mCM.getActiveFgCall());
         boolean showingQuickResponseDialog = (mInCallScreen != null) &&
                 mInCallScreen.isQuickResponseDialogShowing();
         boolean showingDisconnectedConnection =
                 PhoneUtils.hasDisconnectedConnections(phone) && isShowingCallScreen;
-        boolean keepScreenOn = isRinging || isDialing ||
+        boolean keepScreenOn = isRinging || isDialing || isVideoCallActive ||
                 (showingDisconnectedConnection && !showingQuickResponseDialog);
         if (DBG) Log.d(LOG_TAG, "updateWakeState: keepScreenOn = " + keepScreenOn
                        + " (isRinging " + isRinging
                        + ", isDialing " + isDialing
+                       + ", isVideoCallActive " + isVideoCallActive
                        + ", showingQuickResponse " + showingQuickResponseDialog
                        + ", showingDisc " + showingDisconnectedConnection + ")");
         // keepScreenOn == true means we'll hold a full wake lock:
@@ -1153,7 +1189,9 @@ public class PhoneGlobals extends ContextWrapper
                 boolean screenOnImmediately = (isHeadsetPlugged()
                                                || PhoneUtils.isSpeakerOn(this)
                                                || isBluetoothHeadsetAudioOn()
-                                               || mIsHardKeyboardOpen);
+                                               || mIsHardKeyboardOpen
+                                               || PhoneUtils.isImsVideoCallActive(
+                                                       mCM.getActiveFgCall()));
 
                 // We do not keep the screen off when the user is outside in-call screen and we are
                 // horizontal, but we do not force it on when we become horizontal until the
@@ -1507,12 +1545,25 @@ public class PhoneGlobals extends ContextWrapper
             } else if (action.equals(TelephonyIntents.ACTION_SERVICE_STATE_CHANGED)) {
                 handleServiceStateChanged(intent);
             } else if (action.equals(TelephonyIntents.ACTION_EMERGENCY_CALLBACK_MODE_CHANGED)) {
-                if (TelephonyCapabilities.supportsEcm(phone)) {
+                boolean isImsPhone = intent.getBooleanExtra("ims_phone", false);
+
+                if (isImsPhone) {
+                    phoneIms = PhoneUtils.getImsPhone(PhoneGlobals.getInstance().mCM);
+                }
+                if (TelephonyCapabilities.supportsEcm(phone) ||
+                        TelephonyCapabilities.supportsEcm(phoneIms)) {
                     Log.d(LOG_TAG, "Emergency Callback Mode arrived in PhoneApp.");
                     // Start Emergency Callback Mode service
-                    if (intent.getBooleanExtra("phoneinECMState", false)) {
-                        context.startService(new Intent(context,
-                                EmergencyCallbackModeService.class));
+                    if (isImsPhone) {
+                        if (intent.getBooleanExtra("phoneinECMState", false)) {
+                            context.startService(new Intent(context,
+                                    EmergencyCallbackModeService.class).putExtra("ims_phone", true));
+                        }
+                    } else {
+                        if (intent.getBooleanExtra("phoneinECMState", false)) {
+                            context.startService(new Intent(context,
+                                    EmergencyCallbackModeService.class));
+                        }
                     }
                 } else {
                     // It doesn't make sense to get ACTION_EMERGENCY_CALLBACK_MODE_CHANGED

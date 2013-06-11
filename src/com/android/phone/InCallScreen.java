@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Not a Contribution
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1259,8 +1262,12 @@ public class InCallScreen extends Activity
         // Helper class to keep track of enabledness/state of UI controls
         mInCallControlState = new InCallControlState(this, mCM);
 
-        // Helper class to run the "Manage conference" UI
-        mManageConferenceUtils = new ManageConferenceUtils(this, mCM);
+        if (PhoneUtils.isCallOnImsEnabled()) {
+            mManageConferenceUtils = new ImsManageConferenceUtils(this, mCM);
+        } else {
+            // Helper class to run the "Manage conference" UI
+            mManageConferenceUtils = new ManageConferenceUtils(this, mCM);
+        }
 
         // The DTMF Dialpad.
         ViewStub stub = (ViewStub) findViewById(R.id.dtmf_twelve_key_dialer_stub);
@@ -1375,7 +1382,8 @@ public class InCallScreen extends Activity
                 internalSwapCalls();
             }
         } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
             if (hasRingingCall) {
                 // If an incoming call is ringing, the CALL button is actually
                 // handled by the PhoneWindowManager.  (We do this to make
@@ -2455,7 +2463,8 @@ public class InCallScreen extends Activity
                     showWaitPromptDialog(fgLatestConnection, postDialStr);
                 }
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                    || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 for (Connection cn : fgConnections) {
                     if ((cn != null) && (cn.getPostDialState() == Connection.PostDialState.WAIT)) {
                         postDialStr = cn.getRemainingPostDialString();
@@ -3499,16 +3508,19 @@ public class InCallScreen extends Activity
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                 if (DBG) log("internalAnswerCall: answering (CDMA)...");
                 if (mCM.hasActiveFgCall()
-                        && mCM.getFgPhone().getPhoneType() == PhoneConstants.PHONE_TYPE_SIP) {
+                        && (mCM.getFgPhone().getPhoneType() == PhoneConstants.PHONE_TYPE_SIP
+                        || mCM.getFgPhone().getPhoneType() == PhoneConstants.PHONE_TYPE_IMS)) {
                     // The incoming call is CDMA call and the ongoing
                     // call is a SIP call. The CDMA network does not
                     // support holding an active call, so there's no
-                    // way to swap between a CDMA call and a SIP call.
+                    // way to swap between a CDMA call and a SIP or IMS call.
                     // So for now, we just don't allow a CDMA call and
-                    // a SIP call to be active at the same time.We'll
+                    // a SIP or IMS call to be active at the same time.We'll
                     // "answer incoming, end ongoing" in this case.
+                    String fgPhoneName = (mCM.getFgPhone().getPhoneType()
+                            == PhoneConstants.PHONE_TYPE_SIP) ? "SIP" : "IMS";
                     if (DBG) log("internalAnswerCall: answer "
-                            + "CDMA incoming and end SIP ongoing");
+                            + "CDMA incoming and end " + fgPhoneName + " ongoing");
                     PhoneUtils.answerAndEndActive(mCM, ringing);
                 } else {
                     PhoneUtils.answerCall(ringing);
@@ -3531,8 +3543,10 @@ public class InCallScreen extends Activity
                 } else {
                     PhoneUtils.answerCall(ringing);
                 }
-            } else if (phoneType == PhoneConstants.PHONE_TYPE_GSM) {
-                if (DBG) log("internalAnswerCall: answering (GSM)...");
+            } else if (phoneType == PhoneConstants.PHONE_TYPE_GSM
+                    || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
+                String phoneName = (phoneType == PhoneConstants.PHONE_TYPE_GSM) ? "GSM" : "IMS";
+                if (DBG) log("internalAnswerCall: answering (" + phoneName +")...");
                 // GSM: this is usually just a wrapper around
                 // PhoneUtils.answerCall(), *but* we also need to do
                 // something special for the "both lines in use" case.
@@ -3722,16 +3736,10 @@ public class InCallScreen extends Activity
                     return;
                 }
                 List<Connection> connections = mCM.getFgCallConnections();
-                // There almost certainly will be > 1 connection,
+
+                // There almost certainly will be > 1 connection for GSM
                 // since isConferenceCall() just returned true.
-                if ((connections == null) || (connections.size() <= 1)) {
-                    Log.w(LOG_TAG,
-                          "MANAGE_CONFERENCE: Bogus TRUE from isConferenceCall(); connections = "
-                          + connections);
-                    // Hide the Manage Conference panel, return to NORMAL mode.
-                    setInCallScreenMode(InCallScreenMode.NORMAL);
-                    return;
-                }
+                // For IMS conference calls there may be only one connection
 
                 // TODO: Don't do this here. The call to
                 // initManageConferencePanel() should instead happen

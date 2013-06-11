@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+ * Not a Contribution, Apache license notifications and license are retained
+ * for attribution purposes only.
+ *
  * Copyright (C) 2008 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,6 +80,8 @@ public class OutgoingCallBroadcaster extends Activity
     public static final String EXTRA_SIP_PHONE_URI = "android.phone.extra.SIP_PHONE_URI";
     public static final String EXTRA_ACTUAL_NUMBER_TO_DIAL =
             "android.phone.extra.ACTUAL_NUMBER_TO_DIAL";
+    public static final String EXTRA_CALL_TYPE = "android.phone.extra.CALL_TYPE";
+    public static final String EXTRA_CALL_DOMAIN = "android.phone.extra.CALL_DOMAIN";
 
     /**
      * Identifier for intent extra for sending an empty Flash message for
@@ -89,6 +95,9 @@ public class OutgoingCallBroadcaster extends Activity
      */
     public static final String EXTRA_SEND_EMPTY_FLASH =
             "com.android.phone.extra.SEND_EMPTY_FLASH";
+
+    public static final String EXTRA_DIAL_CONFERENCE_URI =
+            "com.android.phone.extra.DIAL_CONFERENCE_URI";
 
     // Dialog IDs
     private static final int DIALOG_NOT_VOICE_CAPABLE = 1;
@@ -307,6 +316,7 @@ public class OutgoingCallBroadcaster extends Activity
         Intent newIntent = new Intent(Intent.ACTION_CALL, uri);
         newIntent.putExtra(EXTRA_ACTUAL_NUMBER_TO_DIAL, number);
         PhoneUtils.checkAndCopyPhoneProviderExtras(intent, newIntent);
+        PhoneUtils.copyImsExtras(intent, newIntent);
 
         // Finally, launch the SipCallOptionHandler, with the copy of the
         // original CALL intent stashed away in the EXTRA_NEW_CALL_INTENT
@@ -600,6 +610,16 @@ public class OutgoingCallBroadcaster extends Activity
 
             Log.i(TAG, "onCreate(): callNow case! Calling placeCall(): " + intent);
 
+            /*
+             * Convert the emergency call intent to the IMS intent if IMS is enabled
+             * emergency calls should go in auto domain not PS domain
+             * TODO: Pass Calltype from UI for OEMs that support video emergency calls
+             */
+            if (PhoneUtils.isCallOnImsEnabled()) {
+                Log.d(TAG, "IMS is enabled , place IMS emergency call");
+                PhoneUtils.convertCallToIMS(intent, Phone.CALL_TYPE_VOICE);
+            }
+
             // Initiate the outgoing call, and simultaneously launch the
             // InCallScreen to display the in-call UI:
             PhoneGlobals.getInstance().callController.placeCall(intent);
@@ -653,6 +673,9 @@ public class OutgoingCallBroadcaster extends Activity
         PhoneUtils.checkAndCopyPhoneProviderExtras(intent, broadcastIntent);
         broadcastIntent.putExtra(EXTRA_ALREADY_CALLED, callNow);
         broadcastIntent.putExtra(EXTRA_ORIGINAL_URI, uri.toString());
+        broadcastIntent.putExtra(EXTRA_DIAL_CONFERENCE_URI,
+                intent.getBooleanExtra((EXTRA_DIAL_CONFERENCE_URI), false));
+
         // Need to raise foreground in-call UI as soon as possible while allowing 3rd party app
         // to intercept the outgoing call.
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
