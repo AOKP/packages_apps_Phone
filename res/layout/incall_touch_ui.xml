@@ -182,7 +182,8 @@
                     />
 
                 <!-- Separator between 3rd (or 4th) and 4th (or 6th) button -->
-                <View style="@style/VerticalSeparator" />
+                <View android:id="@+id/blacklistSpacer"
+                    style="@style/VerticalSeparator" />
 
                 <!-- "Blacklist" -->
                 <!-- The button used for toggling blackist. -->
