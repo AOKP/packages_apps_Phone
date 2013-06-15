@@ -100,6 +100,7 @@ public class InCallTouchUi extends FrameLayout
     private ImageButton mSwapButton;
     private ImageButton mAddBlacklistButton;
     private View mHoldSwapSpacer;
+    private View mBlacklistSpacer;
 
     // "Extra button row"
     private ViewStub mExtraButtonRow;
@@ -192,6 +193,7 @@ public class InCallTouchUi extends FrameLayout
         mSwapButton.setOnClickListener(this);
         mSwapButton.setOnLongClickListener(this);
         mHoldSwapSpacer = mInCallControls.findViewById(R.id.holdSwapSpacer);
+        mBlacklistSpacer = mInCallControls.findViewById(R.id.blacklistSpacer);
 
         // Blacklist functionality
         mAddBlacklistButton = (ImageButton) mInCallControls.findViewById(R.id.addBlacklistButton);
@@ -554,6 +556,7 @@ public class InCallTouchUi extends FrameLayout
             boolean visible = PhoneUtils.PhoneSettings.isBlacklistEnabled(getContext()) &&
                     inCallControlState.canBlacklistCall;
             mAddBlacklistButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+            mBlacklistSpacer.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
         // "Hold" / "Swap":
