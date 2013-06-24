@@ -122,6 +122,11 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
             }
 
         }
+
+        @Override
+        public void onDisplayModeEvent() {
+            // NO-OP
+        }
     }
 
     public VideoCallPanel(Context context) {
@@ -624,6 +629,22 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
             loge("chooseCamera " + chooseFrontCamera + " Both camera ids unknown");
             mCameraId = CAMERA_UNKNOWN;
         }
+    }
+
+    public void startOrientationListener() {
+        if (isCvoModeEnabled()) {
+            mVideoCallManager.startOrientationListener();
+        }
+    }
+
+    public void stopOrientationListener() {
+        if (isCvoModeEnabled()) {
+            mVideoCallManager.stopOrientationListener();
+        }
+    }
+
+    public boolean isCvoModeEnabled() {
+        return mVideoCallManager.isCvoModeEnabled();
     }
 
     private void log(String msg) {

@@ -83,6 +83,13 @@ static int dpl_setSurface(JNIEnv *e, jobject o, jobject osurface) {
     return 0;
 }
 
+static void dpl_setDeviceOrientation(JNIEnv *e, jobject o, jint orientation) {
+    ALOGD("%s", __func__);
+    if (vt_apis && vt_apis->setDeviceOrientation) {
+        vt_apis->setDeviceOrientation(orientation);
+    }
+}
+
 static short dpl_getNegotiatedFPS(JNIEnv *e, jobject o) {
     short def = 20;
     ALOGD("%s", __func__);
@@ -109,6 +116,16 @@ static int dpl_getNegotiatedWidth(JNIEnv *e, jobject o) {
 
     if(vt_apis && vt_apis->getNegotiatedWidth) {
         return vt_apis->getNegotiatedWidth();
+    }
+    return def;
+}
+
+static int dpl_getUIOrientationMode(JNIEnv *e, jobject o) {
+    int def = -1;
+    ALOGD("%s", __func__);
+
+    if(vt_apis && vt_apis->getUIOrientationMode) {
+        return vt_apis->getUIOrientationMode();
     }
     return def;
 }
@@ -162,9 +179,11 @@ static JNINativeMethod sMethods[] =
     {"nativeDeInit", "()V", (void *)dpl_deinit},
     {"nativeHandleRawFrame", "([B)V", (void *)dpl_handleRawFrame},
     {"nativeSetSurface", "(Landroid/graphics/SurfaceTexture;)I", (void *)dpl_setSurface},
+    {"nativeSetDeviceOrientation", "(I)V", (void *)dpl_setDeviceOrientation},
     {"nativeGetNegotiatedFPS", "()S", (void *)dpl_getNegotiatedFPS},
     {"nativeGetNegotiatedHeight", "()I", (void *)dpl_getNegotiatedHeight},
     {"nativeGetNegotiatedWidth", "()I", (void *)dpl_getNegotiatedWidth},
+    {"nativeGetUIOrientationMode", "()I", (void *)dpl_getUIOrientationMode},
     {"nativeRegisterForMediaEvents", "(Lcom/android/phone/MediaHandler;)V"
         , (void *)dpl_registerForImsEvent}
 };
@@ -175,10 +194,12 @@ static JNINativeMethod sMethods[] =
 #define IMPL_SYM_INIT        "initImsThinClient"
 #define IMPL_SYM_FRAME       "frameToEncode"
 #define IMPL_SYM_SET_SURFACE "setFarEndSurface"
+#define IMPL_SYM_SET_DEVICE_ORIENTATION "setDeviceOrientation"
 #define IMPL_SYM_DEINIT      "deInitImsThinClient"
 #define IMPL_SYM_NEG_FPS     "getNegotiatedFPS"
 #define IMPL_SYM_NEG_HEIGHT  "getNegotiatedHeight"
 #define IMPL_SYM_NEG_WIDTH   "getNegotiatedWidth"
+#define IMPL_SYM_UI_ORIENTATION_MODE   "getUIOrientationMode"
 #define IMPL_SYM_REGISTER    "registerAppEventCallback"
 
 struct VtImplApis *vt_load_impl_lib(const char *path)
@@ -197,10 +218,12 @@ struct VtImplApis *vt_load_impl_lib(const char *path)
     ret->initImsThinClient = (VtImplInitFun) dlsym(handle,IMPL_SYM_INIT);
     ret->frameToEncode = (VtImplFrameFun) dlsym(handle, IMPL_SYM_FRAME);
     ret->setFarEndSurface = (VtImplSetSurfFun) dlsym(handle, IMPL_SYM_SET_SURFACE);
+    ret->setDeviceOrientation = (VtImplSetDeviceOrient) dlsym(handle, IMPL_SYM_SET_DEVICE_ORIENTATION);
     ret->deInitImsThinClient = (VtImplDeinitFun) dlsym(handle, IMPL_SYM_DEINIT);
     ret->getNegotiatedFPS = (VtImplUint32VoidFunc) dlsym(handle, IMPL_SYM_NEG_FPS);
     ret->getNegotiatedHeight = (VtImplUint32VoidFunc) dlsym(handle, IMPL_SYM_NEG_HEIGHT);
     ret->getNegotiatedWidth = (VtImplUint32VoidFunc) dlsym(handle, IMPL_SYM_NEG_WIDTH);
+    ret->getUIOrientationMode = (VtImplUint32VoidFunc) dlsym(handle, IMPL_SYM_UI_ORIENTATION_MODE);
     ret->registerAppEventCallback = (VtImplRegisterCbFun) dlsym(handle, IMPL_SYM_REGISTER);
 
     return ret;

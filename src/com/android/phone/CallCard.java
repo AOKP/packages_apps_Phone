@@ -798,6 +798,7 @@ public class CallCard extends LinearLayout
 
         mVideoCallPanel.setVisibility(View.VISIBLE);
         mVideoCallPanel.setPanelElementsVisibility(callType);
+        mVideoCallPanel.startOrientationListener();
     }
 
     /**
@@ -810,6 +811,7 @@ public class CallCard extends LinearLayout
             mPhoto.setVisibility(View.VISIBLE);
             mVideoCallPanel.setVisibility(View.GONE);
             mVideoCallPanel.setCameraNeeded(false);
+            mVideoCallPanel.stopOrientationListener();
         }
     }
 
