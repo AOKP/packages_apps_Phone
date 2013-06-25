@@ -20,13 +20,17 @@
 package com.android.phone;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemProperties;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -54,8 +58,11 @@ import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
  * Settings app.  It's not part of the "Call settings" hierarchy that's
  * available from the Phone app (see CallFeaturesSetting for that.)
  */
+// To support Dialog interface, enhanced the class definition.
 public class MSimMobileNetworkSubSettings extends PreferenceActivity
-        implements Preference.OnPreferenceChangeListener{
+        implements Preference.OnPreferenceChangeListener,
+        DialogInterface.OnClickListener,
+        DialogInterface.OnDismissListener{
 
     // debug data
     private static final String LOG_TAG = "MSimMobileNetworkSubSettings";
@@ -63,6 +70,8 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
     public static final int REQUEST_CODE_EXIT_ECM = 17;
 
     //String keys for preference lookup
+    private static final String BUTTON_DATA_ENABLED_KEY = "button_data_enabled_key";
+    private static final String BUTTON_ROAMING_KEY = "button_roaming_key";
     private static final String BUTTON_PREFERED_NETWORK_MODE = "preferred_network_mode_key";
 
     static final int preferredNetworkMode = Phone.PREFERRED_NT_MODE;
@@ -74,6 +83,8 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
 
     //UI objects
     private ListPreference mButtonPreferredNetworkMode;
+    private CheckBoxPreference mButtonDataRoam;
+    private CheckBoxPreference mButtonDataEnabled;
 
     private static final String iface = "rmnet0"; //TODO: this will go away
 
@@ -88,6 +99,27 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
 
     private Preference mClickedPreference;
 
+    /**
+     * This is a method implemented for DialogInterface.OnClickListener.
+     * Used to dismiss the dialogs when they come up.
+     */
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            // Update the db and then toggle
+            multiSimSetDataRoaming(true, mSubscription);
+            mOkClicked = true;
+        } else {
+            // Reset the toggle
+            mButtonDataRoam.setChecked(false);
+        }
+    }
+
+    public void onDismiss(DialogInterface dialog) {
+        // Assuming that onClick gets called first
+        if (!mOkClicked) {
+            mButtonDataRoam.setChecked(false);
+        }
+    }
 
     /**
      * Invoked on each preference click in this hierarchy, overrides
@@ -99,6 +131,31 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
         /** TODO: Refactor and get rid of the if's using subclasses */
         if (mGsmUmtsOptions != null &&
                 mGsmUmtsOptions.preferenceTreeClick(preference) == true) {
+            return true;
+        } else if (preference == mButtonDataRoam) {
+            // Handles the click events for Data Roaming menu item.
+            if (DBG) log("onPreferenceTreeClick: preference = mButtonDataRoam");
+
+            //normally called on the toggle click
+            if (mButtonDataRoam.isChecked()) {
+                // First confirm with a warning dialog about charges
+                mOkClicked = false;
+                new AlertDialog.Builder(this).setMessage(
+                        getResources().getString(R.string.roaming_warning))
+                        .setTitle(android.R.string.dialog_alert_title)
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .setPositiveButton(android.R.string.yes, this)
+                        .setNegativeButton(android.R.string.no, this)
+                        .show()
+                        .setOnDismissListener(this);
+            } else {
+                 multiSimSetDataRoaming(false, mSubscription);
+            }
+            return true;
+        } else if (preference == mButtonDataEnabled) {
+            // Handles the click events for Mobile Data menu item.
+            if (DBG) log("onPreferenceTreeClick: preference == mButtonDataEnabled.");
+            multiSimSetMobileData(mButtonDataEnabled.isChecked(), mSubscription);
             return true;
         } else if (mCdmaOptions != null &&
                    mCdmaOptions.preferenceTreeClick(preference) == true) {
@@ -143,6 +200,8 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
         //get UI object references
         PreferenceScreen prefSet = getPreferenceScreen();
 
+        mButtonDataEnabled = (CheckBoxPreference) prefSet.findPreference(BUTTON_DATA_ENABLED_KEY);
+        mButtonDataRoam = (CheckBoxPreference) prefSet.findPreference(BUTTON_ROAMING_KEY);
         mButtonPreferredNetworkMode = (ListPreference) prefSet.findPreference(
                 BUTTON_PREFERED_NETWORK_MODE);
 
@@ -192,6 +251,13 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
         // upon resumption from the sub-activity, make sure we re-enable the
         // preferences.
         getPreferenceScreen().setEnabled(true);
+
+        // Set UI state in onResume because a user could go home, launch some
+        // app to change this setting's backend, and re-launch this settings app
+        // and the UI state would be inconsistent with actual state
+        mButtonDataEnabled.setChecked(multiSimGetMobileData(mSubscription));
+        mButtonDataRoam.setChecked(multiSimGetDataRoaming(mSubscription));
+
         if (getPreferenceScreen().findPreference(BUTTON_PREFERED_NETWORK_MODE) != null)  {
             mPhone.getPreferredNetworkType(mHandler.obtainMessage(
                     MyHandler.MESSAGE_GET_PREFERRED_NETWORK_TYPE));
@@ -479,5 +545,57 @@ public class MSimMobileNetworkSubSettings extends PreferenceActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Get Data roaming flag, from DB, as per SUB.
+    private boolean multiSimGetDataRoaming(int sub) {
+        boolean enabled;
+
+        enabled = android.provider.Settings.Global.getInt(mPhone.getContext().getContentResolver(),
+                android.provider.Settings.Global.DATA_ROAMING + sub, 0) != 0;
+        log("Get Data Roaming for SUB-" + sub + " is " + enabled);
+        return enabled;
+    }
+
+    // Set Data roaming flag, in DB, as per SUB.
+    private void multiSimSetDataRoaming(boolean enabled, int sub) {
+        // as per SUB, set the individual flag
+        android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
+                android.provider.Settings.Global.DATA_ROAMING + sub, enabled ? 1 : 0);
+        log("Set Data Roaming for SUB-" + sub + " is " + enabled);
+
+        // If current DDS is this SUB, update the Global flag also
+        if (sub == android.telephony.MSimTelephonyManager.
+                getDefault().getPreferredDataSubscription()) {
+            mPhone.setDataRoamingEnabled(enabled);
+            log("Set Data Roaming for DDS-" + sub + " is " + enabled);
+        }
+    }
+
+    // Get Mobile Data flag, from DB, as per SUB.
+    private boolean multiSimGetMobileData(int sub) {
+        boolean enabled;
+
+        enabled = android.provider.Settings.Global.getInt(mPhone.getContext().getContentResolver(),
+                android.provider.Settings.Global.MOBILE_DATA + sub, 0) != 0;
+        log("Get Mobile Data for SUB-" + sub + " is " + enabled);
+        return enabled;
+    }
+
+    // Set Mobile Data option, in DB, as per SUB.
+    private void multiSimSetMobileData(boolean enabled, int sub) {
+        // as per SUB, set the individual flag
+        android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
+                android.provider.Settings.Global.MOBILE_DATA + sub, enabled ? 1 : 0);
+        log("Set Mobile Data for SUB-" + sub + " is " + enabled);
+
+        // If current DDS is this SUB, update the Global flag also
+        if (sub == android.telephony.MSimTelephonyManager.
+                getDefault().getPreferredDataSubscription()) {
+            ConnectivityManager cm =
+                    (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            cm.setMobileDataEnabled(enabled);
+            log("Set Mobile Data for DDS-" + sub + " is " + enabled);
+        }
     }
 }
