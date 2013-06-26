@@ -631,4 +631,66 @@
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Ringsignal och vibrera"</string>
     <string name="perm_change_mobile_network">Byt nätverk (2G/3G)</string>
     <string name="perm_change_mobile_network_desc">En applikation med denna tillåtelse kan, när som helst, byta mellan 2G data och 3G data. 3G är snabbare, förbrukar mer batteri och kan också kosta dig mer pengar.</string>
+
+   <!-- AOKP additional -->
+
+    <string name="vibration_title">Telefon vibration</string>
+
+    <!-- Advanced Settings -->
+    <string name="advanced_setting">Avancerade Inställningar</string>
+    <string name="vibrate_outgoing">Vibrera vid svar</string>
+    <string name="vibrate_outgoing_sum">Vibrerar när ett utgående samtal besvaras</string>
+    <string name="vibrate_60">Vibration var 60 sekund</string>
+    <string name="vibrate_60_sum">Vibrerar var 60 sekund och märk av varje minut under utgående samtal</string>
+    <string name="vibrate_hangup">Vibrera vid påläggningssignal</string>
+    <string name="vibrate_hangup_sum">Vibrerar när ett samtal har avslutats</string>
+    <string name="vibrate_call_waiting">Vibrera samtal väntar</string>
+    <string name="vibrate_call_waiting_sum">Vibrera vid samtal väntar</string>
+
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Svartlista</string>
+    <string name="enable_blacklist_title">Aktivera svartlista</string>
+    <string name="blacklist_summary_disabled">Inaktiverad</string>
+    <string name="blacklist_summary">Inkommande samtal från telefonnummer i den svarta listan ska blockeras</string>
+    <string name="blacklist_notify">Visa notifikation</string>
+    <string name="blacklist_private_numbers_title">Privata nummer</string>
+    <string name="blacklist_private_numbers_summary">Blockera inkommande samtal från privata nummer</string>
+    <string name="blacklist_unknown_numbers_title">Okända nummer</string>
+    <string name="blacklist_unknown_numbers_summary">Blockera inkommande samtal från nummer som inte finns i kontaktlistan</string>
+    <string name="blacklist_regex_title">Använd wildcard</string>
+    <string name="blacklist_regex_summary">Använd . som ett wildcard och * för upprepning. tex. 123.* Blockera nummer som börjar med 123 och.*123.* Blockera nummer innehåller 123</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Lägg till telefonnummer</string>
+    <string name="add_to_blacklist">Lägg till svartlista</string>
+    <string name="add_to_blacklist_message">Framtida samtal från %s kommer att blockeras</string>
+    <string name="remove_blacklist_number_title">Ta bort nummer</string>
+    <string name="remove_blacklist_number">Vill du ta bort %s från den svarta listan?</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Blockerad ett samtal från %s</string>
+    <string name="blacklist_notification_private_number">Blockerad ett samtal från ett privat nummer</string>
+    <string name="blacklist_notification_list_private">Privat</string>
+    <string name="blacklist_notification_unknown_number">Blockerad okänt nummer %s</string>
+    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> samtal blockerades</string>
+    <string name="unblock_number">Lås upp</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Svartlista</string>
+
+    <string name="ring_delay_title">Ringfördröjningen</string>
+    <string name="ring_delay_summary">Välj Ringfördröjning</string>
+    <string name="exit_to_home_screen_title">Vid avslutat samtal återgå till senaste aktivitet</string>
+    <string name="exit_to_home_screen_summary">Vid avslutat samtal återgå till senaste aktivitets skärm snarare än att gå till samtals loggen</string>
+    <string name="landscape_mode_title">Aktivera Landskap</string>
+    <string name="landscape_mode_summary">Aktivera Landskaps Läge (om sensor är aktiverad)</string>
+
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Brusreducering</string>
+    <string name="noise_suppression_summary">Aktivera brusreducering för samtal</string>
+    <!-- End Noise suppression -->
+
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Knappsatsen inställningarna</string>
+    <string name="dialer_ui_settings_summary">Inställningar för knappsatsen</string>
 </resources>
