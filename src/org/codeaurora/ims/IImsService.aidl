@@ -25,9 +25,9 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.qualcomm.ims;
+package org.codeaurora.ims;
 
-import com.qualcomm.ims.IImsServiceListener;
+import org.codeaurora.ims.IImsServiceListener;
 
 /**
  * Interface used to interact with IMS Service.

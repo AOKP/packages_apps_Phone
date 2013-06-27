@@ -26,7 +26,7 @@
  */
 
 
-package com.qualcomm.ims;
+package org.codeaurora.ims;
 
 /**
  * Interface used for registering callbacks with IMS Service. {@hide}

@@ -75,7 +75,7 @@ import com.android.phone.common.CallLogAsync;
 import com.android.phone.OtaUtils.CdmaOtaScreenState;
 import com.android.server.sip.SipService;
 
-import com.qualcomm.ims.IImsService;
+import org.codeaurora.ims.IImsService;
 /**
  * Global state for the telephony subsystem when running in the primary
  * phone process.
@@ -680,7 +680,7 @@ public class PhoneGlobals extends ContextWrapper
         if (PhoneUtils.isCallOnImsEnabled()) {
             try {
                 // send intent to start ims service n get phone from ims service
-                boolean bound = bindService(new Intent("com.qualcomm.ims.IImsService"),
+                boolean bound = bindService(new Intent("org.codeaurora.ims.IImsService"),
                         ImsServiceConnection, Context.BIND_AUTO_CREATE);
                 Log.d(LOG_TAG, "IMSService bound request : " + bound);
             } catch (NoClassDefFoundError e) {
