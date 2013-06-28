@@ -2281,43 +2281,70 @@ public class PhoneUtils {
      * state of the Phone.
      */
     /* package */ static boolean okToAddCall(CallManager cm) {
-        Phone phone = cm.getActiveFgCall().getPhone();
+        if (!isCallOnImsEnabled()) {
+            Phone phone = cm.getActiveFgCall().getPhone();
+
+            // "Add call" is never allowed in emergency callback mode (ECM).
+            if (isPhoneInEcm(phone)) {
+                return false;
+            }
+
+            int phoneType = phone.getPhoneType();
+            final Call.State fgCallState = cm.getActiveFgCall().getState();
+            if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
+               // CDMA: "Add call" button is only enabled when:
+               // - ForegroundCall is in ACTIVE state
+               // - After 30 seconds of user Ignoring/Missing a Call Waiting call.
+                PhoneGlobals app = PhoneGlobals.getInstance();
+                return ((fgCallState == Call.State.ACTIVE)
+                        && (app.cdmaPhoneCallState.getAddCallMenuStateAfterCallWaiting()));
+            } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
+                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                // GSM: "Add call" is available only if ALL of the following are true:
+                // - There's no incoming ringing call
+                // - There's < 2 lines in use
+                // - The foreground call is ACTIVE or IDLE or DISCONNECTED.
+                //   (We mainly need to make sure it *isn't* DIALING or ALERTING.)
+                final boolean hasRingingCall = cm.hasActiveRingingCall();
+                final boolean hasActiveCall = cm.hasActiveFgCall();
+                final boolean hasHoldingCall = cm.hasActiveBgCall();
+                final boolean allLinesTaken = hasActiveCall && hasHoldingCall;
+
+                return !hasRingingCall
+                        && !allLinesTaken
+                        && ((fgCallState == Call.State.ACTIVE)
+                            || (fgCallState == Call.State.IDLE)
+                            || (fgCallState == Call.State.DISCONNECTED));
+            } else {
+                throw new IllegalStateException("Unexpected phone type: " + phoneType);
+            }
+        } else {
+            return okToAddCallForIms(cm);
+        }
+    }
+
+    /* package */ static boolean okToAddCallForIms(CallManager cm) {
+        Phone phone = cm.getPhoneInCall();
 
         // "Add call" is never allowed in emergency callback mode (ECM).
         if (isPhoneInEcm(phone)) {
             return false;
         }
 
-        int phoneType = phone.getPhoneType();
+        // For IMS scenarios, add call should be allowed in any of the below combination
+        // Gsm+Lte, Cdma+Lte, Lte+Lte
+        // Gsm+Gsm, Cdma+Cdma
         final Call.State fgCallState = cm.getActiveFgCall().getState();
-        if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
-           // CDMA: "Add call" button is only enabled when:
-           // - ForegroundCall is in ACTIVE state
-           // - After 30 seconds of user Ignoring/Missing a Call Waiting call.
-            PhoneGlobals app = PhoneGlobals.getInstance();
-            return ((fgCallState == Call.State.ACTIVE)
-                    && (app.cdmaPhoneCallState.getAddCallMenuStateAfterCallWaiting()));
-        } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
-                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
-            // GSM: "Add call" is available only if ALL of the following are true:
-            // - There's no incoming ringing call
-            // - There's < 2 lines in use
-            // - The foreground call is ACTIVE or IDLE or DISCONNECTED.
-            //   (We mainly need to make sure it *isn't* DIALING or ALERTING.)
-            final boolean hasRingingCall = cm.hasActiveRingingCall();
-            final boolean hasActiveCall = cm.hasActiveFgCall();
-            final boolean hasHoldingCall = cm.hasActiveBgCall();
-            final boolean allLinesTaken = hasActiveCall && hasHoldingCall;
+        final boolean hasRingingCall = cm.hasActiveRingingCall();
+        final boolean hasActiveCall = cm.hasActiveFgCall();
+        final boolean hasHoldingCall = cm.hasActiveBgCall();
+        final boolean allLinesTaken = hasActiveCall && hasHoldingCall;
 
-            return !hasRingingCall
-                    && !allLinesTaken
-                    && ((fgCallState == Call.State.ACTIVE)
-                        || (fgCallState == Call.State.IDLE)
-                        || (fgCallState == Call.State.DISCONNECTED));
-        } else {
-            throw new IllegalStateException("Unexpected phone type: " + phoneType);
-        }
+        return !hasRingingCall
+                && !allLinesTaken
+                && ((fgCallState == Call.State.ACTIVE)
+                    || (fgCallState == Call.State.IDLE)
+                    || (fgCallState == Call.State.DISCONNECTED));
     }
 
     /**
