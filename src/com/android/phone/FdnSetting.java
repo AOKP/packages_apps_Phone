@@ -285,7 +285,7 @@ public class FdnSetting extends PreferenceActivity
                         if (DBG)
                             log("Handle EVENT_PIN2_CHANGE_COMPLETE");
                         AsyncResult ar = (AsyncResult) msg.obj;
-                        if (ar.exception != null) {
+                        if (ar.exception != null && ar.exception instanceof CommandException) {
                             CommandException ce = (CommandException) ar.exception;
                             if (ce.getCommandError() == CommandException.Error.SIM_PUK2) {
                                 // throw an alert dialog on the screen, displaying the
