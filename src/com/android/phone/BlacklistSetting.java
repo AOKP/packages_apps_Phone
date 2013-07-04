@@ -18,9 +18,13 @@ package com.android.phone;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.CountryDetector;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -29,6 +33,10 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.ContactsContract.PhoneLookup;
+import android.provider.Settings;
+import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -163,15 +171,75 @@ public class BlacklistSetting extends PreferenceActivity implements
         }
     }
 
+    private static final class ContactNameHolder {
+        Preference pref;
+        String name;
+    }
+
     private void updateBlacklist() {
         mCatBlacklist.removeAll();
+
+        final CountryDetector detector = (CountryDetector) getSystemService(COUNTRY_DETECTOR);
+        final String currentCountryIso = detector.detectCountry().getCountryIso();
 
         for (String number : mBlacklist.getItems()) {
             Preference pref = new Preference(this);
             pref.setTitle(number);
+
+            String normalizedNumber = number;
+            if (!TextUtils.isEmpty(currentCountryIso)) {
+                // Normalize the number: this is needed because the PhoneLookup query below does not
+                // accept a country code as an input.
+                String numberE164 = PhoneNumberUtils.formatNumberToE164(number, currentCountryIso);
+                if (!TextUtils.isEmpty(numberE164)) {
+                    // Only use it if the number could be formatted to E164.
+                    normalizedNumber = numberE164;
+                }
+            }
+            pref.setKey(normalizedNumber);
             pref.setOnPreferenceClickListener(blackPreferenceListener);
             mCatBlacklist.addPreference(pref);
         }
+
+        final ContentResolver cr = getContentResolver();
+        final AsyncTask<Preference, ContactNameHolder, Void> lookupTask =
+                new AsyncTask<Preference, ContactNameHolder, Void>() {
+            @Override
+            protected Void doInBackground(Preference... params) {
+                final String[] projection = new String[] { PhoneLookup.DISPLAY_NAME };
+
+                for (Preference pref : params) {
+                    Uri uri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
+                            Uri.encode(pref.getKey()));
+                    Cursor cursor = cr.query(uri, projection, null, null, null);
+                    if (cursor != null) {
+                        if (cursor.moveToFirst()) {
+                            ContactNameHolder holder = new ContactNameHolder();
+                            holder.pref = pref;
+                            holder.name = cursor.getString(0);
+                            publishProgress(holder);
+                        }
+                        cursor.close();
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onProgressUpdate(ContactNameHolder... entries) {
+                for (ContactNameHolder entry : entries) {
+                    entry.pref.setSummary(entry.name);
+                }
+            }
+        };
+
+        final int count = mCatBlacklist.getPreferenceCount();
+        final Preference[] prefs = new Preference[count];
+        for (int i = 0; i < count; i++) {
+            prefs[i] = mCatBlacklist.getPreference(i);
+        }
+        lookupTask.execute(prefs);
     }
 
     @Override
