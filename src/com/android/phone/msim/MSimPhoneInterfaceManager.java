@@ -502,6 +502,10 @@ public class MSimPhoneInterfaceManager extends ITelephonyMSim.Stub {
         return checkSimPuk.unlockSim(puk, pin);
     }
 
+    public int getIccPin1RetryCount(int subscription) {
+        return getPhone(subscription).getIccCard().getIccPin1RetryCount();
+    }
+
     /**
      * Helper thread to turn async call to {@link SimCard#supplyPin} into
      * a synchronous one.
