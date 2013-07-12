@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -401,8 +402,14 @@ public class OtaUtils {
         // We won't actually make the call until the user presses the "Activate"
         // button.
 
-        Intent activationScreenIntent = new Intent().setClass(context, InCallScreen.class)
-                .setAction(ACTION_DISPLAY_ACTIVATION_SCREEN);
+        Intent activationScreenIntent = null;
+        if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
+            activationScreenIntent = new Intent().setClass(context, MSimInCallScreen.class)
+                    .setAction(ACTION_DISPLAY_ACTIVATION_SCREEN);
+        } else {
+            activationScreenIntent = new Intent().setClass(context, InCallScreen.class)
+                    .setAction(ACTION_DISPLAY_ACTIVATION_SCREEN);
+        }
         activationScreenIntent.putExtra(SUBSCRIPTION_KEY,
                 PhoneGlobals.getInstance().getDefaultSubscription());
 
