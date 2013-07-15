@@ -104,21 +104,8 @@ public class ADNList extends ListActivity {
 
     protected Uri resolveIntent() {
         Intent intent = getIntent();
-        if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
-            String[] adn = {"adn", "adn_sub2", "adn_sub3"};
-
-            mSubscription = MSimTelephonyManager.getDefault().getPreferredVoiceSubscription();
-            if (intent.getData() == null) {
-                if (mSubscription < MSimTelephonyManager.getDefault().getPhoneCount()) {
-                    intent.setData(Uri.parse("content://iccmsim/" + adn[mSubscription]));
-                } else {
-                    Log.e(TAG, "[ADNList] error: received invalid sub =" + mSubscription);
-                }
-            }
-        } else {
-            if (intent.getData() == null) {
-                intent.setData(Uri.parse("content://icc/adn"));
-            }
+        if (intent.getData() == null) {
+            intent.setData(Uri.parse("content://icc/adn"));
         }
 
         return intent.getData();
