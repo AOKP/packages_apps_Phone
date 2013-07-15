@@ -623,4 +623,64 @@
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrar en sonar"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Sonar en marcar els números"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"To i vibració"</string>
+    <string name="mwi_notification_title">Indicador de missatge d\'espera</string>
+    <string name="mwi_notification_summary">Mostra l\'indicador de missatge d\'espera en avisos de correu de veu</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary">Mode de xarxa preferit: LTE /CDMA / EvDo</string>
+    <string name="preferred_network_mode_lte_gsm_summary">Mode de xarxa preferit: LTE / GSM/WCDMA</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Mode de xarxa preferit:  LTE / CMDA / EvDo / GSM / WCDMA</string>
+    <string name="preferred_network_mode_lte_wcdma_summary">Mode de xarxa preferit: LTE / WCDMA</string>
+    <string name="ring_delay_title">Retard del timbre</string>
+    <string name="ring_delay_summary">Selecció del retard del timbre</string>
+    <string name="exit_to_home_screen_title">En acabar la trucada torna a la darrera activitat</string>
+    <string name="exit_to_home_screen_summary">Torna a l\'activitat de pantalla prèvia en acabar la trucada en lloc d\'anar al registre de trucades</string>
+    <string name="landscape_mode_title">Habilita paisatge</string>
+    <string name="landscape_mode_summary">Habilita el mode paisatge (si el sensor està habilitat)</string>
+    <string name="dialer_ui_settings_title">Configuració del teclat de marcatge</string>
+    <string name="dialer_ui_settings_summary">Paràmetres per al teclat de marcatge</string>
+    <string name="vibration_title">Vibració del telèfon</string>
+    <string name="national_roaming">Itinerància nacional de dades</string>
+    <string name="national_roaming_enable">Connecta als serveis de dades en itinerància nacional</string>
+    <string name="national_roaming_disable">Connecta a serveis de dades en itinerància nacional</string>
+    <string name="perm_change_mobile_network">Canvi de xarxa (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Una aplicació amb aquest permís pot canviar entre dades 2G i 3G en qualsevol moment. El 3G és més ràpid, gasta més bateria i també us surt més car.</string>
+    <string name="noise_suppression_title">Supressió del soroll</string>
+    <string name="noise_suppression_summary">Habilita la supressió del soroll per a les trucades</string>
+    <string name="voice_quality_preferences_title">Qualitat de veu</string>
+    <string name="voice_quality_summary">Actualment el perfil de veu està establert a: <xliff:g id="action">%s</xliff:g></string>
+    <string name="voice_quality_entry_normal">Normal</string>
+    <string name="voice_quality_entry_clear">Clar</string>
+    <string name="voice_quality_entry_crisp">Nítid</string>
+    <string name="voice_quality_entry_bright">Brillant</string>
+    <string name="advanced_setting">Paràmetres avançats</string>
+    <string name="vibrate_outgoing">Vibració en respondre</string>
+    <string name="vibrate_outgoing_sum">Vibra quan es contesta una trucada de sortida</string>
+    <string name="vibrate_60">Vibra cada 60 segons</string>
+    <string name="vibrate_60_sum">Vibra al pas dels 60 segons de cada minut durant les trucades de sortida</string>
+    <string name="vibrate_hangup">Vibració en penjar</string>
+    <string name="vibrate_hangup_sum">Vibra quan s\'ha acabar una trucada</string>
+    <string name="vibrate_call_waiting">Vibració de trucada en espera</string>
+    <string name="vibrate_call_waiting_sum">Vibra amb les trucades en espera</string>
+    <string name="blacklist_title">Llista negra</string>
+    <string name="enable_blacklist_title">Habilita la llista negra</string>
+    <string name="blacklist_summary_disabled">Inhabilitada</string>
+    <string name="blacklist_summary">Es blocaran les trucades entrants dels números de telèfon de la llista negra</string>
+    <string name="blacklist_notify">Mostra un avís</string>
+    <string name="blacklist_private_numbers_title">Números privats</string>
+    <string name="blacklist_private_numbers_summary">Bloqueja les trucades entrants de números privats</string>
+    <string name="blacklist_unknown_numbers_title">Números desconeguts</string>
+    <string name="blacklist_unknown_numbers_summary">Bloqueja les trucades entrants de números que no estan a la llista de contactes</string>
+    <string name="blacklist_regex_title">Utilitza comodins</string>
+    <string name="blacklist_regex_summary">Utilitza . com a comodí i * per a repetició. Exemples: 123.* bloqueja els números que comencen per 123 i .*123.* bloqueja els números que contenen 123</string>
+    <string name="add_blacklist_number">Afegeix un número de telèfon</string>
+    <string name="add_to_blacklist">Afegeix a la llista negra</string>
+    <string name="add_to_blacklist_message">Es bloquejaran les trucades futures de %s</string>
+    <string name="remove_blacklist_number_title">Suprimeix el número</string>
+    <string name="remove_blacklist_number">Voleu suprimir %s de la llista negra?</string>
+    <string name="blacklist_notification">S\'ha bloquejat una trucada de %s</string>
+    <string name="blacklist_notification_private_number">S\'ha bloquejat una trucada d\'un número privat</string>
+    <string name="blacklist_notification_list_private">Privat</string>
+    <string name="blacklist_notification_unknown_number">S\'ha bloquejat el número desconegut %s</string>
+    <string name="blacklist_notification_multiple">S\'ha bloquejat <xliff:g id="count">%d</xliff:g> trucades</string>
+    <string name="unblock_number">Desbloqueja</string>
+    <string name="onscreenBlacklistText">Llista negra</string>
 </resources>
