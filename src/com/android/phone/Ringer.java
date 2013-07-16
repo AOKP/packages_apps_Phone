@@ -389,7 +389,10 @@ public class Ringer {
                 Settings.System.QUIET_HOURS_END, 0);
         boolean quietHoursRinger = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.QUIET_HOURS_RINGER, 0) != 0;
-        if (quietHoursEnabled && quietHoursRinger && (quietHoursStart != quietHoursEnd)) {
+        if (quietHoursEnabled && quietHoursRinger) {
+            if (quietHoursStart == quietHoursEnd) {
+                return true;
+            }
             // Get the date in "quiet hours" format.
             Calendar calendar = Calendar.getInstance();
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
