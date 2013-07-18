@@ -92,6 +92,24 @@ public class MSimCallNotifier extends CallNotifier {
     @Override
     public void handleMessage(Message msg) {
         switch (msg.what) {
+            case PHONE_INCOMING_RING:
+                // repeat the ring when requested by the RIL, when the user has NOT
+                // specifically requested silence and when there in no active call
+                // on other subscription.
+                if (msg.obj != null && ((AsyncResult) msg.obj).result != null) {
+                    PhoneBase pb =  (PhoneBase)((AsyncResult)msg.obj).result;
+
+                    if ((pb.getState() == PhoneConstants.State.RINGING)
+                            && (mSilentRingerRequested == false)
+                            && !mCM.hasActiveFgCallAnyPhone()) {
+                        if (DBG) log("RINGING... (PHONE_INCOMING_RING event)");
+                        mRinger.ring();
+                    } else {
+                        if (DBG) log("Skipping generating Ring tone, state = " + pb.getState()
+                                + " silence requested = " + mSilentRingerRequested);
+                    }
+                }
+                break;
             case PHONE_MWI_CHANGED:
                 Phone phone = (Phone)msg.obj;
                 onMwiChanged(mApplication.phone.getMessageWaitingIndicator(), phone);

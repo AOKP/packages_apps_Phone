@@ -133,7 +133,7 @@ public class CallNotifier extends Handler
     private static final int PHONE_NEW_RINGING_CONNECTION = 2;
     private static final int PHONE_DISCONNECT = 3;
     private static final int PHONE_UNKNOWN_CONNECTION_APPEARED = 4;
-    private static final int PHONE_INCOMING_RING = 5;
+    protected static final int PHONE_INCOMING_RING = 5;
     private static final int PHONE_STATE_DISPLAYINFO = 6;
     private static final int PHONE_STATE_SIGNALINFO = 7;
     private static final int PHONE_CDMA_CALL_WAITING = 8;
@@ -163,7 +163,7 @@ public class CallNotifier extends Handler
     protected Ringer mRinger;
     protected BluetoothHeadset mBluetoothHeadset;
     protected CallLogger mCallLogger;
-    private boolean mSilentRingerRequested;
+    protected boolean mSilentRingerRequested;
 
     // ToneGenerator instance for playing SignalInfo tones
     private ToneGenerator mSignalInfoToneGenerator;
