@@ -73,6 +73,22 @@ interface IImsService {
     void hangupUri(int connectionId, String userUri, String confUri);
 
     /**
+     * Hangup for rejecting incoming call with a reason
+     * This api will be used for following two scenarios -
+     * - Reject incoming call
+     * - While on active call, receive incoming call. Reject this
+     *   incoming call.
+     * connectionId - call id for the call
+     * userUri - dial string or uri
+     * confUri - uri associated with conference/multiparty call
+     * mpty - true for conference/multiparty call
+     * failCause - reason for hangup. Refer to CallFailCause.java for details
+     * errorInfo - extra information associated with hangup
+     */
+    void hangupWithReason(int connectionId, String userUri, String confUri,
+            boolean mpty, in int failCause, in String errorInfo);
+
+    /**
      * Get the Call Details extras for the Call ID
      * @param callId - ID of the Call
      */
