@@ -483,7 +483,6 @@ public class OutgoingCallBroadcaster extends Activity
 
     private void processMSimIntent(Intent intent) {
         String action = intent.getAction();
-        intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
         String number = PhoneNumberUtils.getNumberFromIntent(intent, this);
         Log.d(TAG, "outGoingcallBroadCaster action is "+ action + " number = " + number);
         // Check the number, don't convert for sip uri
@@ -594,7 +593,6 @@ public class OutgoingCallBroadcaster extends Activity
                                                    "com.android.dialer.DialtactsActivity");
                 invokeFrameworkDialer.setAction(Intent.ACTION_DIAL);
                 invokeFrameworkDialer.setData(intent.getData());
-                invokeFrameworkDialer.putExtra(SUBSCRIPTION_KEY, mSubscription);
 
                 if (DBG) Log.v(TAG, "onCreate(): calling startActivity for Dialer: "
                                + invokeFrameworkDialer);
@@ -620,9 +618,6 @@ public class OutgoingCallBroadcaster extends Activity
                 finish();
                 return;
             }
-            int sub = PhoneGlobals.getInstance().getVoiceSubscriptionInService();
-            intent.putExtra(SUBSCRIPTION_KEY, sub);
-            Log.d(TAG, "Attempting emergency call on sub :" + sub);
             callNow = true;
         } else {
             Log.e(TAG, "Unhandled Intent " + intent + ". Finish the Activity immediately.");
@@ -730,11 +725,9 @@ public class OutgoingCallBroadcaster extends Activity
             PhoneUtils.checkAndCopyPhoneProviderExtras(intent, broadcastIntent);
             broadcastIntent.putExtra(EXTRA_ALREADY_CALLED, callNow);
             broadcastIntent.putExtra(EXTRA_ORIGINAL_URI, uri.toString());
-            broadcastIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
             broadcastIntent.putExtra(EXTRA_DIAL_CONFERENCE_URI,
                     intent.getBooleanExtra((EXTRA_DIAL_CONFERENCE_URI), false));
 
-            broadcastIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
             // Need to raise foreground in-call UI as soon as possible while allowing 3rd party app
             // to intercept the outgoing call.
             broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
