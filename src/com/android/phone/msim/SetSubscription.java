@@ -79,6 +79,8 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     private SubscriptionData mUserSelSub;
     private SubscriptionManager mSubscriptionManager;
     private CardSubscriptionManager mCardSubscriptionManager;
+    //mIsForeground is added to track if activity is in foreground
+    private boolean mIsForeground = false;
 
     //String keys for preference lookup
     private static final String PREF_PARENT_KEY = "subscr_parent";
@@ -161,6 +163,18 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mIsForeground = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsForeground = false;
     }
 
     protected void onDestroy () {
@@ -420,7 +434,9 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
             } else {
                 boolean ret = mSubscriptionManager.setSubscription(mUserSelSub);
                 if (ret) {
-                    showDialog(DIALOG_SET_SUBSCRIPTION_IN_PROGRESS);
+                    if(mIsForeground){
+                       showDialog(DIALOG_SET_SUBSCRIPTION_IN_PROGRESS);
+                    }
                     mSubscriptionManager.registerForSetSubscriptionCompleted(mHandler,
                             EVENT_SET_SUBSCRIPTION_DONE, null);
                 } else {
@@ -477,7 +493,8 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
                 case EVENT_SET_SUBSCRIPTION_DONE:
                     Log.d(TAG, "EVENT_SET_SUBSCRIPTION_DONE");
                     mSubscriptionManager.unRegisterForSetSubscriptionCompleted(mHandler);
-                    dismissDialog(DIALOG_SET_SUBSCRIPTION_IN_PROGRESS);
+                    dismissDialogSafely(DIALOG_SET_SUBSCRIPTION_IN_PROGRESS);
+
                     getPreferenceScreen().setEnabled(true);
                     ar = (AsyncResult) msg.obj;
 
@@ -614,5 +631,17 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
             finish();
         }
         updateCheckBoxes();
+    }
+
+
+    private void dismissDialogSafely(int id) {
+        Log.d(TAG, "dismissDialogSafely: id = " + id);
+        try {
+            dismissDialog(id);
+        } catch (IllegalArgumentException e) {
+            // This is expected in the case where we were in the background
+            // at the time we would normally have shown the dialog, so we didn't
+            // show it.
+        }
     }
 }
