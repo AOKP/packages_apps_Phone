@@ -24,6 +24,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.content.res.Resources;
 
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
@@ -85,26 +86,46 @@ public class GsmUmtsOptions {
             mButtonAPNExpand.setEnabled(false);
             mButtonOperatorSelectionExpand.setEnabled(false);
             mButtonPrefer2g.setEnabled(false);
+        } else {
+            log("Not a CDMA phone");
+            Resources res = mPrefActivity.getResources();
+
+            // Determine which options to display, for GSM these are defaulted
+            // are defaulted to true in Phone/res/values/config.xml. But for
+            // some operators like verizon they maybe overriden in operator
+            // specific resources or device specifc overlays.
+            if (!res.getBoolean(R.bool.config_apn_expand)) {
+                mPrefScreen.removePreference(mPrefScreen.findPreference(BUTTON_APN_EXPAND_KEY));
+            }
+            if (!res.getBoolean(R.bool.config_operator_selection_expand)) {
+                mPrefScreen.removePreference(mPrefScreen
+                        .findPreference(BUTTON_OPERATOR_SELECTION_EXPAND_KEY));
+            }
+            if (!res.getBoolean(R.bool.config_prefer_2g)) {
+                mPrefScreen.removePreference(mPrefScreen.findPreference(BUTTON_PREFER_2G_KEY));
+            }
         }
         updateOperatorSelectionVisibility();
     }
 
     private void updateOperatorSelectionVisibility() {
         log("updateOperatorSelectionVisibility.");
+	Resources res = mPrefActivity.getResources();
         if (mButtonOperatorSelectionExpand == null) {
             android.util.Log.e(LOG_TAG, "mButtonOperatorSelectionExpand is null");
             return;
         }
-        if (!mPhone.isManualNetSelAllowed()) {
+        if (!PhoneFactory.getDefaultPhone().isManualNetSelAllowed()) {
             log("Manual network selection not allowed.Disabling Operator Selection menu.");
             mButtonOperatorSelectionExpand.setEnabled(false);
-        } else if (mPrefActivity.getResources().getBoolean(R.bool.csp_enabled)) {
-            if (mPhone.isCspPlmnEnabled()) {
+        } else if (res.getBoolean(R.bool.csp_enabled)) {
+            if (PhoneFactory.getDefaultPhone().isCspPlmnEnabled()) {
                 log("[CSP] Enabling Operator Selection menu.");
                 mButtonOperatorSelectionExpand.setEnabled(true);
             } else {
                 log("[CSP] Disabling Operator Selection menu.");
-                mButtonOperatorSelectionExpand.setEnabled(false);
+                mPrefScreen.removePreference(mPrefScreen
+                          .findPreference(BUTTON_OPERATOR_SELECTION_EXPAND_KEY));
             }
         }
     }
