@@ -94,5 +94,22 @@ interface IImsService {
      * Get the Service State for SMS service
      */
     boolean isVTModifyAllowed();
+
+    /**
+     * Returns true if the current phone supports the ability to add participant
+     *
+     */
+    boolean isAddParticipantAllowed();
+
+    /**
+     * Api for adding participant
+     * dialString - can be either a number or single or multiple uri
+     * clir - will be default value. This is for future usage
+     * callType - will be UNKNOWN. But in ImsPhone, this will take value of fg call.
+     *            This is for future usage, in case call type should be passed through UI
+     * String[] - can be made Parcelable incase its being used across process boundaries,
+     *            which currently is not the case.
+     */
+    void addParticipant(String dialString, int clir, int callType, in String[] extra);
 }
 

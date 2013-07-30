@@ -196,6 +196,15 @@
                 <!-- Separator between 4th (or 5th) button and right padding -->
                 <View style="@style/VerticalSeparator" />
 
+                <Button android:id="@+id/addParticipant"
+                    style="@style/InCallButton"
+                    android:background="@drawable/btn_compound_addparticipant"
+                    android:contentDescription="@string/onscreenAddParticipant"
+                    />
+
+                <!-- Separator between 5th (or 6th) button and right padding -->
+                <View style="@style/VerticalSeparator" />
+
             </LinearLayout>
 
         </LinearLayout>
