@@ -3091,11 +3091,10 @@ public class PhoneUtils {
         int count = MSimTelephonyManager.getDefault().getPhoneCount();
         CallManager cm = MSimPhoneGlobals.getInstance().mCM;
 
-        Log.d(LOG_TAG, "is other sub active = " + subscription + count);
+        if (DBG) Log.d(LOG_TAG, "isAnyOtherSubActive: sub = " + subscription + " count = " + count);
         for (int i = 0; i < count; i++) {
-            Log.d(LOG_TAG, "Count ** " + i);
             if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
-                Log.d(LOG_TAG, "got other active sub  = " + i );
+                Log.d(LOG_TAG, "isAnyOtherSubActive: active sub  = " + i );
                 state = true;
                 break;
             }
@@ -3114,13 +3113,24 @@ public class PhoneUtils {
         int count = MSimTelephonyManager.getDefault().getPhoneCount();
         CallManager cm = MSimPhoneGlobals.getInstance().mCM;
 
-        Log.d(LOG_TAG, "in switch to other active sub = " + subscription + count);
+        Log.d(LOG_TAG, "switchToOtherActiveSub: sub = " + subscription +  " count = "+ count);
         for (int i = 0; i < count; i++) {
-            Log.d(LOG_TAG, "Count  ******  " + i);
             if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
                 setActiveSubscription(i);
-                switchToLocalHold(i, true);
-                Log.d(LOG_TAG, "Switchin to other active sub  = " + i );
+
+                // Since active subscription got changed, call setAudioMode
+                // which informs LCH state to RIL and updates audio state of subs.
+                // This required to update the call audio states when switch sub
+                // triggered from UI.
+                cm.setAudioMode();
+
+                // There is a change in active subscription, need switch playing
+                // LCH/SCH tones on new active subscription.
+                final MSimCallNotifier notifier =
+                        (MSimCallNotifier)PhoneGlobals.getInstance().notifier;
+                notifier.manageMSimInCallTones(true);
+
+                Log.d(LOG_TAG, "Switching to other active sub  = " + i );
                 break;
             }
         }
@@ -3136,11 +3146,5 @@ public class PhoneUtils {
             Log.d(LOG_TAG, "Failed to retrieve Csvt call state. " + e);
         }
         return isActive;
-    }
-
-    // This method is called when user does which SUB from UI.
-    public static void switchToLocalHold(int subscription, boolean switchTo) {
-        Log.d(LOG_TAG, "Switch to local hold  = " );
-        MSimPhoneGlobals.getInstance().mCM.switchToLocalHold(subscription, switchTo);
     }
 }

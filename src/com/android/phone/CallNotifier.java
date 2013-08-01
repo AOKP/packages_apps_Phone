@@ -1535,6 +1535,10 @@ public class CallNotifier extends Handler
         public static final int TONE_RING_BACK = 12;
         public static final int TONE_UNOBTAINABLE_NUMBER = 13;
 
+        public static final int TONE_LOCAL_CW = 14;
+        public static final int TONE_HOLD_RECALL = 15;
+        public static final int TONE_SUPERVISORY_CH = 16;
+
         // The tone volume relative to other sounds in the stream
         static final int TONE_RELATIVE_VOLUME_EMERGENCY = 100;
         static final int TONE_RELATIVE_VOLUME_HIPRI = 80;
@@ -1647,6 +1651,24 @@ public class CallNotifier extends Handler
                     toneVolume = TONE_RELATIVE_VOLUME_HIPRI;
                     toneLengthMillis = 4000;
                     break;
+                case TONE_LOCAL_CW:
+                    toneType = ToneGenerator.TONE_LOCAL_CW;
+                    toneVolume = TONE_RELATIVE_VOLUME_HIPRI;
+                    // Local call waiting tone is stopped by stopTone() method
+                    toneLengthMillis = Integer.MAX_VALUE - TONE_TIMEOUT_BUFFER;
+                    break;
+                case TONE_HOLD_RECALL:
+                    toneType = ToneGenerator.TONE_HOLD_RECALL;
+                    toneVolume = TONE_RELATIVE_VOLUME_HIPRI;
+                    // Call hold recall tone is stopped by stopTone() method
+                    toneLengthMillis = Integer.MAX_VALUE - TONE_TIMEOUT_BUFFER;
+                    break;
+                case TONE_SUPERVISORY_CH:
+                    toneType = ToneGenerator.TONE_SUPERVISORY_CH;
+                    toneVolume = TONE_RELATIVE_VOLUME_HIPRI;
+                    // Supervisory call held tone is stopped by stopTone() method
+                    toneLengthMillis = Integer.MAX_VALUE - TONE_TIMEOUT_BUFFER;
+                    break;
                 default:
                     throw new IllegalArgumentException("Bad toneId: " + mToneId);
             }
@@ -1662,6 +1684,13 @@ public class CallNotifier extends Handler
                 } else {
                     stream = AudioManager.STREAM_VOICE_CALL;
                 }
+
+                // As supervisory tone played in-band, phoneapp need to
+                // set the stream type as INCALL_MUSIC.
+                if (toneType == ToneGenerator.TONE_SUPERVISORY_CH) {
+                    stream = AudioManager.STREAM_INCALL_MUSIC;
+                }
+
                 toneGenerator = new ToneGenerator(stream, toneVolume);
                 // if (DBG) log("- created toneGenerator: " + toneGenerator);
             } catch (RuntimeException e) {
