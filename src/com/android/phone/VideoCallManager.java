@@ -53,7 +53,7 @@ public class VideoCallManager {
     private VideoCallManager(Context context) {
         log("Instantiating VideoCallManager");
         mCameraHandler = CameraHandler.getInstance(context);
-        mMediaHandler = new MediaHandler();
+        mMediaHandler = MediaHandler.getInstance();
     }
 
     /**
