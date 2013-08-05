@@ -98,8 +98,10 @@ public class GsmUmtsOptions {
                 mPrefScreen.removePreference(mPrefScreen.findPreference(BUTTON_APN_EXPAND_KEY));
             }
             if (!res.getBoolean(R.bool.config_operator_selection_expand)) {
-                mPrefScreen.removePreference(mPrefScreen
-                        .findPreference(BUTTON_OPERATOR_SELECTION_EXPAND_KEY));
+                if (mButtonOperatorSelectionExpand != null) {
+                    mPrefScreen.removePreference(mButtonOperatorSelectionExpand);
+                    mButtonOperatorSelectionExpand = null;
+               }
             }
             if (!res.getBoolean(R.bool.config_prefer_2g)) {
                 mPrefScreen.removePreference(mPrefScreen.findPreference(BUTTON_PREFER_2G_KEY));
@@ -110,7 +112,7 @@ public class GsmUmtsOptions {
 
     private void updateOperatorSelectionVisibility() {
         log("updateOperatorSelectionVisibility.");
-	Resources res = mPrefActivity.getResources();
+        Resources res = mPrefActivity.getResources();
         if (mButtonOperatorSelectionExpand == null) {
             android.util.Log.e(LOG_TAG, "mButtonOperatorSelectionExpand is null");
             return;
@@ -124,8 +126,10 @@ public class GsmUmtsOptions {
                 mButtonOperatorSelectionExpand.setEnabled(true);
             } else {
                 log("[CSP] Disabling Operator Selection menu.");
-                mPrefScreen.removePreference(mPrefScreen
-                          .findPreference(BUTTON_OPERATOR_SELECTION_EXPAND_KEY));
+                if (mButtonOperatorSelectionExpand != null) {
+                    mPrefScreen.removePreference(mButtonOperatorSelectionExpand);
+                    mButtonOperatorSelectionExpand = null;
+                }
             }
         }
     }
