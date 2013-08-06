@@ -30,9 +30,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import static com.android.internal.telephony.MSimConstants.SUB1;
-import static com.android.internal.telephony.MSimConstants.SUB2;
-
 /**
  * SIM Address Book UI for the Phone app.
  */
@@ -41,6 +38,7 @@ public class MSimContacts extends SimContacts {
     private static final String SIM_INDEX = "sim_index";
 
     private int mSimIndex = 0;
+    String[] mAdnString = {"adn", "adn_sub2", "adn_sub3"};
     //Import from all SIM's option is having the maximum index
     //we cannot take the phoneCount as maximum index as it will conflict
     //in DSDS and TSTS. So assigning to some constant value.
@@ -49,15 +47,13 @@ public class MSimContacts extends SimContacts {
     @Override
     protected Uri resolveIntent() {
         Intent intent = getIntent();
-
         Bundle extras = intent.getExtras();
         mSimIndex  = extras.getInt(SIM_INDEX);
-        if (mSimIndex == SUB1) {
-            intent.setData(Uri.parse("content://iccmsim/adn"));
-        } else if (mSimIndex == SUB2) {
-            intent.setData(Uri.parse("content://iccmsim/adn_sub2"));
-        } else if (mSimIndex == IMPORT_FROM_ALL) {
+
+        if (mSimIndex == IMPORT_FROM_ALL) {
             intent.setData(Uri.parse("content://iccmsim/adn_all"));
+        } else if (mSimIndex < MSimTelephonyManager.getDefault().getPhoneCount()) {
+            intent.setData(Uri.parse("content://iccmsim/" + mAdnString[mSimIndex]));
         } else {
             Log.e(LOG_TAG, "Error: received invalid sub =" + mSimIndex);
         }
@@ -73,21 +69,16 @@ public class MSimContacts extends SimContacts {
 
     @Override
     protected Uri getUri() {
-        if (mSimIndex == SUB1) {
-            return Uri.parse("content://iccmsim/adn");
-        } else if (mSimIndex == SUB2) {
-            return Uri.parse("content://iccmsim/adn_sub2");
+        if (mSimIndex < MSimTelephonyManager.getDefault().getPhoneCount()) {
+            return Uri.parse("content://iccmsim/" + mAdnString[mSimIndex]);
         } else {
-            Log.e(TAG, "Invalid subcription");
+            Log.e(TAG, "Invalid subcription:" + mSimIndex);
             return null;
         }
     }
 
     private boolean isImportFromAllSelection() {
-        if (mSimIndex == IMPORT_FROM_ALL) {
-            return true;
-        }
-        return false;
+        return (mSimIndex == IMPORT_FROM_ALL);
     }
 
     @Override

@@ -51,8 +51,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 
 import static android.view.Window.PROGRESS_VISIBILITY_OFF;
 import static android.view.Window.PROGRESS_VISIBILITY_ON;
-import static com.android.internal.telephony.MSimConstants.SUB1;
-import static com.android.internal.telephony.MSimConstants.SUB2;
 
 public class ExportContactsToSim extends Activity {
     private static final String TAG = "ExportContactsToSim";
@@ -121,8 +119,8 @@ public class ExportContactsToSim extends Activity {
                 "='1' AND (account_type is NULL OR account_type !=?)";
         String[] selectionArg = new String[] {"SIM"};
 
-        Cursor contactsCursor = managedQuery(phoneBookContentUri, null,
-                selection, selectionArg, null);
+        Cursor contactsCursor = getContentResolver().query(phoneBookContentUri, null, selection,
+                selectionArg, null);
         return contactsCursor;
     }
 
@@ -201,13 +199,13 @@ public class ExportContactsToSim extends Activity {
         Bundle extras = intent.getExtras();
         if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
             int subscription  = extras.getInt(SIM_INDEX);
+            String[] adnString = {"adn", "adn_sub2", "adn_sub3"};
             Log.d("ExportContactsToSim"," subscription : " + subscription);
-            if (subscription == SUB1) {
-                return Uri.parse("content://iccmsim/adn");
-            } else if (subscription == SUB2) {
-                return Uri.parse("content://iccmsim/adn_sub2");
+
+            if (subscription < MSimTelephonyManager.getDefault().getPhoneCount()) {
+                return Uri.parse("content://iccmsim/" + adnString[subscription]);
             } else {
-                Log.e("ExportContactsToSim", "Invalid subcription");
+                Log.e(TAG, "Invalid subcription:" + subscription);
                 return null;
             }
         } else {
