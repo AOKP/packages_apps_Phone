@@ -105,11 +105,10 @@ public class MediaHandler extends Handler {
 
     private MediaEventListener mMediaEventListener;
 
-    private static boolean mIsReadyToReceivePreview = false;
-
     public interface MediaEventListener {
         void onParamReadyEvent();
         void onDisplayModeEvent();
+        void onStartReadyEvent();
     }
 
     static {
@@ -125,8 +124,6 @@ public class MediaHandler extends Handler {
      */
     public int init() {
         if (!mInitCalledFlag) {
-            //Initialize mIsReadyToReceivePreview to false to begin with
-            mIsReadyToReceivePreview = false;
             int error = nativeInit();
             Log.d(TAG, "init called error = " + error);
             switch (error) {
@@ -252,14 +249,6 @@ public class MediaHandler extends Handler {
     }
 
     /**
-     * Get Negotiated FPS
-     */
-    public static short getNegotiatedFPS() {
-        Log.d(TAG, "Negotiated FPS = " + mNegotiatedFps);
-        return mNegotiatedFps;
-    }
-
-    /**
      * Get Negotiated Height
      */
     public static int getNegotiatedHeight() {
@@ -283,13 +272,8 @@ public class MediaHandler extends Handler {
         return mUIOrientationMode;
     }
 
-    public static synchronized boolean canSendPreview() {
-        return MediaHandler.mIsReadyToReceivePreview;
-    }
-
-    public static synchronized void setIsReadyToReceivePreview(boolean flag) {
-        Log.d(TAG, "setIsReadyToReceivePreview = " + flag);
-        MediaHandler.mIsReadyToReceivePreview = flag;
+    public static short getNegotiatedFps() {
+        return mNegotiatedFps;
     }
 
     /**
@@ -322,7 +306,9 @@ public class MediaHandler extends Handler {
                 break;
             case START_READY_EVT:
                 Log.d(TAG, "Received START_READY_EVT. Camera frames can be sent now");
-                setIsReadyToReceivePreview(true);
+                if (mMediaEventListener != null) {
+                    mMediaEventListener.onStartReadyEvent();
+                }
                 break;
             case DISPLAY_MODE_EVT:
                 mUIOrientationMode = nativeGetUIOrientationMode();
