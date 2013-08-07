@@ -3147,4 +3147,16 @@ public class PhoneUtils {
         }
         return isActive;
     }
+
+    public static boolean shouldShowAddParticipant() {
+        final PhoneGlobals app = PhoneGlobals.getInstance();
+        boolean value = false;
+        try {
+            value = ((isCallOnImsEnabled()) && (app.mImsService != null) &&
+                    (app.mImsService.isAddParticipantAllowed()));
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "Ims Service isAddParticipantAllowed exception", ex);
+        }
+        return value;
+    }
 }

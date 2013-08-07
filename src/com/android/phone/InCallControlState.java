@@ -237,18 +237,13 @@ public class InCallControlState {
             modifyCallEnabled = false;
         }
 
-        try {
-            // IMS add participant
-            if ((PhoneUtils.isCallOnImsEnabled()) && (mApp.mImsService != null) &&
-                    (mApp.mImsService.isAddParticipantAllowed()) && canAddCall) {
-                addParticipantVisible = true;
-                addParticipantEnabled = true;
-            } else {
-                addParticipantVisible = false;
-                addParticipantEnabled = false;
-            }
-        } catch (RemoteException ex) {
-            Log.d(LOG_TAG, "Ims Service isAddParticipantAllowed exception", ex);
+        // IMS add participant
+        if (PhoneUtils.shouldShowAddParticipant() && canAddCall) {
+            addParticipantVisible = true;
+            addParticipantEnabled = true;
+        } else {
+            addParticipantVisible = false;
+            addParticipantEnabled = false;
         }
 
         if (DBG) dumpState();
