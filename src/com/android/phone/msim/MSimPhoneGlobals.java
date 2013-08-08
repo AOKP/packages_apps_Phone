@@ -756,6 +756,7 @@ public class MSimPhoneGlobals extends PhoneGlobals {
     /*
      * Gets User preferred Data subscription setting
      */
+    @Override
     public int getDataSubscription() {
         return MSimPhoneFactory.getDataSubscription();
     }
