@@ -51,7 +51,6 @@
             android:targetPackage="com.android.phone"
             android:targetClass="com.android.phone.DataUsage" />
     </PreferenceScreen>
-
     <ListPreference
         android:key="preferred_network_mode_key"
         android:title="@string/preferred_network_mode_title"

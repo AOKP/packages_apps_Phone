@@ -72,6 +72,7 @@ import com.android.internal.telephony.PhoneFactory;
 import com.android.internal.telephony.TelephonyCapabilities;
 import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.telephony.cdma.TtyIntent;
+import com.android.phone.common.CallLogAsync;
 import com.android.phone.OtaUtils.CdmaOtaScreenState;
 import com.android.server.sip.SipService;
 
@@ -541,10 +542,12 @@ public class PhoneGlobals extends ContextWrapper
 
             if (DBG) Log.d(LOG_TAG, "onCreate: mUpdateLock: " + mUpdateLock);
 
+            CallLogger callLogger = new CallLogger(this, new CallLogAsync());
+
             // Create the CallController singleton, which is the interface
             // to the telephony layer for user-initiated telephony functionality
             // (like making outgoing calls.)
-            callController = CallController.init(this);
+            callController = CallController.init(this, callLogger);
             // ...and also the InCallUiState instance, used by the CallController to
             // keep track of some "persistent state" of the in-call UI.
             inCallUiState = InCallUiState.init(this);
@@ -559,7 +562,7 @@ public class PhoneGlobals extends ContextWrapper
             // asynchronous events from the telephony layer (like
             // launching the incoming-call UI when an incoming call comes
             // in.)
-            notifier = CallNotifier.init(this, phone, ringer, new CallLogAsync());
+            notifier = CallNotifier.init(this, phone, ringer, callLogger);
 
             // register for ICC status
             IccCard sim = phone.getIccCard();
@@ -1816,9 +1819,9 @@ public class PhoneGlobals extends ContextWrapper
      * while we are now assuming it is "com.android.contacts"
      */
     public static final String EXTRA_CALL_ORIGIN = "com.android.phone.CALL_ORIGIN";
-    private static final String DEFAULT_CALL_ORIGIN_PACKAGE = "com.android.contacts";
+    private static final String DEFAULT_CALL_ORIGIN_PACKAGE = "com.android.dialer";
     private static final String ALLOWED_EXTRA_CALL_ORIGIN =
-            "com.android.contacts.activities.DialtactsActivity";
+            "com.android.dialer.DialtactsActivity";
     /**
      * Used to determine if the preserved call origin is fresh enough.
      */
@@ -1878,7 +1881,7 @@ public class PhoneGlobals extends ContextWrapper
                     + inCallUiState.latestActiveCallOrigin + ") was found. "
                     + "Go back to the previous screen.");
             // Right now we just launch the Activity which launched in-call UI. Note that we're
-            // assuming the origin is from "com.android.contacts", which may be incorrect in the
+            // assuming the origin is from "com.android.dialer", which may be incorrect in the
             // future.
             final Intent intent = new Intent();
             intent.setClassName(DEFAULT_CALL_ORIGIN_PACKAGE, inCallUiState.latestActiveCallOrigin);

@@ -74,11 +74,11 @@
     <string name="unlock_success" msgid="6770085622238180152">"Umefaulu kufungua mtandao."</string>
     <string name="labelGSMMore" msgid="5930842194056092106">"Mipangilio ya simu ya GSM"</string>
     <string name="labelCDMAMore" msgid="1630676740428229339">"Mipangilio ya simu ya CDMA"</string>
-    <string name="apn_settings" msgid="9043423184895642077">"Fikia Majina ya Pointi za mfikio"</string>
+    <string name="apn_settings" msgid="9043423184895642077">"Majina ya Milango ya Kufikia"</string>
     <string name="settings_label" msgid="3876743539816984008">"Mipangilio ya mtandao"</string>
     <string name="voicemail" msgid="8693759337917898954">"Barua ya sauti"</string>
     <string name="voicemail_abbreviated" msgid="2215592488517217448">"VM:"</string>
-    <string name="networks" msgid="8873030692174541976">"Opereta wa mtandao"</string>
+    <string name="networks" msgid="8873030692174541976">"Kampuni zinazotoa huduma"</string>
     <string name="call_settings" msgid="6112441768261754562">"Mipangilio ya simu"</string>
     <string name="additional_gsm_call_settings" msgid="1391795981938800617">"Mipangilio ya ziada"</string>
     <string name="sum_gsm_call_settings" msgid="4076647190996778012">"Mipangilio ya ziada ya simu ya GSM tu"</string>
@@ -126,8 +126,8 @@
     <string name="fdn_check_failure" msgid="18200614306525434">"Mpangilio wa programu ya simu yako wa Kupigia Nambari Fulani Pekee umewashwa. Kutokana na hayo, baadhi ya vipengele vinavyohusiana na simu havifanyi kazi."</string>
     <string name="radio_off_error" msgid="2304459933248513376">"Washa redio kabla ya kutazama mipangilio hii."</string>
     <string name="close_dialog" msgid="2365884406356986917">"Sawa"</string>
-    <string name="enable" msgid="1059008390636773574">"Wezesha"</string>
-    <string name="disable" msgid="7274240979164762320">"Lemaza"</string>
+    <string name="enable" msgid="1059008390636773574">"Washa"</string>
+    <string name="disable" msgid="7274240979164762320">"Zima"</string>
     <string name="change_num" msgid="239476305819844391">"Sasisha"</string>
   <string-array name="clir_display_values">
     <item msgid="5560134294467334594">"Chaguo-msingi la mtandao"</item>
@@ -151,7 +151,7 @@
     <string name="not_allowed" msgid="5613353860205691579">"SIM kadi yako hairuhusu muunganisho wa mtandao huu."</string>
     <string name="connect_later" msgid="2308119155752343975">"Haiwezi kuunganisha na mtandao huu hivi sasa. Jaribu tena baadaye."</string>
     <string name="registration_done" msgid="495135664535876612">"Imesajiliwa katika mtandao"</string>
-    <string name="sum_carrier_select" msgid="3494252551249882718">"Chagua mtoa huduma wa mtandao"</string>
+    <string name="sum_carrier_select" msgid="3494252551249882718">"Chagua mtoa huduma"</string>
     <string name="sum_search_networks" msgid="2921092249873272715">"Tafuta mitandao yote inayopatikana"</string>
     <string name="select_automatically" msgid="5628402124471810174">"Chagua kiotomatiki"</string>
     <string name="sum_select_automatically" msgid="5614890115123292400">"Chagua mtandao unaoupendelea kiotomatiki"</string>
@@ -167,28 +167,34 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Modi pendekezwa ya mtandao: CDMA / EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Modi pendekezwa ya mtandao: CDMA pekee"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Modi pendekezwa ya mtandao:  EvDo pekee"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Modi pendekezwa ya mtandao:  LTE / CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Hali ya mtandao inayopendelewa: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Hali ya mtandao inayopendelewa: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Hali ya mtandao inayopendelewa: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Hali ya mtandao inayopendelewa: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Hali ya mtandao inayopendelewa: Ulimwenguni Kote"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Hali ya mtandao inayopendelewa: LTE / WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"EvDo tu"</item>
-    <item msgid="454610224530856274">"CDMA w/o EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo otomatiki"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA otomatiki"</item>
-    <item msgid="5189164180446264504">"WCDMA tu"</item>
-    <item msgid="5714714953966979187">"GSM tu"</item>
-    <item msgid="8508331239546115206">"GSM/WCDMA inapendelewa"</item>
+    <item msgid="7886739962255042385">"LTE / WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Ulimwenguni Kote"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"EvDo pekee"</item>
+    <item msgid="1508557726283094448">"CDMA w/o EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo otomatiki"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA otomatiki"</item>
+    <item msgid="7913148405605373434">"WCDMA pekee"</item>
+    <item msgid="1524224863879435516">"GSM pekee"</item>
+    <item msgid="3817924849415716259">"GSM/WCDMA inapendelewa"</item>
   </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
-  </string-array>
-    <string name="data_enabled" msgid="5972538663568715366">"Data imewezeshwa"</string>
-    <string name="data_enable_summary" msgid="5022018967714633874">"Wezesha mfiko wa data kupitia mtandao wa Simu"</string>
-    <string name="roaming" msgid="8871412572928323707">"Urandaji wa data"</string>
-    <string name="roaming_enable" msgid="7331106985174381987">"Unganisha huduma ya data  wakati wa urandaji"</string>
-    <string name="roaming_disable" msgid="1843417228755568110">"Unganisha huduma ya data  wakati wa urandaji"</string>
-    <string name="roaming_reenable_message" msgid="8913735676127858115">"Umepoteza muunganisho wa data kwa sababu uliacha mtandao wako wa nyumbani, data ya urandaji ikiwa imezimwa."</string>
-    <string name="roaming_warning" msgid="7820963598559553967">"Je, unnataka kuruhusuji wa data? Huenda ukagharamia ada za urandaji!"</string>
+    <string name="data_enabled" msgid="5972538663568715366">"Data imewashwa"</string>
+    <string name="data_enable_summary" msgid="5022018967714633874">"Wezesha data ifikiwe kupitia mtandao wa Simu"</string>
+    <string name="roaming" msgid="8871412572928323707">"Utumiaji data nje ya mtandao wako wa kawaida"</string>
+    <string name="roaming_enable" msgid="7331106985174381987">"Unganisha huduma ya data wakati niko nje ya mtandao wangu wa kawaida"</string>
+    <string name="roaming_disable" msgid="1843417228755568110">"Unganisha huduma ya data wakati niko nje ya mtandao wangu wa kawaida"</string>
+    <string name="roaming_reenable_message" msgid="8913735676127858115">"Umepoteza muunganisho wa data kwa sababu uliondoka kwenye mtandao wako wa kawaida ukiwa umezima utumiaji data nje ya mtandao wa kawaida."</string>
+    <string name="roaming_warning" msgid="7820963598559553967">"Ungependa kuruhusu matumizi ya data nje ya mtandao wako wa kawaida? Huenda ukatozwa ada iliyo juu!"</string>
     <string name="gsm_umts_options" msgid="6538311689850981686">"Chaguo za GSM/UMTS"</string>
     <string name="cdma_options" msgid="4016822858172249884">"Chaguo za CDMA"</string>
     <string name="throttle_data_usage" msgid="3715677828160555808">"Matumizi ya data"</string>
@@ -289,8 +295,8 @@
     <string name="enable_disable_multi_category" msgid="626771003122899280">"Kategoria anuwai"</string>
     <string name="multi_category_enable" msgid="1179299804641721768">"Kategoria anuwai imewezeshwa"</string>
     <string name="multi_category_disable" msgid="880104702904139505">"Kategoria anuwai imelemazwa"</string>
-    <string name="prefer_2g" msgid="8442550937280449639">"Tumia mitandao ya 2g peke yake"</string>
-    <string name="prefer_2g_summary" msgid="1976491403210690759">"Huokoa betri"</string>
+    <string name="prefer_2g" msgid="8442550937280449639">"Tumia mitandao ya 2G pekee"</string>
+    <string name="prefer_2g_summary" msgid="1976491403210690759">"Huokoa nishati ya betri"</string>
     <string name="cdma_system_select_title" msgid="5757657769327732833">"Chagua mfumo"</string>
     <string name="cdma_system_select_summary" msgid="60460043745797517">"Badilisha hali ya urandaji ya CDMA"</string>
     <string name="cdma_system_select_dialogtitle" msgid="6083355415165359075">"Chagua mfumo"</string>
@@ -442,7 +448,7 @@
     <string name="onscreenManageCallsText" msgid="5473231160123254154">"Dhibiti simu"</string>
     <string name="onscreenManageConferenceText" msgid="6485935856534311346">"Dhibiti kongamano"</string>
     <string name="onscreenAudioText" msgid="1710087112800041743">"Kusikika"</string>
-    <string name="importSimEntry" msgid="6614358325359736031">"Leta"</string>
+    <string name="importSimEntry" msgid="6614358325359736031">"Ingiza"</string>
     <string name="importAllSimEntries" msgid="1503181169636198673">"Leta zote"</string>
     <string name="importingSimContacts" msgid="7374056215462575769">"Inaleta anwani za SIM"</string>
     <string name="importToFDNfromContacts" msgid="2130620207013368580">"Ingiza kutoka kwa anwani"</string>
@@ -466,7 +472,7 @@
     <string name="ota_skip_activation_dialog_title" msgid="2943366608272261306">"Ruka uwezeshaji?"</string>
     <string name="ota_skip_activation_dialog_message" msgid="2440770373498870550">"Kama utaruka kuwezesha, hauwezi kupiga simu au kuunganisha kwa mitandao ya data ya simu (ingawaje unaweza kuunganisha kwa mitandao-hewa). Hadi uiwezeshe simu yako, utaulizwa uiwezeshe kila utakapoiwasha."</string>
     <string name="ota_skip_activation_dialog_skip_label" msgid="3458532775091563208">"Ruka"</string>
-    <string name="ota_activate" msgid="1368528132525626264">"Amilisha"</string>
+    <string name="ota_activate" msgid="1368528132525626264">"Washa"</string>
     <string name="ota_title_activate_success" msgid="6570240212263372046">"Simu imeamilishwa."</string>
     <string name="ota_title_problem_with_activation" msgid="7095824491970084367">"Tatizo na uamilisho"</string>
     <string name="ota_listen" msgid="162923839877584937">"Fuata maagizo yanayotamkwa hadi usikie kwamba uwezeshaji umekamilika."</string>
@@ -585,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Nitakupigia mara moja."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Nitakupigia baadaye."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Siwezi kuongea sasa. Nipigie baadaye?"</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Ujumbe maalum"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Andika yako binafsi..."</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Majibu ya haraka"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Hariri majibu ya haraka"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Majibu ya haraka"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Weka upya programu chaguo-msingi"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Ujumbe uliotumwa kwa <xliff:g id="PHONE_NUMBER">%s</xliff:g> ."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"moja"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"mbili"</string>
@@ -621,6 +628,7 @@
   </string-array>
     <string name="ringtone_title" msgid="6374978286202084684">"Mlio wa simu"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Tetema wakati wa kuita"</string>
-    <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Toni za mguso wa pedi ya kupiga"</string>
+    <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Toa sauti vitufe vya kupiga vinapoguswa"</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Jaza kitufe cha kupiga kiotomatiki"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Malio wa simu na Mtetemo"</string>
 </resources>

@@ -53,7 +53,7 @@
     <string name="cancel" msgid="5044513931633602634">"Cancelar"</string>
     <string name="manageConferenceLabel" msgid="4691922394301969053">"Gerenciar conferência telefônica"</string>
     <string name="audio_mode_speaker" msgid="27649582100085266">"Alto-falante"</string>
-    <string name="audio_mode_earpiece" msgid="4156527186373869107">"Minifone de tel. sem fio"</string>
+    <string name="audio_mode_earpiece" msgid="4156527186373869107">"Minifone do aparelho"</string>
     <string name="audio_mode_wired_headset" msgid="1465350758489175975">"Fone de ouvido com fio"</string>
     <string name="audio_mode_bluetooth" msgid="3047641300848211128">"Bluetooth"</string>
     <string name="wait_prompt_str" msgid="7601815427707856238">"Enviar os toques a seguir?"\n</string>
@@ -167,20 +167,26 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Modo de rede de preferência: CDMA/EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Modo de rede preferencial: somente CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Modo de rede preferencial: somente EvDO"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Modo de rede preferencial: LTE/CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Modo de rede preferencial: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Modo de rede preferencial: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Modo de rede preferencial: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Modo de rede preferencial: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Modo de rede preferencial: global"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Modo de rede preferencial: LTE / WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"Somente EvDo"</item>
-    <item msgid="454610224530856274">"CDMA sem EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo automático"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA automático"</item>
-    <item msgid="5189164180446264504">"Somente WCDMA"</item>
-    <item msgid="5714714953966979187">"Somente GSM"</item>
-    <item msgid="8508331239546115206">"GSM/WCDMA de preferência"</item>
-  </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="7886739962255042385">"LTE/WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Global"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"Somente EvDo"</item>
+    <item msgid="1508557726283094448">"CDMA sem EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo automático"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA automático"</item>
+    <item msgid="7913148405605373434">"Somente WCDMA"</item>
+    <item msgid="1524224863879435516">"Somente GSM"</item>
+    <item msgid="3817924849415716259">"GSM/WCDMA preferencial"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Dados ativados"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Ativar acesso a dados pela rede móvel"</string>
@@ -352,7 +358,7 @@
     <string name="simContacts_emptyLoading" msgid="2203331234764498011">"Lendo a partir do cartão SIM…"</string>
     <string name="simContacts_empty" msgid="5270660846489561932">"Não há contatos no seu cartão SIM."</string>
     <string name="simContacts_title" msgid="1861472842524839921">"Selecione os contatos a serem importados"</string>
-    <string name="simContacts_airplaneMode" msgid="1846161429087789936">"Para importar os contatos do cartão SIM, primeiro desligue o modo para avião."</string>
+    <string name="simContacts_airplaneMode" msgid="1846161429087789936">"Para importar os contatos do cartão SIM, primeiro desligue o modo avião."</string>
     <string name="enable_pin" msgid="5422767284133234860">"Ativar/desativar PIN do SIM"</string>
     <string name="change_pin" msgid="9174186126330785343">"Alterar PIN do SIM"</string>
     <string name="enter_pin_text" msgid="8532615714751931951">"PIN do SIM:"</string>
@@ -585,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Já te ligo de volta."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Eu te ligo mais tarde."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Não posso falar agora. Me liga depois, por favor?"</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Personalizar mensagem"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Escreva sua resposta..."</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Respostas rápidas"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Editar respostas rápidas"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Resposta rápida"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Redefinir aplicativo padrão"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Mensagem enviada para <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"um"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"dois"</string>
@@ -622,6 +629,7 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Toque do telefone"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrar quando estiver tocando"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tons de toque do teclado numérico"</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Preenchimento automático do teclado"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Toque e vibração"</string>
     <string name="perm_change_mobile_network">Alternar rede de dados (2G/3G)</string>
     <string name="perm_change_mobile_network_desc">Aplicação com está permissão pode a qualquer momento, alterar entre dados 2G and 3G. 3G é mais rápido, consome mais bateria, e também pode gastar mais seu dinheiro.</string>

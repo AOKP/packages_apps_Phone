@@ -167,20 +167,26 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Voorkeursnetwerkmodus: CDMA/EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Voorkeursnetwerkmodus: alleen CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Voorkeursnetwerkmodus: alleen EvDo"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Voorkeursnetwerkmodus: LTE/CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Voorkeursnetwerkmodus: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Voorkeursnetwerkmodus: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Voorkeursnetwerkmodus: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Voorkeursnetwerkmodus: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Voorkeursnetwerkmodus: Wereldwijd"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Voorkeursnetwerkmodus: LTE / WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"Alleen EvDo"</item>
-    <item msgid="454610224530856274">"CDMA zonder EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo automatisch"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA automatisch"</item>
-    <item msgid="5189164180446264504">"Alleen WCDMA"</item>
-    <item msgid="5714714953966979187">"Alleen GSM"</item>
-    <item msgid="8508331239546115206">"Voorkeur voor GSM/WCDMA"</item>
-  </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="7886739962255042385">"LTE/WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Wereldwijd"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"Alleen EvDo"</item>
+    <item msgid="1508557726283094448">"CDMA zonder EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo automatisch"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA automatisch"</item>
+    <item msgid="7913148405605373434">"Alleen WCDMA"</item>
+    <item msgid="1524224863879435516">"Alleen GSM"</item>
+    <item msgid="3817924849415716259">"Voorkeur voor GSM/WCDMA"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Gegevenstoegang aan"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Gegevenstoegang via mobiel netwerk inschakelen"</string>
@@ -464,7 +470,7 @@
     <string name="ota_title_activate" msgid="8616918561356194398">"Uw telefoon activeren"</string>
     <string name="ota_touch_activate" msgid="6553212803262586244">"U moet een speciale oproep uitvoeren om uw telefoonservice te activeren. "\n\n"Nadat u op \'Activeren\' heeft gedrukt, luistert u naar de instructies om uw telefoon te activeren."</string>
     <string name="ota_skip_activation_dialog_title" msgid="2943366608272261306">"Activering overslaan?"</string>
-    <string name="ota_skip_activation_dialog_message" msgid="2440770373498870550">"Als u de activering overslaat, kunt u niet bellen of verbinding maken met mobiele gegevensnetwerken (u kunt wel verbinding maken met Wi-Fi-netwerken). Tot u de telefoon activeert, wordt u gevraagd deze te activeren telkens wanneer u de telefoon inschakelt."</string>
+    <string name="ota_skip_activation_dialog_message" msgid="2440770373498870550">"Als u de activering overslaat, kunt u niet bellen of verbinding maken met mobiele gegevensnetwerken (u kunt wel verbinding maken met wifi-netwerken). Tot u de telefoon activeert, wordt u gevraagd deze te activeren telkens wanneer u de telefoon inschakelt."</string>
     <string name="ota_skip_activation_dialog_skip_label" msgid="3458532775091563208">"Overslaan"</string>
     <string name="ota_activate" msgid="1368528132525626264">"Activeren"</string>
     <string name="ota_title_activate_success" msgid="6570240212263372046">"De telefoon is geactiveerd."</string>
@@ -514,7 +520,7 @@
     <string name="sip_receive_calls" msgid="5635685570889971559">"Inkomende gesprekken ontvangen"</string>
     <string name="sip_receive_calls_summary" msgid="8403613238633679184">"Verkort levensduur van accu"</string>
     <string name="sip_call_options_title" msgid="27433718808839672">"Internetoproepen gebruiken"</string>
-    <string name="sip_call_options_wifi_only_title" msgid="145572394529090811">"Internetoproepen gebruiken (alleen Wi-Fi)"</string>
+    <string name="sip_call_options_wifi_only_title" msgid="145572394529090811">"Internetoproepen gebruiken (alleen wifi)"</string>
     <string name="sip_call_options_entry_1" msgid="6556668894178520760">"Voor alle oproepen indien gegevensnetwerk beschikbaar is"</string>
     <string name="sip_call_options_entry_2" msgid="6789764029719494361">"Alleen voor internetoproepen"</string>
     <string name="sip_call_options_entry_3" msgid="7474809001402649185">"Vragen bij elke oproep"</string>
@@ -574,7 +580,7 @@
     <string name="empty_alert" msgid="6839103946505432390">"<xliff:g id="INPUT_FIELD_NAME">%s</xliff:g> is verplicht en mag niet worden leeggelaten."</string>
     <string name="not_a_valid_port" msgid="4796149266434630292">"Het poortnummer moet tussen 1000 en 65534 liggen."</string>
     <string name="no_internet_available_title" msgid="3327109242858406165">"Geen internetverbinding"</string>
-    <string name="no_wifi_available_title" msgid="747881033089378758">"Geen Wi-Fi-verbinding"</string>
+    <string name="no_wifi_available_title" msgid="747881033089378758">"Geen wifi-verbinding"</string>
     <string name="no_internet_available" msgid="7877142631803238549">"Controleer uw internetverbinding voordat u belt via internet."</string>
     <string name="no_wifi_available" msgid="1225073547318465713">"Voor internetoproepen moet u verbinding hebben met een wifi-netwerk (gebruik de instellingen bij \'Draadloos en netwerken\')."</string>
     <string name="no_voip" msgid="8901474054537199865">"Bellen via internet niet ondersteund"</string>
@@ -585,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Ik bel je zo terug."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Ik bel je later."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Kan nu niet opnemen. Bel me later."</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Aangepast bericht"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Eigen reactie opstellen..."</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Snelle reacties"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Snelle reacties bewerken"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Snelle reactie"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Standaardapp opnieuw instellen"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Bericht verzonden naar <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"één"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"twee"</string>
@@ -622,6 +629,7 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Beltoon telefoon"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Trillen bij bellen"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"DTMF-tonen kiestoetsen"</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Automatisch aanvullen voor toetsenblok"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Beltoon en trillen"</string>
     <string name="perm_change_mobile_network">Verander netwerk (2G/3G)</string>
     <string name="perm_change_mobile_network_desc">Applicatie met deze toegang kan op elk moment wisselen tussen 2G en 3G. 3G is sneller, verbruikt meer stroom en kan duurder zijn.</string>

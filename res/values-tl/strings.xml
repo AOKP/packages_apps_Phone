@@ -167,20 +167,26 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Mas gustong mode ng network: CDMA / EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Mas gustong mode ng network: CDMA lamang"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Mas gustong mode ng network: EvDo lamang"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Mas gustong mode ng network: LTE / CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Gustong mode ng network: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Gustong mode ng network: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Gustong mode ng network: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Gustong mode ng network: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Gustong mode ng network: Pangkalahatan"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Gustong mode ng network: LTE / WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"EvDo lang"</item>
-    <item msgid="454610224530856274">"CDMA na walang EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo auto"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA auto"</item>
-    <item msgid="5189164180446264504">"WCDMA lang"</item>
-    <item msgid="5714714953966979187">"GSM lang"</item>
-    <item msgid="8508331239546115206">"Ninanais ng GSM/WCDMA"</item>
-  </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="7886739962255042385">"LTE / WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Pangkalahatan"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"EvDo lang"</item>
+    <item msgid="1508557726283094448">"CDMA na walang EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo auto"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA auto"</item>
+    <item msgid="7913148405605373434">"WCDMA lang"</item>
+    <item msgid="1524224863879435516">"GSM lang"</item>
+    <item msgid="3817924849415716259">"Ninanais ang GSM/WCDMA"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Pinagana ang data"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Paganahin ang access sa data sa Mobile network"</string>
@@ -585,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Tawagan kita ulit."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Tawagan kita mamaya."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Di masagot ngayon. Tawag ka mamaya?"</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Custom na mensahe"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Sumulat ng sarili mong tugon…"</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Mga mabilisang tugon"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"I-edit ang mga mabilisang tugon"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Mabilisang tugon"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"I-reset ang default na app"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Naipadala ang mensahe sa <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"isa"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"dalawa"</string>
@@ -622,5 +629,6 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Ringtone ng telepono"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"I-vibrate kapag nagri-ring"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Mga tone ng pagpindot sa dial pad"</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Pag-autocomplete ng dial pad"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Ringtone at Pag-vibrate"</string>
 </resources>

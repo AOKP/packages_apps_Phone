@@ -167,32 +167,27 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Upřednostňovaný režim sítě: CDMA / EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Upřednostňovaný režim sítě: pouze CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Upřednostňovaný režim sítě: pouze EvDo"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Upřednostňovaný režim sítě: LTE / CDMA"</string>
-    <string name="preferred_network_mode_lte_cdma_evdo_summary">Upřednostňovaný režim sítě: LTE / CDMA / EvDo</string>
-    <string name="preferred_network_mode_lte_gsm_summary">Upřednostňovaný režim sítě: LTE / GSM / WCDMA</string>
-    <string name="preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary">Upřednostňovaný režim sítě: LTE / CMDA / EvDo / GSM / WCDMA</string>
-    <string name="preferred_network_mode_lte_wcdma_summary">Upřednostňovaný režim sítě: LTE / WCDMA</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Preferovaný režim sítě: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Preferovaný režim sítě: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Preferovaný režim sítě: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Preferovaný režim sítě: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Preferovaný režim sítě: Globální"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Preferovaný režim sítě: LTE/WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"Všechny"</item>
-    <item msgid="3273348576277144124">"Pouze EvDo"</item>
-    <item msgid="454610224530856274">"CDMA bez EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo – automaticky"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA – automaticky"</item>
-    <item msgid="5189164180446264504">"Pouze WCDMA"</item>
-    <item msgid="5714714953966979187">"Pouze GSM"</item>
-    <item msgid="8508331239546115206">"GSM/WCDMA – upřednostňováno"</item>
+    <item msgid="7886739962255042385">"LTE/WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Globální"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"Pouze EvDo"</item>
+    <item msgid="1508557726283094448">"CDMA bez EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo – automaticky"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA – automaticky"</item>
+    <item msgid="7913148405605373434">"Pouze WCDMA"</item>
+    <item msgid="1524224863879435516">"Pouze GSM"</item>
+    <item msgid="3817924849415716259">"GSM/WCDMA – preferováno"</item>
   </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item>LTE/CMDA/EvDo/GSM/WCDMA</item>
-    <item>LTE/CDMA/EvDo</item>
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA/EvDo - automaticky"</item>
-  </string-array>
-    <string-array name="preferred_network_mode_choices_lte_gsm">
-        <item>LTE/WCDMA</item>
-        <item>LTE/GSM/WCDMA</item>
-        <item>GSM/WCDMA - upřednostňováno</item>
-    </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Dat. přenosy aktivovány"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Aktivovat datový přístup prostřednictvím mobilní sítě"</string>
     <string name="roaming" msgid="8871412572928323707">"Datový roaming"</string>
@@ -475,7 +470,7 @@
     <string name="ota_title_activate" msgid="8616918561356194398">"Aktivujte svůj telefon"</string>
     <string name="ota_touch_activate" msgid="6553212803262586244">"K aktivaci telefonní služby je potřeba uskutečnit speciální hovor. "\n\n"Stiskněte tlačítko Aktivovat a aktivujte telefon podle pokynů, které vám budou sděleny."</string>
     <string name="ota_skip_activation_dialog_title" msgid="2943366608272261306">"Přeskočit aktivaci?"</string>
-    <string name="ota_skip_activation_dialog_message" msgid="2440770373498870550">"Pokud přeskočíte aktivaci, nemůžete volat ani se připojovat k mobilním datovým sítím (můžete se ale připojit k sítím WiFi). Dokud svůj telefon neaktivujete, bude se zobrazovat výzva k aktivaci při každém zapnutí."</string>
+    <string name="ota_skip_activation_dialog_message" msgid="2440770373498870550">"Pokud přeskočíte aktivaci, nemůžete volat ani se připojovat k mobilním datovým sítím (můžete se ale připojit k sítím Wi-Fi). Dokud svůj telefon neaktivujete, bude se zobrazovat výzva k aktivaci při každém zapnutí."</string>
     <string name="ota_skip_activation_dialog_skip_label" msgid="3458532775091563208">"Přeskočit"</string>
     <string name="ota_activate" msgid="1368528132525626264">"Aktivovat"</string>
     <string name="ota_title_activate_success" msgid="6570240212263372046">"Telefon je aktivován."</string>
@@ -596,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Zavolám zpátky."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Zavolám později."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Nemůžu telefonovat, volejte jindy."</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Vlastní zpráva"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Napsat vlastní odpověď..."</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Rychlé odpovědi"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Upravit rychlé odpovědi"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Rychlá odpověď"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Resetovat výchozí aplikaci"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Zpráva byla odeslána na číslo <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"jedna"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"dvě"</string>
@@ -633,69 +629,6 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Vyzváněcí tón telefonu"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrace při vyzvánění"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tóny při dotyku číselníku"</string>
-    <string name="ring_delay_title">Prodleva vyzvánění</string>
-    <string name="ring_delay_summary">Zvolit prodlevu vyzvánění</string>
-    <string-array name="ring_delay_entries">
-         <item>Prodleva vypnuta</item>
-        <item>3 sekundy</item>
-        <item>6 sekund</item>
-        <item>9 sekund</item>
-    </string-array>
-    <string name="vibration_title">Vibrace telefonu</string>
-    <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
-    <string name="dialer_ui_settings_summary">Nastavení číselníku vytáčení</string>
-    <string name="exit_to_home_screen_title">Návrat na předchozí aktivitu</string>
-    <string name="exit_to_home_screen_summary">Vrátit se k poslední prováděné aktivitě po ukončení hovoru (místo výpisu hovorů)</string>
-    <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
-    <string name="landscape_mode_summary">Zapnout automatickou rotaci obrazovky (pokud je senzor aktivní)</string>
-    <string name="national_roaming">Národní datový roaming</string>
-    <string name="national_roaming_enable">Připojit k datové síti během národního roamingu</string>
-    <string name="national_roaming_disable">Nepřipojovat k datové síti během národního roamingu</string>
-    <string name="noise_suppression_title">Potlačení šumu</string>
-    <string name="noise_suppression_summary">Zapnout potlačení šumu u hovorů</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Automatické doplňování pomocí číselníku"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Vyzvánění a vibrace"</string>
-    <string name="advanced_setting">Rozšířené nastavení</string>
-    <string name="vibrate_outgoing">Vibrace při odpovědi</string>
-    <string name="vibrate_outgoing_sum">Vibrace pokud druhá strana zvedne hovor</string>
-    <string name="vibrate_60">Vibrace každých 60 sekund</string>
-    <string name="vibrate_60_sum">Při odchozím hovoru vibrovat každých 60 sekund</string>
-    <string name="vibrate_hangup">Vibrace po zavěšení</string>
-    <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
-    <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
-    <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
-    <string name="perm_change_mobile_network">Změnit typ sítě (2G/3G)</string>
-    <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
-    <string name="voice_quality_preferences_title">Hlasová kvalita</string>
-    <string name="voice_quality_summary">Aktuální nastavení hlasového profilu: <xliff:g id="action">%s</xliff:g></string>
-    <string name="voice_quality_entry_normal">Normální</string>
-    <string name="voice_quality_entry_clear">Čistý</string>
-    <string name="voice_quality_entry_crisp">Ostrý</string>
-    <string name="voice_quality_entry_bright">Živý</string>
-    <!-- Blacklist preferences -->
-    <string name="blacklist_title">Blacklist</string>
-    <string name="enable_blacklist_title">Zapnout blacklist</string>
-    <string name="blacklist_summary_disabled">Vypnut</string>
-    <string name="blacklist_summary">Příchozí hovory z telefonních čísel v blacklistu budou blokovány</string>
-    <string name="blacklist_notify">Zobrazit upozornění</string>
-    <string name="blacklist_private_numbers_title">Skrytá čísla</string>
-    <string name="blacklist_private_numbers_summary">Blokovat příchozí hovory ze skrytých čísel</string>
-    <string name="blacklist_unknown_numbers_title">Neznámá čísla</string>
-    <string name="blacklist_unknown_numbers_summary">Blokovat příchozí hovory z čísel, které nejsou v seznamu kontaktů</string>
-    <string name="blacklist_regex_title">Použít zástupné znaky</string>
-    <string name="blacklist_regex_summary">Použít . jako zástupný znak, * pro opakování. Např. 123.* zablokuje čísla začínající na 123 a .*123.* zablokuje čísla obsahující 123</string>
-    <!-- Blacklist management -->
-    <string name="add_blacklist_number">Přidat telefonní číslo</string>
-    <string name="add_to_blacklist">Přidat na blacklist</string>
-    <string name="add_to_blacklist_message">Budoucí hovory z %s budou blokovány</string>
-    <string name="remove_blacklist_number_title">Odstranit číslo</string>
-    <string name="remove_blacklist_number">Opravdu odstranit %s z blacklistu?</string>
-    <!-- Blacklist notifications -->
-    <string name="blacklist_notification">Zablokován hovor z %s</string>
-    <string name="blacklist_notification_private_number">Zablokován hovor ze skrytého čísla</string>
-    <string name="blacklist_notification_list_private">Skryté</string>
-    <string name="blacklist_notification_unknown_number">Zablokováno neznámé číslo %s</string>
-    <string name="blacklist_notification_multiple">Počet zablokovaných hovorů: <xliff:g id="count">%d</xliff:g></string>
-    <string name="unblock_number">Odblokovat</string>
-    <!-- Text for the onscreen "Blacklist" button -->
-    <string name="onscreenBlacklistText">Blacklist</string>
 </resources>

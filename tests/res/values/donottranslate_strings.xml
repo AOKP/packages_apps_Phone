@@ -24,4 +24,6 @@
     <string name="dialCommand">DIAL</string>
     <string name="itelephonyCallCommand">ITelephony.call()</string>
     <string name="itelephonyDialCommand">ITelephony.dial()</string>
+
+    <string name="instant_text_back_content">message: %s, Uri: %s, </string>
 </resources>

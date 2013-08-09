@@ -134,4 +134,10 @@
          for the "Phantom Voicemail" issue where notifications that are
          impossible to dismiss on the Sprint network. -->
     <bool name="sprint_mwi_quirk">false</bool>
+    <!-- Configure certain GsmUmtsOptions to be available or not. The
+         default values are in Phone/res/values/config.xml and maybe overridden
+         in operator specific resource directories or device specific overlays. -->
+    <bool name="config_apn_expand" translatable="false">true</bool>
+    <bool name="config_operator_selection_expand" translatable="false">true</bool>
+    <bool name="config_prefer_2g" translatable="false">true</bool>
 </resources>

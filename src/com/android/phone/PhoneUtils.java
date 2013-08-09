@@ -814,7 +814,12 @@ public class PhoneUtils {
         return status;
     }
 
-    private static String toLogSafePhoneNumber(String number) {
+    /* package */ static String toLogSafePhoneNumber(String number) {
+        // For unknown number, log empty string.
+        if (number == null) {
+            return "";
+        }
+
         if (VDBG) {
             // When VDBG is true we emit PII.
             return number;
@@ -2604,31 +2609,6 @@ public class PhoneUtils {
      */
     static boolean isVoipSupported() {
         return sVoipSupported;
-    }
-
-    /**
-     * On GSM devices, we never use short tones.
-     * On CDMA devices, it depends upon the settings.
-     */
-    public static boolean useShortDtmfTones(Phone phone, Context context) {
-        int phoneType = phone.getPhoneType();
-        if (phoneType == PhoneConstants.PHONE_TYPE_GSM) {
-            return false;
-        } else if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
-            int toneType = android.provider.Settings.System.getInt(
-                    context.getContentResolver(),
-                    Settings.System.DTMF_TONE_TYPE_WHEN_DIALING,
-                    CallFeaturesSetting.DTMF_TONE_TYPE_NORMAL);
-            if (toneType == CallFeaturesSetting.DTMF_TONE_TYPE_NORMAL) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (phoneType == PhoneConstants.PHONE_TYPE_SIP) {
-            return false;
-        } else {
-            throw new IllegalStateException("Unexpected phone type: " + phoneType);
-        }
     }
 
     public static String getPresentationString(Context context, int presentation) {

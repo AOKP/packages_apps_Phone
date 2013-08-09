@@ -167,20 +167,26 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Preferált hálózati mód: CDMA / EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Preferált hálózati mód: csak CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Preferált hálózati mód: csak EvDo"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Preferált hálózati mód: LTE/CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Preferált hálózati mód: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Preferált hálózati mód: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Preferált hálózati mód: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Preferált hálózati mód: CDMA+LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Preferált hálózati mód: globális"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Preferált hálózati mód: LTE/WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"Csak EvDo"</item>
-    <item msgid="454610224530856274">"CDMA EvDo nélkül"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo automatikus"</item>
-    <item msgid="7148247646407324800">"GSM/WCDMA automatikus"</item>
-    <item msgid="5189164180446264504">"Csak WCDMA"</item>
-    <item msgid="5714714953966979187">"Csak GSM"</item>
-    <item msgid="8508331239546115206">"GSM/WCDMA a preferált"</item>
-  </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="7886739962255042385">"LTE/WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Globális"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"Csak EvDo"</item>
+    <item msgid="1508557726283094448">"CDMA EvDo nélkül"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo automatikus"</item>
+    <item msgid="5958053792390386668">"GSM/WCDMA automatikus"</item>
+    <item msgid="7913148405605373434">"Csak WCDMA"</item>
+    <item msgid="1524224863879435516">"Csak GSM"</item>
+    <item msgid="3817924849415716259">"GSM/WCDMA a preferált"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Adatok engedélyezése"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Adathozzáférés engedélyezése mobilhálózatokon"</string>
@@ -330,8 +336,6 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"TTY-mód beállítása"</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"Automatikus újrapróbálkozás"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"Automatikus újrapróbálkozás-mód bekapcsolása"</string>
-    <string name="exit_to_home_screen_title">Kezdőképernyőre lépés hívás végén</string>
-    <string name="exit_to_home_screen_summary">Kilép a kezdőképernyőre hívás végén, nem megy az Előzményekre</string>
     <string name="menu_add" msgid="1882023737425114762">"Névjegy hozzáadása"</string>
     <string name="menu_edit" msgid="7143003705504672374">"Névjegy szerkesztése"</string>
     <string name="menu_delete" msgid="3977150783449642851">"Névjegy törlése"</string>
@@ -587,11 +591,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Hamarosan visszahívom."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Később visszahívom."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Most nem alkalmas. Hívna később?"</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Egyéni üzenet"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Saját válasz írása..."</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Gyors válaszok"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Gyors válaszok szerkesztése"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Gyors válasz"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Alapalkalmazás visszaállítása"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Üzenet elküldve ide: <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"egy"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"kettő"</string>
@@ -624,72 +629,6 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Telefon csengőhangja"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Csengetéskor rezegjen"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tárcsázó érintési hangjai"</string>
-    <string name="landscape_mode_title">Fekvőmód engedélyezése</string>
-    <string name="landscape_mode_summary">Engedélyezi a fekvőmódot (ha a szenzor engedi)</string>
-
-    <!-- Dialer UI Settings -->
-    <string name="dialer_ui_settings_title">Tárcsázó beállítás</string>
-    <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
-    <string name="vibration_title">Telefon rezgés</string>
-
-    <!-- CYANOGENMOD ADDITIONS START -->
-
-    <!-- Mobile network settings screen, setting check box name -->
-    <string name="national_roaming">Nemzetközi adat barangolás</string>
-    <!-- Mobile network settings screen, setting summary text when check box is selected -->
-    <string name="national_roaming_enable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
-    <!-- Mobile network settings screen, setting summary text when check box is clear -->
-    <string name="national_roaming_disable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
-
-    <!-- CYANOGENMOD ADDITIONS END -->
-
-    <!-- Noise suppression -->
-    <string name="noise_suppression_title">Zaj elnyomás</string>
-    <string name="noise_suppression_summary">Zaj elnyomás engedélyezése hívás közben</string>
-    <!-- End Noise suppression -->
-
-    <string name="preference_category_ringtone">Csengés &amp; Rezgés</string>
-    <!-- Advanced Settings -->
-    <string name="advanced_setting">Haladó beállítások</string>
-    <string name="vibrate_outgoing">Rezgés válasznál</string>
-    <string name="vibrate_outgoing_sum">Rezeg, ha felveszed a bejövő hívást</string>
-    <string name="vibrate_60">60 mp-ként rezeg</string>
-    <string name="vibrate_60_sum">Kimenő hívásnál 60 mp-ként rezeg jelzésként</string>
-    <string name="vibrate_hangup">Rezgés a végén</string>
-    <string name="vibrate_hangup_sum">Rezeg a hívás végénél</string>
-    <string name="vibrate_call_waiting">Rezgés hívás várakoztatásnál</string>
-    <string name="vibrate_call_waiting_sum">Rezeg, ha hívás várakoztatás van</string>
-    <string name="ring_delay_title">Csöngés késleltetés</string>
-    <string name="ring_delay_summary">Válasz csengés késleltetést</string>
-
-    <!-- Blacklist preferences -->
-    <string name="blacklist_title">Feketelista</string>
-    <string name="enable_blacklist_title">Feketelista engedélyezése</string>
-    <string name="blacklist_summary_disabled">Tiltás</string>
-    <string name="blacklist_summary">Bejövő hívások a feketelistán blokkolva lesznek</string>
-    <string name="blacklist_notify">Értesítés mutatása</string>
-    <string name="blacklist_private_numbers_title">Magán számok</string>
-    <string name="blacklist_private_numbers_summary">Magán számok blokkolása</string>
-    <string name="blacklist_unknown_numbers_title">Ismeretlen számok</string>
-    <string name="blacklist_unknown_numbers_summary">Kontakt listán nem szereplő számok blokkolása</string>
-    <string name="blacklist_regex_title">Helyettesítő karakterek használata</string>
-    <string name="blacklist_regex_summary">Használj .-ot és *-ot, Például 123.* blokkolja az 123-mal kezdödő számokat. *123.* blokkolja az 123-t tartalmazóakat.</string>
-
-    <!-- Blacklist management -->
-    <string name="add_blacklist_number">Szám hozzáadása</string>
-    <string name="add_to_blacklist">Feketelistához adja</string>
-    <string name="add_to_blacklist_message">Hívások innen %s blokkolva lesznek</string>
-    <string name="remove_blacklist_number_title">Szám eltávolítása</string>
-    <string name="remove_blacklist_number">El akarod távolítani %s a fekete listáról?</string>
-
-    <!-- Blacklist notifications -->
-    <string name="blacklist_notification">Blokkolja innen a hívásokat %s</string>
-    <string name="blacklist_notification_private_number">Blokkolja a hívást magánszámról</string>
-    <string name="blacklist_notification_list_private">Magán</string>
-    <string name="blacklist_notification_unknown_number">Blokkolja ismeretlen számról %s</string>
-    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> hívások blokkolva</string>
-    <string name="unblock_number">Feloldás</string>
-
-    <!-- Text for the onscreen "Blacklist" button -->
-    <string name="onscreenBlacklistText">Feketelista</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Tárcsázó automatikus kiegészítés"</string>
+    <string name="preference_category_ringtone" msgid="5197960752529332721">"Csengőhang és rezgés"</string>
 </resources>

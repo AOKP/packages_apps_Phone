@@ -20,7 +20,6 @@ import android.animation.LayoutTransition;
 import android.content.res.Configuration;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -879,9 +878,9 @@ public class CallCard extends LinearLayout
             // In that rare case, the gravity needs to be reset to the right.
             // Also, setText("") is used since there is a delay in making the view GONE,
             // so the user will otherwise see the text jump to the right side before disappearing.
-            if(mCallStateLabel.getGravity() != Gravity.RIGHT) {
+            if(mCallStateLabel.getGravity() != Gravity.END) {
                 mCallStateLabel.setText("");
-                mCallStateLabel.setGravity(Gravity.RIGHT);
+                mCallStateLabel.setGravity(Gravity.END);
             }
         }
         if (skipAnimation) {
@@ -1206,7 +1205,6 @@ public class CallCard extends LinearLayout
         mPhotoTracker.setPhotoState(ContactsAsyncHelper.ImageTracker.DISPLAY_IMAGE);
 
         // The actual strings we're going to display onscreen:
-        boolean displayNameIsNumber = false;
         String displayName;
         String displayNumber = null;
         String label = null;
@@ -1214,7 +1212,10 @@ public class CallCard extends LinearLayout
         // String socialStatusText = null;
         // Drawable socialStatusBadge = null;
 
-        if (info != null) {
+        // Gather missing info unless the call is generic, in which case we wouldn't use
+        // the gathered information anyway.
+        if (info != null && !call.isGeneric()) {
+
             // It appears that there is a small change in behaviour with the
             // PhoneUtils' startGetCallerInfo whereby if we query with an
             // empty number, we will get a valid CallerInfo object, but with
@@ -1228,7 +1229,7 @@ public class CallCard extends LinearLayout
             // .getCallerInfo() that relied on a NULL CallerInfo to indicate
             // an unknown contact.
 
-            // Currently, info.phoneNumber may actually be a SIP address, and
+            // Currently, infi.phoneNumber may actually be a SIP address, and
             // if so, it might sometimes include the "sip:" prefix.  That
             // prefix isn't really useful to the user, though, so strip it off
             // if present.  (For any other URI scheme, though, leave the
@@ -1274,7 +1275,6 @@ public class CallCard extends LinearLayout
 
                     // Promote the phone number up to the "name" slot:
                     displayName = number;
-                    displayNameIsNumber = true;
 
                     // ...and use the "number" slot for a geographical description
                     // string if available (but only for incoming calls.)
@@ -1313,49 +1313,10 @@ public class CallCard extends LinearLayout
             displayName = PhoneUtils.getPresentationString(getContext(), presentation);
         }
 
-        boolean updateNameAndNumber = true;
-        // If the new info is just a phone number, check to make sure it's not less
-        // information than what's already being displayed.
-        if (displayNameIsNumber) {
-            // If the new number is the same as the number already displayed, ignore it
-            // because that means we're also already displaying a name for it.
-            // If the new number is the same as the name currently being displayed, only
-            // display if the new number is longer (ie, has formatting).
-            String visiblePhoneNumber = null;
-            if (mPhoneNumber.getVisibility() == View.VISIBLE) {
-                visiblePhoneNumber = mPhoneNumber.getText().toString();
-            }
-            if ((visiblePhoneNumber != null &&
-                 PhoneNumberUtils.compare(visiblePhoneNumber, displayName)) ||
-                (PhoneNumberUtils.compare(mName.getText().toString(), displayName) &&
-                 displayName.length() < mName.length())) {
-                if (DBG) log("chose not to update display {" + mName.getText() + ", "
-                             + visiblePhoneNumber + "} with number " + displayName);
-                updateNameAndNumber = false;
-            }
-        }
-
-        if (updateNameAndNumber) {
-            if (call.isGeneric()) {
-                mName.setText(R.string.card_title_in_call);
-            } else {
-                mName.setText(displayName);
-            }
-            mName.setVisibility(View.VISIBLE);
-
-            if (displayNumber != null && !call.isGeneric()) {
-                mPhoneNumber.setText(displayNumber);
-                mPhoneNumber.setVisibility(View.VISIBLE);
-            } else {
-                mPhoneNumber.setVisibility(View.GONE);
-            }
-
-            if (label != null && !call.isGeneric()) {
-                mLabel.setText(label);
-                mLabel.setVisibility(View.VISIBLE);
-            } else {
-                mLabel.setVisibility(View.GONE);
-            }
+        if (call.isGeneric()) {
+            updateGenericInfoUi();
+        } else {
+            updateInfoUi(displayName, displayNumber, label);
         }
 
         // Update mPhoto
@@ -1416,6 +1377,41 @@ public class CallCard extends LinearLayout
         // Other text fields:
         updateCallTypeLabel(call);
         // updateSocialStatus(socialStatusText, socialStatusBadge, call);  // Currently unused
+    }
+
+    /**
+     * Updates the info portion of the UI to be generic.  Used for CDMA 3-way calls.
+     */
+    private void updateGenericInfoUi() {
+        mName.setText(R.string.card_title_in_call);
+        mPhoneNumber.setVisibility(View.GONE);
+        mLabel.setVisibility(View.GONE);
+    }
+
+    /**
+     * Updates the info portion of the call card with passed in values.
+     */
+    private void updateInfoUi(String displayName, String displayNumber, String label) {
+        mName.setText(displayName);
+        mName.setVisibility(View.VISIBLE);
+
+        if (TextUtils.isEmpty(displayNumber)) {
+            mPhoneNumber.setVisibility(View.GONE);
+            // We have a real phone number as "mName" so make it always LTR
+            mName.setTextDirection(View.TEXT_DIRECTION_LTR);
+        } else {
+            mPhoneNumber.setText(displayNumber);
+            mPhoneNumber.setVisibility(View.VISIBLE);
+            // We have a real phone number as "mPhoneNumber" so make it always LTR
+            mPhoneNumber.setTextDirection(View.TEXT_DIRECTION_LTR);
+        }
+
+        if (TextUtils.isEmpty(label)) {
+            mLabel.setVisibility(View.GONE);
+        } else {
+            mLabel.setText(label);
+            mLabel.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -1776,7 +1772,15 @@ public class CallCard extends LinearLayout
         }
     }
 
+    public void clear() {
+        // The existing phone design is to keep an instance of call card forever.  Until that
+        // design changes, this method is needed to clear (reset) the call card for the next call
+        // so old data is not shown.
 
+        // Other elements can also be cleared here.  Starting with elapsed time to fix a bug.
+        mElapsedTime.setVisibility(View.GONE);
+        mElapsedTime.setText(null);
+    }
 
 
     // Debugging / testing code

@@ -1029,6 +1029,15 @@ public class InCallScreen extends Activity
             moveTaskToBack(true);
         }
         setInCallScreenMode(InCallScreenMode.UNDEFINED);
+
+        // Call update screen so that the in-call screen goes back to a normal state.
+        // This avoids bugs where a previous state will filcker the next time phone is
+        // opened.
+        updateScreen();
+
+        if (mCallCard != null) {
+            mCallCard.clear();
+        }
     }
 
     /**
@@ -3568,17 +3577,6 @@ public class InCallScreen extends Activity
             // Call origin is valid only with outgoing calls. Disable it on incoming calls.
             mApp.setLatestActiveCallOrigin(null);
         }
-    }
-
-    /**
-     * Answer the ringing call *and* hang up the ongoing call.
-     */
-    private void internalAnswerAndEnd() {
-        if (DBG) log("internalAnswerAndEnd()...");
-        if (VDBG) PhoneUtils.dumpCallManager();
-        // In the rare case when multiple calls are ringing, the UI policy
-        // it to always act on the first ringing call.
-        PhoneUtils.answerAndEndActive(mCM, mCM.getFirstActiveRingingCall());
     }
 
     /**

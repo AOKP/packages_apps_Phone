@@ -167,27 +167,33 @@
     <string name="preferred_network_mode_cdma_evdo_summary" msgid="8332063064712726618">"Foretrukket nettverksmodus: CMDA/EvDo"</string>
     <string name="preferred_network_mode_cdma_only_summary" msgid="1309770926198634150">"Foretrukket nettverksmodus: kun CDMA"</string>
     <string name="preferred_network_mode_evdo_only_summary" msgid="8472220691721269155">"Foretrukket nettverksmodus: kun EvDo"</string>
-    <string name="preferred_network_mode_lte_cdma_summary" msgid="3722647806454528426">"Foretrukket nettverksmodus: LTE/CDMA"</string>
+    <string name="preferred_network_mode_cdma_evdo_gsm_wcdma_summary" msgid="4726682079415227330">"Foretrukket nettverksmodus: CDMA/EvDo/GSM/WCDMA"</string>
+    <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Foretrukket nettverksmodus: LTE"</string>
+    <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Foretrukket nettverksmodus: GSM/WCDMA/LTE"</string>
+    <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Foretrukket nettverksmodus: CDMA + LTE/EVDO"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Foretrukket nettverksmodus: Overordnet"</string>
+    <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Foretrukket nettverksmodus: LTE/WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
-    <item msgid="5543794538185064048">"LTE/CDMA"</item>
-    <item msgid="3273348576277144124">"Kun EvDo"</item>
-    <item msgid="454610224530856274">"CDMA uten EvDo"</item>
-    <item msgid="648505122852496166">"CDMA/EvDo automatisk"</item>
-    <item msgid="7148247646407324800">"GSM / WCDMA automatisk"</item>
-    <item msgid="5189164180446264504">"Kun WCDMA"</item>
-    <item msgid="5714714953966979187">"Kun GSM"</item>
-    <item msgid="8508331239546115206">"GSM/WCDMA foretrukket"</item>
-  </string-array>
-  <string-array name="preferred_network_mode_choices_lte">
-    <item msgid="7002474529872452266">"LTE/CDMA"</item>
-    <item msgid="5541716989029928208">"CDMA"</item>
+    <item msgid="7886739962255042385">"LTE / WCDMA"</item>
+    <item msgid="577652050447385699">"LTE"</item>
+    <item msgid="6813597571293773656">"Overordnet"</item>
+    <item msgid="127064712132619032">"GSM/WCDMA/LTE"</item>
+    <item msgid="1126767511633425977">"CDMA + LTE/EvDo"</item>
+    <item msgid="6389676313771670660">"CDMA/EvDo/GSM/WCDMA"</item>
+    <item msgid="545430093607698090">"Bare EvDo"</item>
+    <item msgid="1508557726283094448">"CDMA uten EvDo"</item>
+    <item msgid="4341433122263841224">"CDMA/EvDo automatisk"</item>
+    <item msgid="5958053792390386668">"GSM / WCDMA automatisk"</item>
+    <item msgid="7913148405605373434">"Bare WCDMA"</item>
+    <item msgid="1524224863879435516">"Bare GSM"</item>
+    <item msgid="3817924849415716259">"GSM/WCDMA foretrukket"</item>
   </string-array>
     <string name="data_enabled" msgid="5972538663568715366">"Data aktivert"</string>
     <string name="data_enable_summary" msgid="5022018967714633874">"Aktiver datatilgang i mobilnettverk"</string>
     <string name="roaming" msgid="8871412572928323707">"Dataroaming"</string>
     <string name="roaming_enable" msgid="7331106985174381987">"Koble til datatjenester ved roaming"</string>
     <string name="roaming_disable" msgid="1843417228755568110">"Koble til datatjenester ved roaming"</string>
-    <string name="roaming_reenable_message" msgid="8913735676127858115">"Du har mistet datatilkoblingen fordi du forlot hjemmenettet med datastreifing avslått."</string>
+    <string name="roaming_reenable_message" msgid="8913735676127858115">"Du har mistet datatilkoblingen fordi du forlot hjemmenettet med roaming avslått."</string>
     <string name="roaming_warning" msgid="7820963598559553967">"Tillat dataroaming? Dette kan koste mye penger!"</string>
     <string name="gsm_umts_options" msgid="6538311689850981686">"GSM/UMTS-innstillinger"</string>
     <string name="cdma_options" msgid="4016822858172249884">"CDMA-innstillinger"</string>
@@ -591,11 +597,12 @@
     <string name="respond_via_sms_canned_response_2" msgid="4074450431532859214">"Jeg ringer deg straks tilbake."</string>
     <string name="respond_via_sms_canned_response_3" msgid="3496079065723960450">"Jeg ringer deg senere."</string>
     <string name="respond_via_sms_canned_response_4" msgid="1698989243040062190">"Ikke nå. Ringer du meg senere?"</string>
-    <string name="respond_via_sms_custom_message" msgid="6648174777301028017">"Egendefinert melding"</string>
+    <string name="respond_via_sms_custom_message" msgid="6158880869935281078">"Skriv ditt eget"</string>
     <string name="respond_via_sms_setting_title" msgid="3754000371039709383">"Hurtigsvar"</string>
     <string name="respond_via_sms_setting_title_2" msgid="6104662227299493906">"Rediger hurtigsvar"</string>
     <string name="respond_via_sms_setting_summary" msgid="9150281183930613065"></string>
     <string name="respond_via_sms_edittext_dialog_title" msgid="20379890418289778">"Hurtigsvar"</string>
+    <string name="respond_via_sms_menu_reset_default_activity" msgid="1461742052902053466">"Tilbakestill standardappen"</string>
     <string name="respond_via_sms_confirmation_format" msgid="7229149977515784269">"Melding er sendt til <xliff:g id="PHONE_NUMBER">%s</xliff:g>."</string>
     <string name="description_image_button_one" msgid="5502718871331943463">"en"</string>
     <string name="description_image_button_two" msgid="4903738528222924522">"to"</string>
@@ -628,5 +635,6 @@
     <string name="ringtone_title" msgid="6374978286202084684">"Telefonringetone"</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"Vibrering når det ringer"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tastetoner for tastatur"</string>
+    <string name="dial_pad_autocomplete" msgid="494525952035761075">"Autofullføring for talltastaturet"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Ringetone og vibrering"</string>
 </resources>
