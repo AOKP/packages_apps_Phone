@@ -348,40 +348,8 @@ public class MobileNetworkSettings extends PreferenceActivity
                     android.provider.Settings.Global.PREFERRED_NETWORK_MODE, preferredNetworkMode);
             if (buttonNetworkMode != settingsNetworkMode) {
                 int modemNetworkMode;
-                switch(buttonNetworkMode) {
-                    case Phone.NT_MODE_LTE_WCDMA:
-                        modemNetworkMode = Phone.NT_MODE_LTE_WCDMA;
-                        break;
-                    case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
-                        modemNetworkMode = Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA;
-                        break;
-                    case Phone.NT_MODE_LTE_GSM_WCDMA:
-                        modemNetworkMode = Phone.NT_MODE_LTE_GSM_WCDMA;
-                        break;
-                    case Phone.NT_MODE_LTE_CDMA_AND_EVDO:
-                        modemNetworkMode = Phone.NT_MODE_LTE_CDMA_AND_EVDO;
-                        break;
-                    case Phone.NT_MODE_GLOBAL:
-                        modemNetworkMode = Phone.NT_MODE_GLOBAL;
-                        break;
-                    case Phone.NT_MODE_EVDO_NO_CDMA:
-                        modemNetworkMode = Phone.NT_MODE_EVDO_NO_CDMA;
-                        break;
-                    case Phone.NT_MODE_CDMA_NO_EVDO:
-                        modemNetworkMode = Phone.NT_MODE_CDMA_NO_EVDO;
-                        break;
-                    case Phone.NT_MODE_CDMA:
-                        modemNetworkMode = Phone.NT_MODE_CDMA;
-                        break;
-                    case Phone.NT_MODE_GSM_UMTS:
-                        modemNetworkMode = Phone.NT_MODE_GSM_UMTS;
-                        break;
-                    case Phone.NT_MODE_WCDMA_ONLY:
-                        modemNetworkMode = Phone.NT_MODE_WCDMA_ONLY;
-                        break;
-                    case Phone.NT_MODE_GSM_ONLY:
-                        modemNetworkMode = Phone.NT_MODE_GSM_ONLY;
-                        break;
+                // if new mode is invalid ignore it
+                switch (buttonNetworkMode) {
                     case Phone.NT_MODE_WCDMA_PREF:
                     case Phone.NT_MODE_GSM_ONLY:
                     case Phone.NT_MODE_WCDMA_ONLY:
@@ -474,11 +442,6 @@ public class MobileNetworkSettings extends PreferenceActivity
                         //but it's not true. Double check here
                         ((getResources().getBoolean(R.bool.world_phone) == true || isLteOnCdma) &&
                             modemNetworkMode == Phone.NT_MODE_GLOBAL) ||
-                        modemNetworkMode == Phone.NT_MODE_LTE_CDMA_AND_EVDO ||
-                        modemNetworkMode == Phone.NT_MODE_LTE_GSM_WCDMA ||
-                        modemNetworkMode == Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA ||
-                        modemNetworkMode == Phone.NT_MODE_LTE_WCDMA ) {
-                        modemNetworkMode == Phone.NT_MODE_GLOBAL ||
                         modemNetworkMode == Phone.NT_MODE_LTE_CDMA_AND_EVDO ||
                         modemNetworkMode == Phone.NT_MODE_LTE_GSM_WCDMA ||
                         modemNetworkMode == Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA ||
@@ -615,26 +578,6 @@ public class MobileNetworkSettings extends PreferenceActivity
             case Phone.NT_MODE_LTE_ONLY:
                 mButtonPreferredNetworkMode.setSummary(
                         R.string.preferred_network_mode_lte_summary);
-                break;
-            case Phone.NT_MODE_LTE_GSM_WCDMA:
-                mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_lte_gsm_wcdma_summary);
-                break;
-            case Phone.NT_MODE_LTE_CDMA_AND_EVDO:
-                mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_lte_cdma_evdo_summary);
-                break;
-            case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
-                mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_global_summary);
-                break;
-            case Phone.NT_MODE_GLOBAL:
-                mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_cdma_evdo_gsm_wcdma_summary);
-                break;
-            case Phone.NT_MODE_LTE_WCDMA:
-                mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_lte_wcdma_summary);
                 break;
             default:
                 mButtonPreferredNetworkMode.setSummary(
