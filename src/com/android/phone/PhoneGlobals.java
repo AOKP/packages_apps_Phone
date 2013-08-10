@@ -2038,6 +2038,13 @@ public class PhoneGlobals extends ContextWrapper
         return DEFAULT_SUBSCRIPTION;
     }
 
+    /*
+     * Gets User preferred Data subscription setting
+     */
+    public int getDataSubscription() {
+        return DEFAULT_SUBSCRIPTION;
+    }
+
     /**
      * Return an Intent that can be used to bring up the in-call screen.
      *

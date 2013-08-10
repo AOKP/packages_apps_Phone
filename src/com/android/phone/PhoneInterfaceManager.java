@@ -629,11 +629,13 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
 
     public int getDataState() {
-        return DefaultPhoneNotifier.convertDataState(mPhone.getDataConnectionState());
+        Phone phone = mApp.getPhone(mApp.getDataSubscription());
+        return DefaultPhoneNotifier.convertDataState(phone.getDataConnectionState());
     }
 
     public int getDataActivity() {
-        return DefaultPhoneNotifier.convertDataActivityState(mPhone.getDataActivityState());
+        Phone phone = mApp.getPhone(mApp.getDataSubscription());
+        return DefaultPhoneNotifier.convertDataActivityState(phone.getDataActivityState());
     }
 
     @Override
