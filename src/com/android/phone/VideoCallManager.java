@@ -28,13 +28,17 @@
 
 package com.android.phone;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera.Size;
+import android.os.AsyncResult;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
 import com.android.phone.CameraHandler.CameraState;
+import com.android.phone.CvoHandler.CvoEventListener;
+
+import java.io.IOException;
 
 /**
  * Provides an interface for the applications to interact with Camera for the
@@ -46,14 +50,53 @@ public class VideoCallManager {
     private static VideoCallManager mInstance; // Use a singleton
     private CameraHandler mCameraHandler;
     private MediaHandler mMediaHandler;
+    private CvoHandler mCvoHandler;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            AsyncResult ar;
+            switch (msg.what) {
+                case CVO_MODE_REQUEST_CHANGED:
+                    ar = (AsyncResult) msg.obj;
+                    if (ar != null && ar.result != null && ar.exception == null) {
+                        boolean start = (Boolean) ar.result;
+                        mCvoHandler.startOrientationListener(start);
+                    }
+                    break;
+                case CVO_INFO_CHANGED:
+                    ar = (AsyncResult) msg.obj;
+                    if (ar != null && ar.result != null && ar.exception == null) {
+                        int orientation = (Integer) ar.result;
+                        mMediaHandler.sendCvoInfo(orientation);
+                        notifyCvoClient(orientation);
+                    }
+                    break;
+            }
+        }
+    };
+    private CvoEventListener mCvoEventListener;
 
     public static final int MEDIA_INIT_SUCCESS = 0;
+    private static final int CVO_MODE_REQUEST_CHANGED = 0;
+    private static final int CVO_INFO_CHANGED = 2;
 
     /** @hide */
     private VideoCallManager(Context context) {
         log("Instantiating VideoCallManager");
         mCameraHandler = CameraHandler.getInstance(context);
         mMediaHandler = MediaHandler.getInstance();
+        mCvoHandler = CvoHandler.getInstance(context);
+        mMediaHandler.registerForCvoModeRequestChanged(mHandler, CVO_MODE_REQUEST_CHANGED, null);
+        mCvoHandler.registerForCvoInfoChange(mHandler, CVO_INFO_CHANGED, null);
+    }
+
+    private void notifyCvoClient(int orientation) {
+        int angle = mCvoHandler
+                .convertMediaOrientationToActualAngle(orientation);
+        log("handleMessage Device orientation angle=" + angle);
+        if (mCvoEventListener != null) {
+            mCvoEventListener.onDeviceOrientationChanged(angle);
+        }
     }
 
     /**
@@ -246,12 +289,20 @@ public class VideoCallManager {
         mMediaHandler.setMediaEventListener(listener);
     }
 
-    public void startOrientationListener() {
-        mMediaHandler.startOrientationListener();
+    /*
+     * Setup a CVO Event listener for triggering UI callbacks like
+     * onDeviceOrientationChanged to be invoked directly
+     */
+    public void setCvoEventListener(CvoEventListener listener) {
+        log("setCvoEventListener");
+        // TODO: Create a list of listeners or do not allow over-write
+        mCvoEventListener = listener;
     }
 
-    public void stopOrientationListener() {
-        mMediaHandler.stopOrientationListener();
+    public void startOrientationListener(boolean start) {
+        if (isCvoModeEnabled()) {
+            mCvoHandler.startOrientationListener(start);
+        }
     }
 
     private void log(String msg) {

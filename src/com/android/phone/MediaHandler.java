@@ -28,16 +28,14 @@
 
 package com.android.phone;
 
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
-import android.hardware.SensorManager;
 import android.os.AsyncResult;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Registrant;
 import android.os.RegistrantList;
 import android.util.Log;
-import android.view.OrientationEventListener;
 
 /**
  * Provides an interface to handle the media part of the video telephony call
@@ -69,31 +67,8 @@ public class MediaHandler extends Handler {
     public static final int START_READY_EVT = 2;
     public static final int DISPLAY_MODE_EVT = 5;
 
-    private static int ORIENTATION_ANGLE_0 = 0;
-    private static int ORIENTATION_ANGLE_90 = 1;
-    private static int ORIENTATION_ANGLE_180 = 2;
-    private static int ORIENTATION_ANGLE_270 = 3;
-    private static int ORIENTATION_MODE_THRESHOLD = 45;
-
     protected final RegistrantList mDisplayModeEventRegistrants
             = new RegistrantList();
-
-    /**
-     * Phone orientation angle which can take one of the 4 values
-     * ORIENTATION_ANGLE_0, ORIENTATION_ANGLE_90, ORIENTATION_ANGLE_180,
-     * ORIENTATION_ANGLE_270
-     */
-    private int mCurrentOrientation = 0;
-    Context context = PhoneGlobals.getInstance().getApplicationContext();
-    OrientationEventListener mOrientationEventListener =
-            new OrientationEventListener(context,
-                    SensorManager.SENSOR_DELAY_NORMAL) {
-                @Override
-                public void onOrientationChanged(int angle) {
-                    int newOrientation = calculateDeviceOrientation(angle);
-                    detectOrientationChangedAndSendCvo(newOrientation);
-                }
-            };
 
     // UI Orientation Modes
     private static final int LANDSCAPE_MODE = 1;
@@ -114,12 +89,7 @@ public class MediaHandler extends Handler {
     private static MediaHandler mInstance;
 
     private MediaEventListener mMediaEventListener;
-
-    public interface MediaEventListener {
-        void onParamReadyEvent();
-        void onDisplayModeEvent();
-        void onStartReadyEvent();
-    }
+    public RegistrantList mCvoModeOnRegistrant = new RegistrantList();
 
     /**
      * This method returns the single instance of MediaHandler object *
@@ -135,6 +105,12 @@ public class MediaHandler extends Handler {
      * Private constructor for MediaHandler
      */
     private MediaHandler() {
+    }
+
+    public interface MediaEventListener {
+        void onParamReadyEvent();
+        void onDisplayModeEvent();
+        void onStartReadyEvent();
     }
 
     static {
@@ -182,62 +158,7 @@ public class MediaHandler extends Handler {
         mInitCalledFlag = false;
     }
 
-    public void startOrientationListener() {
-        Log.d(TAG, "startOrientationListener");
-        if (mOrientationEventListener.canDetectOrientation()) {
-            mOrientationEventListener.enable();
-        } else {
-            Log.d(TAG, "Cannot detect orientation");
-        }
-    }
-
-    public void stopOrientationListener() {
-        Log.d(TAG, "stopOrientationListener");
-        mOrientationEventListener.disable();
-
-    }
-
-    /** For CVO mode handling, phone is expected to have only 4 orientations
-     * The orientation sensor gives every degree change angle. This needs to
-     * be categorized to one of the 4 angles. This method does this calculation.
-     * @param angle
-     * @return one of the 4 orientation angles ORIENTATION_ANGLE_0, ORIENTATION_ANGLE_90,
-     * ORIENTATION_ANGLE_180, ORIENTATION_ANGLE_270
-     */
-    private int calculateDeviceOrientation(int angle) {
-        int newOrientation = ORIENTATION_ANGLE_0;
-        if ((angle >= 0
-                && angle < 0 + ORIENTATION_MODE_THRESHOLD) ||
-                (angle >= 360 - ORIENTATION_MODE_THRESHOLD &&
-                angle < 360)) {
-            newOrientation = ORIENTATION_ANGLE_0;
-        } else if (angle >= 90 - ORIENTATION_MODE_THRESHOLD
-                && angle < 90 + ORIENTATION_MODE_THRESHOLD) {
-            newOrientation = ORIENTATION_ANGLE_90;
-        } else if (angle >= 180 - ORIENTATION_MODE_THRESHOLD
-                && angle < 180 + ORIENTATION_MODE_THRESHOLD) {
-            newOrientation = ORIENTATION_ANGLE_180;
-        } else if (angle >= 270 - ORIENTATION_MODE_THRESHOLD
-                && angle < 270 + ORIENTATION_MODE_THRESHOLD) {
-            newOrientation = ORIENTATION_ANGLE_270;
-        }
-        return newOrientation;
-    }
-
-    /**
-     * Detect change in device orientation and send newOrientation to IMS
-     * library
-     *
-     * @param newOrientation
-     */
-    private void detectOrientationChangedAndSendCvo(int newOrientation) {
-        if (newOrientation != mCurrentOrientation) {
-            mCurrentOrientation = newOrientation;
-            sendCvoInfo(mCurrentOrientation);
-        }
-    }
-
-    private void sendCvoInfo(int orientation) {
+    public void sendCvoInfo(int orientation) {
         Log.d(TAG, "sendCvoInfo orientation=" + orientation);
         nativeSetDeviceOrientation(orientation);
     }
@@ -366,11 +287,26 @@ public class MediaHandler extends Handler {
     }
 
     private void processUIOrientationMode() {
-        if(isCvoModeEnabled()) {
-            startOrientationListener();
-        } else {
-            stopOrientationListener();
-        }
+        mCvoModeOnRegistrant.notifyRegistrants(new AsyncResult(null,
+                isCvoModeEnabled(), null));
+    }
+
+    /**
+     * Register for mode change notification from IMS media library to determine
+     * if CVO mode needs to be activated or deactivated
+     */
+    public void registerForCvoModeRequestChanged(Handler h, int what, Object obj) {
+        Registrant r = new Registrant(h, what, obj);
+        mCvoModeOnRegistrant.add(r);
+    }
+
+    /**
+     * TODO Call all unregister methods Unregister for mode change notification
+     * from IMS media library to determine if CVO mode needs to be activated or
+     * deactivated
+     */
+    public void unregisterForCvoModeRequestChanged(Handler h) {
+        mCvoModeOnRegistrant.remove(h);
     }
 
     public boolean isCvoModeEnabled() {
