@@ -575,12 +575,17 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
      * set the camera direction to the rear facing
      */
     private void chooseCamera(boolean chooseFrontCamera) {
-        if (mFrontCameraId != CAMERA_UNKNOWN && chooseFrontCamera) {
-            mCameraId = mFrontCameraId;
-        } else if (mBackCameraId != CAMERA_UNKNOWN) {
+        if (mFrontCameraId != CAMERA_UNKNOWN && mBackCameraId != CAMERA_UNKNOWN) {
+            mCameraId = chooseFrontCamera ? mFrontCameraId : mBackCameraId;
+        } else if (mFrontCameraId == CAMERA_UNKNOWN
+                && mBackCameraId != CAMERA_UNKNOWN) {
             mCameraId = mBackCameraId;
+        } else if (mFrontCameraId != CAMERA_UNKNOWN
+                && mBackCameraId == CAMERA_UNKNOWN) {
+            mCameraId = mFrontCameraId;
         } else {
-            loge("chooseCamera " + chooseFrontCamera + " Both camera ids unknown");
+            loge("chooseCamera " + chooseFrontCamera
+                    + " Both camera ids unknown");
             mCameraId = CAMERA_UNKNOWN;
         }
     }
