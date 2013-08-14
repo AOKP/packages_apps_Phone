@@ -243,6 +243,10 @@ public class MSimPhoneGlobals extends PhoneGlobals {
             // in.)
             notifier = MSimCallNotifier.init(this, phone, ringer, callLogger);
 
+            // Create the Managed Roaming singleton class, used to show popup
+            // to user for initiating network search when location update is rejected
+            mManagedRoam = ManagedRoaming.init(this);
+
             XDivertUtility.init(this, phone, (MSimCallNotifier)notifier, this);
 
             // register for ICC status

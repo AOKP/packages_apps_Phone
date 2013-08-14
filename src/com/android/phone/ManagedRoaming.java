@@ -37,24 +37,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.telephony.MSimTelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.android.internal.telephony.TelephonyIntents;
+import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
 
 public class ManagedRoaming {
     private static final String LOG_TAG = "ManagedRoaming";
 
-    private final Context mContext;
-
     // Key used to read and write the saved network selection numeric value
     private static final String NETWORK_SELECTION_KEY = "network_selection_key";
-    private static boolean isMRDialogShown = false;
 
     /** The singleton ManagedRoaming instance. */
     private static ManagedRoaming sInstance;
+
+    private Context mContext;
+    private int mSubscription = 0;
+    private  boolean mIsMRDialogShown = false;
 
     static ManagedRoaming init(Context context) {
         synchronized (ManagedRoaming.class) {
@@ -84,7 +87,9 @@ public class ManagedRoaming {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(TelephonyIntents.ACTION_MANAGED_ROAMING_IND)) {
-                createManagedRoamingDialog();
+                int subscription = intent.getIntExtra(SUBSCRIPTION_KEY,
+                        PhoneGlobals.getInstance().getDefaultSubscription());
+                createManagedRoamingDialog(subscription);
             }
         }
     };
@@ -92,17 +97,26 @@ public class ManagedRoaming {
     /*
      * Show Managed Roaming dialog if user preferred Network Selection mode is 'Manual'
      */
-    private void createManagedRoamingDialog() {
+    private void createManagedRoamingDialog(int subscription) {
         Resources r = Resources.getSystem();
         String networkSelection = PreferenceManager.getDefaultSharedPreferences(mContext)
                .getString(NETWORK_SELECTION_KEY, "");
 
         log(" Received Managed Roaming intent, networkSelection " + networkSelection +
-                      "Is Dialog Displayed" + isMRDialogShown);
+                      " Is Dialog Displayed " + mIsMRDialogShown + " sub = " + subscription);
         // networkSelection will be empty for 'Automatic' mode.
-        if (!TextUtils.isEmpty(networkSelection) && !isMRDialogShown) {
+        if (!TextUtils.isEmpty(networkSelection) && !mIsMRDialogShown) {
+            MSimTelephonyManager tm = MSimTelephonyManager.getDefault();
+            int[] titleResource = {R.string.managed_roaming_title_sub1,
+                    R.string.managed_roaming_title_sub2, R.string.managed_roaming_title_sub3};
+            int title = R.string.managed_roaming_title;
+
+            mSubscription = subscription;
+            if (tm.isMultiSimEnabled() && (tm.getPhoneCount() > mSubscription)) {
+                title = titleResource[mSubscription];
+            }
             AlertDialog managedRoamingDialog = new AlertDialog.Builder(mContext)
-                    .setTitle(R.string.managed_roaming_title)
+                    .setTitle(title)
                     .setMessage(R.string.managed_roaming_dialog_content)
                     .setPositiveButton(R.string.managed_roaming_dialog_ok_button,
                         onManagedRoamingDialogClick)
@@ -111,7 +125,7 @@ public class ManagedRoaming {
                     .create();
 
             managedRoamingDialog.setOnKeyListener(mManagedRoamingDialogOnKeyListener);
-            isMRDialogShown = true;
+            mIsMRDialogShown = true;
             managedRoamingDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             managedRoamingDialog.show();
         }
@@ -123,11 +137,12 @@ public class ManagedRoaming {
             dialog.dismiss();
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
-                    log("Launch network settings activity");
+                    log("Launch network settings activity sub = " + mSubscription);
                     Intent networkSettingIntent = new Intent(Intent.ACTION_MAIN);
                     networkSettingIntent.setClassName("com.android.phone",
                             "com.android.phone.NetworkSetting");
                     networkSettingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    networkSettingIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
                     mContext.startActivity(networkSettingIntent);
                     break;
 
@@ -137,7 +152,7 @@ public class ManagedRoaming {
                     Log.w(LOG_TAG, "received unknown button type: "+ which);
                     break;
             }
-            isMRDialogShown = false;
+            mIsMRDialogShown = false;
         }
     };
 
@@ -147,7 +162,7 @@ public class ManagedRoaming {
             // Handle the back key to reset the global variable.
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 log(" presed back key, reset local state");
-                isMRDialogShown = false;
+                mIsMRDialogShown = false;
             }
             return false;
         }
