@@ -1254,6 +1254,9 @@
 
     <!-- Shown in "Managed Roaming" dialog when registration is denied with rejCode 10. -->
     <string name="managed_roaming_title">Managed Roaming</string>
+    <string name="managed_roaming_title_sub1">Managed Roaming (SUB1)</string>
+    <string name="managed_roaming_title_sub2">Managed Roaming (SUB2)</string>
+    <string name="managed_roaming_title_sub3">Managed Roaming (SUB3)</string>
     <string name="managed_roaming_dialog_content">Network with Limited Service found. Do you want to initiate a Network Search?</string>
     <string name="managed_roaming_dialog_ok_button">Yes</string>
     <string name="managed_roaming_dialog_cancel_button">No</string>
