@@ -113,15 +113,16 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
                 // If camera is already capturing stop preview, reset the
                 // parameters and then start preview again
                 try {
+                    mVideoCallManager.stopCameraRecording();
                     mVideoCallManager.stopCameraPreview();
                     initializeCameraParams();
                     mVideoCallManager.startCameraPreview(mCameraSurface);
+                    mVideoCallManager.startCameraRecording();
                 } catch (IOException ioe) {
                     loge("Exception onParamReadyEvent stopping and starting preview "
                             + ioe.toString());
                 }
             }
-
         }
 
         @Override
@@ -131,7 +132,7 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
 
         @Override
         public void onStartReadyEvent() {
-            mVideoCallManager.startCameraRecording();
+         // NO-OP
         }
     }
 
@@ -261,9 +262,7 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
         }
         initializeZoom();
         initializeCameraParams();
-        // Start camera preview
-        startPreview();
-        startRecording();
+        startPreviewAndRecording();
     }
 
     public boolean isCameraInitNeeded() {
@@ -294,27 +293,24 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
     }
 
     /**
-     * This method starts the camera preview
-     */
-    private void startPreview() {
-        try {
-            mCameraPreview.setVisibility(View.VISIBLE);
-            mVideoCallManager.startCameraPreview(mCameraSurface);
-        } catch (IOException ioe) {
-            closeCamera();
-            loge("Exception while setting preview texture, " + ioe.toString());
-        }
-    }
-
-    private void startRecording() {
-        mVideoCallManager.startCameraRecording();
-    }
-
-    /**
      * This method disconnect and releases the camera
      */
     private void closeCamera() {
             mVideoCallManager.closeCamera();
+    }
+
+    /**
+     * This method starts the camera preview and recording
+     */
+    private void startPreviewAndRecording() {
+        try {
+            mCameraPreview.setVisibility(View.VISIBLE);
+            mVideoCallManager.startCameraPreview(mCameraSurface);
+            mVideoCallManager.startCameraRecording();
+        } catch (IOException ioe) {
+            closeCamera();
+            loge("Exception startPreviewAndRecording, " + ioe.toString());
+        }
     }
 
     /**
