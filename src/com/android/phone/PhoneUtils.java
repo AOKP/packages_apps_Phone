@@ -66,6 +66,7 @@ import com.android.internal.telephony.TelephonyProperties;
 import com.android.internal.telephony.cdma.CdmaConnection;
 import com.android.internal.telephony.sip.SipPhone;
 import com.google.android.collect.Maps;
+import com.android.internal.util.Objects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -183,7 +184,7 @@ public class PhoneUtils {
                         if (!fgConnections.contains(cn) && !bgConnections.contains(cn)) {
                             if (DBG) log("connection '" + cn + "' not accounted for, removing.");
                             for (Connection fgcn : fgConnections) {
-                                if((cn.getAddress()).equals(fgcn.getAddress())) {
+                                if(Objects.equal(cn.getAddress(), fgcn.getAddress())) {
                                    Boolean bMute = sConnectionMuteTable.get(cn);
                                    log("updating fg conn '"+fgcn +"' wth mute value: "+bMute+
                                                                  " address: "+fgcn.getAddress());
@@ -193,7 +194,7 @@ public class PhoneUtils {
                             }
 
                             for (Connection bgcn : bgConnections) {
-                                if((cn.getAddress()).equals(bgcn.getAddress())) {
+                                if(Objects.equal(cn.getAddress(), bgcn.getAddress())) {
                                    Boolean bMute = sConnectionMuteTable.get(cn);
                                    log("updating bg conn '"+bgcn+"' wth mute value: "+bMute+
                                                                  " address: "+bgcn.getAddress());
