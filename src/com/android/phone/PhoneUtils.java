@@ -629,8 +629,6 @@ public class PhoneUtils {
                     + ", GW: " + (gatewayUri != null ? "non-null" : "null")
                     + ", emergency? " + isEmergencyCall);
         }
-        // The phone on whilch dial request is initiated set it as active subscription
-        setActiveSubscription(phone.getSubscription());
         return placeCall(context, phone, number, contactRef, isEmergencyCall, gatewayUri,
                 Phone.CALL_TYPE_VOICE, null);
     }
@@ -664,6 +662,9 @@ public class PhoneUtils {
         if (DBG) {
             log("placeCall '" + number + "' GW:'" + gatewayUri + "'" + " CallType:" + callType);
         }
+        // The phone on whilch dial request is initiated set it as active subscription
+        setActiveSubscription(phone.getSubscription());
+
         final PhoneGlobals app = PhoneGlobals.getInstance();
 
         boolean useGateway = false;
