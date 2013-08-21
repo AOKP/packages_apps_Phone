@@ -196,7 +196,6 @@ public class EmergencyCallbackModeService extends Service {
                 getText(R.string.phone_entered_ecm_text), 0);
 
         Intent intent = new Intent(EmergencyCallbackModeExitDialog.ACTION_SHOW_ECM_EXIT_DIALOG);
-        intent.putExtra("ims_phone", mIsImsPhone);
         intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
 
         // PendingIntent to launch Emergency Callback Mode Exit activity if the user selects
@@ -268,5 +267,12 @@ public class EmergencyCallbackModeService extends Service {
      */
     public boolean getEmergencyCallbackModeCallState() {
         return mInEmergencyCall;
+    }
+
+    /**
+     * Returns true if ECBM is on IMS phone
+     */
+    public boolean isEcbmOnIms() {
+        return mIsImsPhone;
     }
 }
