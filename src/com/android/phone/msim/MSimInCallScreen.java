@@ -108,10 +108,9 @@ public class MSimInCallScreen extends InCallScreen {
                     break;
 
                 case PHONE_CDMA_CALL_WAITING:
-                   //TODO:
                     AsyncResult ar = (AsyncResult) msg.obj;
-                    int subscription = Integer.valueOf((String) ar.userObj).intValue();
-                    if (DBG) log("Received PHONE_CDMA_CALL_WAITING event ...");
+                    int subscription = (Integer) ar.userObj;
+                    if (DBG) log("Received PHONE_CDMA_CALL_WAITING event sub = " + subscription);
                     Connection cn = mCM.getFirstActiveRingingCall(subscription).
                             getLatestConnection();
 
@@ -683,7 +682,14 @@ public class MSimInCallScreen extends InCallScreen {
             // We'll listen for that message too, so that we can finish
             // the activity at the same time.
             mCM.registerForMmiComplete(mHandler, PhoneGlobals.MMI_COMPLETE, null);
-            mCM.registerForCallWaiting(mHandler, PHONE_CDMA_CALL_WAITING, null);
+            for (Phone phone : mCM.getAllPhones()) {
+                if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA ) {
+                    log("register for cdma call waiting " + phone.getSubscription());
+                    mCM.registerForCallWaiting(mHandler, PHONE_CDMA_CALL_WAITING,
+                            phone.getSubscription());
+                    break;
+                }
+            }
             mCM.registerForPostDialCharacter(mHandler, POST_ON_DIAL_CHARS, null);
             mCM.registerForSuppServiceFailed(mHandler, SUPP_SERVICE_FAILED, null);
             mCM.registerForIncomingRing(mHandler, PHONE_INCOMING_RING, null);
