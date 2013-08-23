@@ -214,16 +214,19 @@ public class InCallScreen extends Activity
      * eg. from VOLTE to VT-TX, consent is needed so
      * row 0, col 1 is set to 1
      *
+     * User consent is needed for all upgrades and not
+     * needed for downgrades
+     *
      *         VOLTE     VT-TX      VT-RX      VT
-     * VOLTE |   0    |    0   |     1   |     1
-     * VT-TX |   0    |    0   |     0   |     0
-     * VT-RX |   0    |    0   |     0   |     1
+     * VOLTE |   0    |    1   |     1   |     1
+     * VT-TX |   0    |    0   |     1   |     1
+     * VT-RX |   0    |    1   |     0   |     1
      * VT    |   0    |    0   |     0   |     0
      */
 
-    private int[][] mVideoConsentTable = {{0, 0, 1, 1},
-                                          {0, 0, 0, 0},
-                                          {0, 0, 0, 1},
+    private int[][] mVideoConsentTable = {{0, 1, 1, 1},
+                                          {0, 0, 1, 1},
+                                          {0, 1, 0, 1},
                                           {0, 0, 0, 0}};
     protected boolean mRegisteredForPhoneStates;
 
@@ -4979,9 +4982,7 @@ public class InCallScreen extends Activity
     }
 
     private boolean isUserConsentRequired(int callType, int prevCallType) {
-        boolean isConsentRequired;
-        isConsentRequired = mVideoConsentTable[prevCallType][callType] == 1;
-        return isConsentRequired;
+        return mVideoConsentTable[prevCallType][callType] == 1;
     }
 
     private void log(String msg) {
