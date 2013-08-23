@@ -3074,7 +3074,22 @@ public class PhoneUtils {
      * @param subscription the sub id which needs to be active one.
      */
     public static void setActiveSubscription(int subscription) {
-        PhoneGlobals.getInstance().mCM.setActiveSubscription(subscription);
+        CallManager cm = PhoneGlobals.getInstance().mCM;
+        int activeSub = getActiveSubscription();
+
+        if (activeSub != subscription) {
+            if ((cm.getState(subscription) == PhoneConstants.State.OFFHOOK) &&
+                    (cm.getState(activeSub) == PhoneConstants.State.OFFHOOK)) {
+                // If there is a change in active subscription while both the
+                // subscriptions are in active state, need to siwtch the
+                // playing of LCH/SCH tone to new LCH subscription.
+                final MSimCallNotifier notifier =
+                        (MSimCallNotifier)PhoneGlobals.getInstance().notifier;
+                notifier.manageMSimInCallTones(true);
+            }
+
+            cm.setActiveSubscription(subscription);
+        }
     }
 
     /**
@@ -3091,19 +3106,7 @@ public class PhoneUtils {
     *  if yes it returns true.
      */
     public static boolean isAnyOtherSubActive(int subscription) {
-        boolean state = false;
-        int count = MSimTelephonyManager.getDefault().getPhoneCount();
-        CallManager cm = MSimPhoneGlobals.getInstance().mCM;
-
-        if (DBG) Log.d(LOG_TAG, "isAnyOtherSubActive: sub = " + subscription + " count = " + count);
-        for (int i = 0; i < count; i++) {
-            if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
-                Log.d(LOG_TAG, "isAnyOtherSubActive: active sub  = " + i );
-                state = true;
-                break;
-            }
-        }
-        return state;
+        return (getOtherActiveSub(subscription) != -1) ? true : false;
     }
 
     /**
@@ -3121,23 +3124,37 @@ public class PhoneUtils {
         for (int i = 0; i < count; i++) {
             if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
                 setActiveSubscription(i);
-
                 // Since active subscription got changed, call setAudioMode
                 // which informs LCH state to RIL and updates audio state of subs.
                 // This required to update the call audio states when switch sub
                 // triggered from UI.
                 cm.setAudioMode();
-
-                // There is a change in active subscription, need switch playing
-                // LCH/SCH tones on new active subscription.
-                final MSimCallNotifier notifier =
-                        (MSimCallNotifier)PhoneGlobals.getInstance().notifier;
-                notifier.manageMSimInCallTones(true);
-
                 Log.d(LOG_TAG, "Switching to other active sub  = " + i );
                 break;
             }
         }
+    }
+
+    /**
+     * Check whether any other sub is in active state other than
+     * provided subscription, if yes return the other active sub.
+     * @return subscription which is active, if no other sub is in
+     * active state return -1.
+     */
+    public static int getOtherActiveSub(int subscription) {
+        int otherSub = -1;
+        int count = MSimTelephonyManager.getDefault().getPhoneCount();
+        CallManager cm = MSimPhoneGlobals.getInstance().mCM;
+
+        if (DBG) Log.d(LOG_TAG, "getOtherActiveSub: sub = " + subscription + " count = " + count);
+        for (int i = 0; i < count; i++) {
+            if ((i != subscription) && (cm.getState(i) != PhoneConstants.State.IDLE)) {
+                Log.d(LOG_TAG, "getOtherActiveSub: active sub  = " + i );
+                otherSub = i;
+                break;
+            }
+        }
+        return otherSub;
     }
 
     public static boolean isCsvtCallActive() {
