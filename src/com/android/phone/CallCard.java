@@ -767,20 +767,17 @@ public class CallCard extends LinearLayout
 
             case DISCONNECTING: // These are an intentional fall through(s)
             case DISCONNECTED:
-                mAudioDeviceInitialized = false;
                 hideVideoCallWidgets();
                 break;
 
             case HOLDING: // These are an intentional fall through(s)
             case IDLE:
             case WAITING:
-                mAudioDeviceInitialized = false;
                 hideVideoCallWidgets();
                 break;
 
             default:
                 Log.e(LOG_TAG, "videocall: updateVideoCallState in bad state:" + state);
-                mAudioDeviceInitialized = false;
                 hideVideoCallWidgets();
                 break;
         }
@@ -788,9 +785,10 @@ public class CallCard extends LinearLayout
 
     /**
      * If this is a video call then hide the photo widget and show the
-     * video call panel.
+     * video call panel
      */
     private void showVideoCallWidgets(int callType) {
+
         if (isPhotoVisible()) {
             if (DBG) log("show videocall widget");
             mPhoto.setVisibility(View.GONE);
@@ -802,9 +800,12 @@ public class CallCard extends LinearLayout
     }
 
     /**
-     * Hide the video call widget and restore the photo widget
+     * Hide the video call widget and restore the photo widget and
+     * reset mAudioDeviceInitialized
      */
     private void hideVideoCallWidgets() {
+        mAudioDeviceInitialized = false;
+
         if ((mVideoCallPanel != null) && (mVideoCallPanel.getVisibility() == View.VISIBLE)) {
             if (DBG) log("Hide videocall widget");
 
@@ -826,6 +827,7 @@ public class CallCard extends LinearLayout
          * 4. Speaker state not changed during a call when VOLTE<->VT
          *    call type change happens.
          */
+        if (DBG) log("initVideoCall mAudioDeviceInitialized: " + mAudioDeviceInitialized);
         if (!mAudioDeviceInitialized) {
             switchInVideoCallAudio(); // Set audio to speaker by default
             mAudioDeviceInitialized = true;
