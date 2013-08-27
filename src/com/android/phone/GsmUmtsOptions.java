@@ -111,17 +111,17 @@ public class GsmUmtsOptions {
     }
 
     private void updateOperatorSelectionVisibility() {
-        log("updateOperatorSelectionVisibility.");
+        log("updateOperatorSelectionVisibility. mPhone = " + mPhone.getPhoneName());
         Resources res = mPrefActivity.getResources();
         if (mButtonOperatorSelectionExpand == null) {
             android.util.Log.e(LOG_TAG, "mButtonOperatorSelectionExpand is null");
             return;
         }
-        if (!PhoneFactory.getDefaultPhone().isManualNetSelAllowed()) {
+        if (!mPhone.isManualNetSelAllowed()) {
             log("Manual network selection not allowed.Disabling Operator Selection menu.");
             mButtonOperatorSelectionExpand.setEnabled(false);
         } else if (res.getBoolean(R.bool.csp_enabled)) {
-            if (PhoneFactory.getDefaultPhone().isCspPlmnEnabled()) {
+            if (mPhone.isCspPlmnEnabled()) {
                 log("[CSP] Enabling Operator Selection menu.");
                 mButtonOperatorSelectionExpand.setEnabled(true);
             } else {
