@@ -252,6 +252,20 @@ public class InCallTouchUi extends FrameLayout
     }
 
     /**
+     * Set the time of the most recent incoming call action.
+     */
+    protected void setLastIncomingCallActionTime(long time) {
+        mLastIncomingCallActionTime = time;
+    }
+
+    /**
+     * Retrieve the time of the most recent incoming call action.
+     */
+    protected long getLastIncomingCallActionTime() {
+        return mLastIncomingCallActionTime;
+    }
+
+    /**
      * Updates the visibility and/or state of our UI elements, based on
      * the current state of the phone.
      *
@@ -302,7 +316,7 @@ public class InCallTouchUi extends FrameLayout
             // Watch out: we should *not* rely on this behavior when "instant text response" action
             // has been chosen. See also onTrigger() for why.
             long now = SystemClock.uptimeMillis();
-            if (now < mLastIncomingCallActionTime + 500) {
+            if (now < getLastIncomingCallActionTime() + 500) {
                 log("updateState: Too soon after last action; not drawing!");
                 showIncomingCallControls = false;
             }
@@ -1089,7 +1103,7 @@ public class InCallTouchUi extends FrameLayout
                 // ...and also prevent it from reappearing right away.
                 // (This covers up a slow response from the radio for some
                 // actions; see updateState().)
-                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                setLastIncomingCallActionTime(SystemClock.uptimeMillis());
                 break;
 
             case SEND_SMS_ID:
@@ -1126,7 +1140,7 @@ public class InCallTouchUi extends FrameLayout
                 mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallReject);
 
                 // Same as "answer" case.
-                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                setLastIncomingCallActionTime(SystemClock.uptimeMillis());
                 break;
 
             case ANSWER_VIDEO_CALL_ID:
