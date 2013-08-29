@@ -73,8 +73,6 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
     private SurfaceTexture mFarEndSurface;
     private ImageView mCameraPicker;
 
-    // Camera related
-    private ImsCamera mImsCamera;
     private int mZoomMax;
     private int mZoomValue;  // The current zoom value
 
@@ -419,16 +417,17 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
      * initialized the zoom control
      */
     private void initializeZoom() {
-        if (mImsCamera == null) {
+        ImsCamera imsCamera = mVideoCallManager.getImsCameraInstance();
+        if (imsCamera == null) {
             return;
         }
-        if (!mImsCamera.isZoomSupported()) {
+        if (!imsCamera.isZoomSupported()) {
             mZoomControl.setVisibility(View.GONE); // Disable ZoomControl
             return;
         }
 
         mZoomControl.setVisibility(View.VISIBLE); // Enable ZoomControl
-        mZoomMax = mImsCamera.getMaxZoom();
+        mZoomMax = imsCamera.getMaxZoom();
         // Currently we use immediate zoom for fast zooming to get better UX and
         // there is no plan to take advantage of the smooth zoom.
         mZoomControl.setZoomMax(mZoomMax);
@@ -443,10 +442,10 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
      */
     private void onZoomValueChanged(int index) {
         mZoomValue = index;
-
+        ImsCamera imsCamera = mVideoCallManager.getImsCameraInstance();
         // Set zoom
-        if (mImsCamera.isZoomSupported()) {
-            mImsCamera.setZoom(mZoomValue);
+        if (imsCamera.isZoomSupported()) {
+            imsCamera.setZoom(mZoomValue);
         }
     }
 
@@ -456,19 +455,19 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
     private void initializeCameraParams() {
         try {
             // Get the parameter to make sure we have the up-to-date value.
-            mImsCamera = mVideoCallManager.getImsCameraInstance();
+            ImsCamera imsCamera = mVideoCallManager.getImsCameraInstance();
             // Set the camera preview size
             if (mIsMediaLoopback) {
                 // In loopback mode the IMS is hard coded to render the
                 // camera frames of only the size 176x144 on the far end surface
-                mImsCamera.setPreviewSize(LOOPBACK_MODE_WIDTH, LOOPBACK_MODE_HEIGHT);
+                imsCamera.setPreviewSize(LOOPBACK_MODE_WIDTH, LOOPBACK_MODE_HEIGHT);
             } else {
                 log("Set Preview Size directly with negotiated Height = "
                         + mVideoCallManager.getNegotiatedHeight()
                         + " negotiated width= " + mVideoCallManager.getNegotiatedWidth());
-                mImsCamera.setPreviewSize(mVideoCallManager.getNegotiatedWidth(),
+                imsCamera.setPreviewSize(mVideoCallManager.getNegotiatedWidth(),
                         mVideoCallManager.getNegotiatedHeight());
-                mImsCamera.setPreviewFpsRange(mVideoCallManager.getNegotiatedFps());
+                imsCamera.setPreviewFpsRange(mVideoCallManager.getNegotiatedFps());
             }
         } catch (RuntimeException e) {
             loge("Error setting Camera preview size/fps exception=" + e);
