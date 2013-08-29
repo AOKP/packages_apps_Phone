@@ -146,7 +146,7 @@ public class ImsCamera {
     }
 
     public void setZoom(int zoomValue) {
-        if(DBG) log("setZoom");
+        if (DBG) log("setZoom " + zoomValue);
         native_setZoom(zoomValue);
     }
 
