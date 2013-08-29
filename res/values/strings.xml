@@ -283,6 +283,9 @@
     <string name="ruim_unlock_success">RUIM unlock successful.</string>
     <!-- Success message displayed on PUK Depersonalization panel -->
     <string name="puk_unlock_success">PUK unlock successful.</string>
+    <string name="unlock_failed">Network unlock request unsuccessful.</string>
+    <string name="requesting_unlock">Requesting network unlock…</string>
+    <string name="unlock_success">Network unlock successful.</string>
 
     <!-- settings strings -->
 
