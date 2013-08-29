@@ -28,6 +28,7 @@ import android.widget.CompoundButton;
 
 import com.android.internal.telephony.CallManager;
 import com.android.internal.telephony.PhoneConstants;
+import com.android.phone.PhoneUtils;
 
 /**
  * In-call onscreen touch UI elements, used on some platforms.
@@ -40,13 +41,33 @@ public class MSimInCallTouchUi extends InCallTouchUi {
     protected static final boolean DBG = (MSimPhoneGlobals.DBG_LEVEL >= 1);
 
     private CompoundButton mSwitchButton;
+    // Times of the most recent "answer" or "reject" action (see updateState())
+    // In multisim scenarios, we maintain the times for each sub.
+    private long[] mLastIncomingCallActionTimes;  // in SystemClock.uptimeMillis() time base
 
     public MSimInCallTouchUi(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mLastIncomingCallActionTimes = new long[MSimTelephonyManager.getDefault().getPhoneCount()];
     }
 
     void setInCallScreenInstance(MSimInCallScreen inCallScreen) {
         super.setInCallScreenInstance(inCallScreen);
+    }
+
+    /**
+     * Set the time of the most recent incoming call action.
+     */
+    @Override
+    protected void setLastIncomingCallActionTime(long time) {
+        mLastIncomingCallActionTimes[PhoneUtils.getActiveSubscription()] = time;
+    }
+
+    /**
+     * Retrieve the time of the most recent incoming call action.
+     */
+    @Override
+    protected long getLastIncomingCallActionTime() {
+        return mLastIncomingCallActionTimes[PhoneUtils.getActiveSubscription()];
     }
 
     protected void onFinishInflate() {
