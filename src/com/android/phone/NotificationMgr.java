@@ -1437,7 +1437,6 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
             if (vibrate) {
                 notification.defaults |= Notification.DEFAULT_VIBRATE;
             }
-            notification.flags |= Notification.FLAG_NO_CLEAR;
             configureLedNotification(notification);
             mNotificationManager.notify(VOICEMAIL_NOTIFICATION, notification);
         } else {
