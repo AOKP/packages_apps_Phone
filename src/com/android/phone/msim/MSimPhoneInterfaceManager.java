@@ -875,14 +875,14 @@ public class MSimPhoneInterfaceManager extends ITelephonyMSim.Stub {
      * Returns the network type
      */
     public int getNetworkType() {
-        return getNetworkType(getDefaultSubscription());
+        return getDataNetworkType(getDefaultSubscription());
     }
 
     /**
      * Returns the network type for a subscription
      */
     public int getNetworkType(int subscription) {
-        return getPhone(subscription).getServiceState().getNetworkType();
+        return getPhone(subscription).getServiceState().getDataNetworkType();
     }
 
     /**
