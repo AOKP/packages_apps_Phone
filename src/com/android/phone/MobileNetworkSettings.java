@@ -566,11 +566,15 @@ public class MobileNetworkSettings extends PreferenceActivity
                 break;
             case Phone.NT_MODE_LTE_GSM_WCDMA:
                 mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_lte_gsm_summary);
+                        R.string.preferred_network_mode_lte_gsm_wcdma_summary);
                 break;
             case Phone.NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA:
                 mButtonPreferredNetworkMode.setSummary(
-                        R.string.preferred_network_mode_lte_cdma_evdo_gsm_wcdma_summary);
+                        R.string.preferred_network_mode_global_summary);
+                break;
+            case Phone.NT_MODE_GLOBAL:
+                mButtonPreferredNetworkMode.setSummary(
+                        R.string.preferred_network_mode_cdma_evdo_gsm_wcdma_summary);
                 break;
             case Phone.NT_MODE_LTE_WCDMA:
                 mButtonPreferredNetworkMode.setSummary(
