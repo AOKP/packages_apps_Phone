@@ -631,4 +631,69 @@
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tóny při dotyku číselníku"</string>
     <string name="dial_pad_autocomplete" msgid="494525952035761075">"Automatické doplňování pomocí číselníku"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Vyzvánění a vibrace"</string>
+    <!-- AOKP translations -->
+    <string name="ring_delay_title">Prodleva vyzvánění</string>
+    <string name="ring_delay_summary">Zvolit prodlevu vyzvánění</string>
+    <string-array name="ring_delay_entries">
+         <item>Prodleva vypnuta</item>
+        <item>3 sekundy</item>
+        <item>6 sekund</item>
+        <item>9 sekund</item>
+    </string-array>
+    <string name="vibration_title">Vibrace telefonu</string>
+    <string name="dialer_ui_settings_title">Nastavení vytáčení</string>
+    <string name="dialer_ui_settings_summary">Nastavení číselníku vytáčení</string>
+    <string name="exit_to_home_screen_title">Návrat na předchozí aktivitu</string>
+    <string name="exit_to_home_screen_summary">Vrátit se k poslední prováděné aktivitě po ukončení hovoru (místo výpisu hovorů)</string>
+    <string name="landscape_mode_title">Zapnout rotaci obrazovky</string>
+    <string name="landscape_mode_summary">Zapnout automatickou rotaci obrazovky (pokud je senzor aktivní)</string>
+    <string name="national_roaming">Národní datový roaming</string>
+    <string name="national_roaming_enable">Připojit k datové síti během národního roamingu</string>
+    <string name="national_roaming_disable">Nepřipojovat k datové síti během národního roamingu</string>
+    <string name="noise_suppression_title">Potlačení šumu</string>
+    <string name="noise_suppression_summary">Zapnout potlačení šumu u hovorů</string>
+    <string name="advanced_setting">Rozšířené nastavení</string>
+    <string name="vibrate_outgoing">Vibrace při odpovědi</string>
+    <string name="vibrate_outgoing_sum">Vibrace pokud druhá strana zvedne hovor</string>
+    <string name="vibrate_60">Vibrace každých 60 sekund</string>
+    <string name="vibrate_60_sum">Při odchozím hovoru vibrovat každých 60 sekund</string>
+    <string name="vibrate_hangup">Vibrace po zavěšení</string>
+    <string name="vibrate_hangup_sum">Vibrace po ukončení hovoru</string>
+    <string name="vibrate_call_waiting">Vibrace při dalším hovoru</string>
+    <string name="vibrate_call_waiting_sum">Vibrace při čekajícím hovoru na lince</string>
+    <string name="perm_change_mobile_network">Změnit typ sítě (2G/3G)</string>
+    <string name="perm_change_mobile_network_desc">Aplikace s tímto oprávněním může kdykoliv změnit mezi 2G data a 3G data. 3G je rychlejší, ale náročnější na využití baterie a také může stát více peněz.</string>
+    <string name="voice_quality_preferences_title">Hlasová kvalita</string>
+    <string name="voice_quality_summary">Aktuální nastavení hlasového profilu: <xliff:g id="action">%s</xliff:g></string>
+    <string name="voice_quality_entry_normal">Normální</string>
+    <string name="voice_quality_entry_clear">Čistý</string>
+    <string name="voice_quality_entry_crisp">Ostrý</string>
+    <string name="voice_quality_entry_bright">Živý</string>
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Blacklist</string>
+    <string name="enable_blacklist_title">Zapnout blacklist</string>
+    <string name="blacklist_summary_disabled">Vypnut</string>
+    <string name="blacklist_summary">Příchozí hovory z telefonních čísel v blacklistu budou blokovány</string>
+    <string name="blacklist_notify">Zobrazit upozornění</string>
+    <string name="blacklist_private_numbers_title">Skrytá čísla</string>
+    <string name="blacklist_private_numbers_summary">Blokovat příchozí hovory ze skrytých čísel</string>
+    <string name="blacklist_unknown_numbers_title">Neznámá čísla</string>
+    <string name="blacklist_unknown_numbers_summary">Blokovat příchozí hovory z čísel, které nejsou v seznamu kontaktů</string>
+    <string name="blacklist_regex_title">Použít zástupné znaky</string>
+    <string name="blacklist_regex_summary">Použít . jako zástupný znak, * pro opakování. Např. 123.* zablokuje čísla začínající na 123 a .*123.* zablokuje čísla obsahující 123</string>
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Přidat telefonní číslo</string>
+    <string name="add_to_blacklist">Přidat na blacklist</string>
+    <string name="add_to_blacklist_message">Budoucí hovory z %s budou blokovány</string>
+    <string name="remove_blacklist_number_title">Odstranit číslo</string>
+    <string name="remove_blacklist_number">Opravdu odstranit %s z blacklistu?</string>
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Zablokován hovor z %s</string>
+    <string name="blacklist_notification_private_number">Zablokován hovor ze skrytého čísla</string>
+    <string name="blacklist_notification_list_private">Skryté</string>
+    <string name="blacklist_notification_unknown_number">Zablokováno neznámé číslo %s</string>
+    <string name="blacklist_notification_multiple">Počet zablokovaných hovorů: <xliff:g id="count">%d</xliff:g></string>
+    <string name="unblock_number">Odblokovat</string>
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Blacklist</string>
 </resources>
