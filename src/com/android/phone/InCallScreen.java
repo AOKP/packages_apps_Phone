@@ -4943,14 +4943,15 @@ public class InCallScreen extends Activity
                     }
 
                     if (isUserConsentRequired(callType, prevCallType)) {
-                        final ModifyCallOnClickListener onClickListener =
-                                new ModifyCallOnClickListener(conn);
+                        final ModifyCallConsentListener onConsentListener =
+                                new ModifyCallConsentListener(conn);
                         mModifyCallPromptDialog = new AlertDialog.Builder(this)
                                 .setMessage(str)
                                 .setPositiveButton(R.string.modify_call_prompt_yes,
-                                        onClickListener)
+                                        onConsentListener)
                                 .setNegativeButton(R.string.modify_call_prompt_no,
-                                        onClickListener)
+                                        onConsentListener)
+                                .setOnDismissListener(onConsentListener)
                                 .create();
                         mModifyCallPromptDialog.getWindow().addFlags(
                                 WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
@@ -4959,10 +4960,10 @@ public class InCallScreen extends Activity
                     }
                 } else {
                     log("videocall: Modify Call request failed.");
-                    acceptConnectTypeChange(false, conn);
                     // We are not explicitly dismissing mModifyCallPromptDialog
-                    // here
-                    // since it is dismissed at the beginning of this function.
+                    // here since it is dismissed at the beginning of this function.
+                    // Note, connection type change will be rejected by
+                    // the Modify Call Consent dialog.
 
                 }
 
@@ -4972,16 +4973,19 @@ public class InCallScreen extends Activity
         }
     }
 
-    private class ModifyCallOnClickListener implements DialogInterface.OnClickListener {
+    private class ModifyCallConsentListener implements DialogInterface.OnClickListener,
+            DialogInterface.OnDismissListener {
         final private Connection mConn;
+        private boolean mClicked = false;
 
-        public ModifyCallOnClickListener(Connection conn) {
+        public ModifyCallConsentListener(Connection conn) {
             mConn = conn;
         }
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
             log("videocall: ConsentDialog: Clicked on button with ID: " + which);
+            mClicked = true;
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     acceptConnectTypeChange(true, mConn);
@@ -4991,6 +4995,14 @@ public class InCallScreen extends Activity
                     break;
                 default:
                     loge("videocall: No handler for this button, ID:" + which);
+            }
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            if (!mClicked) {
+                log("videocall: ConsentDialog: Dismissing the dialog");
+                acceptConnectTypeChange(false, mConn);
             }
         }
     }
