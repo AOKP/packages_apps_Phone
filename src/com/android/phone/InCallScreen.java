@@ -37,6 +37,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.pm.ActivityInfo;
 import com.android.internal.telephony.gsm.SuppServiceNotification;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -180,6 +181,7 @@ public class InCallScreen extends Activity
     private static final int PHONE_INCOMING_MODIFY_CALL_REQUEST = 125;
     private static final int PHONE_MODIFY_CALL_EVENT = 126;
     private static final int PHONE_AVP_UPGRADE_RETRY_FAILURE_NOTICE = 127;
+    private static final int DISPLAY_MODE_CHANGED = 128;
 
     // When InCallScreenMode is UNDEFINED set the default action
     // to ACTION_UNDEFINED so if we are resumed the activity will
@@ -290,6 +292,12 @@ public class InCallScreen extends Activity
     // For use with Pause/Wait dialogs
     private String mPostDialStrAfterPause;
     private boolean mPauseInProgress = false;
+
+    // MediaHandler instance
+    private MediaHandler mMediaHandler;
+
+    // Default screen orientation
+    private int mDefaultScreenOrientation;
 
     // Info about the most-recently-disconnected Connection, which is used
     // to determine what should happen when exiting the InCallScreen after a
@@ -473,6 +481,19 @@ public class InCallScreen extends Activity
                             .show();
                     break;
 
+                case DISPLAY_MODE_CHANGED:
+                    if (msg != null && mCM.isImsPhoneActive()) {
+                        int mode = (Integer) ((AsyncResult) msg.obj).result;
+                        log("DISPLAY_MODE_CHANGED mode = " + mode);
+                        if ((ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE == mode) ||
+                                (ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT == mode)) {
+                            setOrientation(mode);
+                        }
+                    } else {
+                        loge("IMS: DISPLAY_MODE_CHANGED with msg null");
+                    }
+                    break;
+
                 default:
                     Log.wtf(LOG_TAG, "mHandler: unexpected message: " + msg);
                     break;
@@ -594,7 +615,24 @@ public class InCallScreen extends Activity
         }
 
         Profiler.callScreenCreated();
+
+        processDisplayMode();
+
         if (DBG) log("onCreate(): exit");
+    }
+
+    private void processDisplayMode() {
+        // Since AndroidManifest.xml has android:screenOrientation="nosensor"
+        // mDefaultScreenOrientation is expected to have SCREEN_ORIENTATION_NOSENSOR
+        mDefaultScreenOrientation = getRequestedOrientation();
+        if (PhoneUtils.isCallOnImsEnabled()) {
+            mMediaHandler = MediaHandler.getInstance();
+            if (mMediaHandler != null) {
+                mMediaHandler.registerForDisplayModeEvent(mHandler, DISPLAY_MODE_CHANGED, null);
+            } else {
+                loge("mMediaHandler null");
+            }
+        }
     }
 
      protected BluetoothProfile.ServiceListener mBluetoothProfileServiceListener =
@@ -1038,6 +1076,10 @@ public class InCallScreen extends Activity
         // references to our internal widgets.
         if (mApp.otaUtils != null) {
             mApp.otaUtils.clearUiWidgets();
+        }
+
+        if (mMediaHandler != null) {
+            mMediaHandler.unregisterForDisplayModeEvent(mHandler);
         }
     }
 
@@ -2143,6 +2185,9 @@ public class InCallScreen extends Activity
         // TODO: this call needs to happen in the CallController, not here.
         // (It should probably be triggered by the CallNotifier's onDisconnect method.)
         // mHandler.removeMessages(THREEWAY_CALLERINFO_DISPLAY_DONE);
+
+        setOrientation(mDefaultScreenOrientation);
+
     }
 
     /**
@@ -5076,4 +5121,15 @@ public class InCallScreen extends Activity
     public boolean isQuickResponseDialogShowing() {
         return mRespondViaSmsManager != null && mRespondViaSmsManager.isShowingPopup();
     }
+
+    /**
+     * Sets the rotation of the screen
+     */
+    public void setOrientation(int mode) {
+        if (getRequestedOrientation() != mode) {
+            log("setOrientation mode = " + mode);
+            setRequestedOrientation(mode);
+        }
+    }
+
 }

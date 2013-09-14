@@ -29,9 +29,13 @@
 package com.android.phone;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.hardware.SensorManager;
+import android.os.AsyncResult;
 import android.os.Handler;
+import android.os.Message;
+import android.os.RegistrantList;
 import android.util.Log;
 import android.view.OrientationEventListener;
 
@@ -71,6 +75,9 @@ public class MediaHandler extends Handler {
     private static int ORIENTATION_ANGLE_270 = 3;
     private static int ORIENTATION_MODE_THRESHOLD = 45;
 
+    protected final RegistrantList mDisplayModeEventRegistrants
+            = new RegistrantList();
+
     /**
      * Phone orientation angle which can take one of the 4 values
      * ORIENTATION_ANGLE_0, ORIENTATION_ANGLE_90, ORIENTATION_ANGLE_180,
@@ -103,12 +110,31 @@ public class MediaHandler extends Handler {
     private static int mUIOrientationMode = PORTRAIT_MODE;
     private static short mNegotiatedFps = 20;
 
+    // Use a singleton
+    private static MediaHandler mInstance;
+
     private MediaEventListener mMediaEventListener;
 
     public interface MediaEventListener {
         void onParamReadyEvent();
         void onDisplayModeEvent();
         void onStartReadyEvent();
+    }
+
+    /**
+     * This method returns the single instance of MediaHandler object *
+     */
+    public static synchronized MediaHandler getInstance() {
+        if (mInstance == null) {
+            mInstance = new MediaHandler();
+        }
+        return mInstance;
+    }
+
+    /**
+     * Private constructor for MediaHandler
+     */
+    private MediaHandler() {
     }
 
     static {
@@ -312,14 +338,31 @@ public class MediaHandler extends Handler {
                 break;
             case DISPLAY_MODE_EVT:
                 mUIOrientationMode = nativeGetUIOrientationMode();
+                Log.d(TAG, "Received DISPLAY_MODE_EVT. mUIOrientationMode = " + mUIOrientationMode);
                 processUIOrientationMode();
                 if (mMediaEventListener != null) {
                     mMediaEventListener.onDisplayModeEvent();
                 }
+                // Since this is a callback,
+                // post a message back to the current process.
+                sendEmptyMessage(DISPLAY_MODE_EVT);
+                break;
             default:
                 Log.e(TAG, "Received unknown event id=" + eventId);
         }
 
+    }
+
+    public void handleMessage(Message msg) {
+        switch(msg.what) {
+            case DISPLAY_MODE_EVT:
+                mDisplayModeEventRegistrants.notifyRegistrants(
+                        new AsyncResult (null, convertMediaMode(mUIOrientationMode), null));
+                break;
+
+            default:
+                Log.e(TAG, "Received unknown msg id = " + msg.what);
+        }
     }
 
     private void processUIOrientationMode() {
@@ -332,5 +375,27 @@ public class MediaHandler extends Handler {
 
     public boolean isCvoModeEnabled() {
         return mUIOrientationMode == CVO_MODE;
+    }
+
+    public void registerForDisplayModeEvent(Handler h, int what, Object obj) {
+        mDisplayModeEventRegistrants.addUnique(h, what, obj);
+    }
+
+    public void unregisterForDisplayModeEvent(Handler h) {
+        mDisplayModeEventRegistrants.remove(h);
+    }
+
+    private int convertMediaMode(int mode) {
+        switch(mode) {
+            case LANDSCAPE_MODE:
+                return ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+
+            case PORTRAIT_MODE:
+                return ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT;
+
+            default:
+                Log.d(TAG,"Received unknown mode = " + mode);
+                return ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+        }
     }
 }
