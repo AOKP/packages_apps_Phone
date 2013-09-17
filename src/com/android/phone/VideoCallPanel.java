@@ -28,11 +28,9 @@
 
 package com.android.phone;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -46,7 +44,6 @@ import com.android.internal.telephony.Phone;
 import com.android.phone.CameraHandler.CameraState;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Helper class to initialize and run the InCallScreen's "Video Call" UI.
@@ -132,6 +129,17 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
         public void onStartReadyEvent() {
          // NO-OP
         }
+
+    }
+
+    public class CvoListener implements CvoHandler.CvoEventListener {
+        @Override
+        public void onDeviceOrientationChanged(int rotation) {
+            int requiredSurfaceRotation = 360 - rotation;
+            if (DBG) log("onDeviceOrientationChanged: Local sensor rotation =" + rotation +
+                    " Rotate far end based on local sensor by " + requiredSurfaceRotation);
+            mFarEndView.setRotation(requiredSurfaceRotation);
+        }
     }
 
     public VideoCallPanel(Context context) {
@@ -191,6 +199,7 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
 
         // Set media event listener
         mVideoCallManager.setOnParamReadyListener(new ParamReadyListener());
+        mVideoCallManager.setCvoEventListener(new CvoListener());
     }
 
     public void setCameraNeeded(boolean mCameraNeeded) {
@@ -585,20 +594,8 @@ public class VideoCallPanel extends RelativeLayout implements TextureView.Surfac
         }
     }
 
-    public void startOrientationListener() {
-        if (isCvoModeEnabled()) {
-            mVideoCallManager.startOrientationListener();
-        }
-    }
-
-    public void stopOrientationListener() {
-        if (isCvoModeEnabled()) {
-            mVideoCallManager.stopOrientationListener();
-        }
-    }
-
-    public boolean isCvoModeEnabled() {
-        return mVideoCallManager.isCvoModeEnabled();
+    public void startOrientationListener(boolean start) {
+        mVideoCallManager.startOrientationListener(start);
     }
 
     private void log(String msg) {
