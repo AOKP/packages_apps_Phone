@@ -184,7 +184,7 @@ public class Ringer {
                 mVibratorThread.start();
             }
             int ringerVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_RING);
-            if (ringerVolume == 0 && mRingerVolumeSetting <= 0) {
+            if ((ringerVolume == 0 && mRingerVolumeSetting <= 0) || inQuietHours()) {
                 if (DBG) log("skipping ring because volume is zero");
                 PhoneUtils.setAudioMode();
                 return;
