@@ -155,7 +155,7 @@ public class EmergencyCallHelper extends Handler {
         mNumRetriesSoFar = 0;
 
         // Reset mPhone to whatever the current default phone is right now.
-        mPhone = mApp.mCM.getDefaultPhone();
+        mPhone = mApp.getPhone();
 
         // Wake lock to make sure the processor doesn't go to sleep midway
         // through the emergency call sequence.
