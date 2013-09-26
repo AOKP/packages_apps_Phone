@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.telephony.MSimTelephonyManager;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
@@ -71,7 +72,9 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
     protected void addContact() {
         if (DBG) log("addContact");
 
-        if (!isValidNumber(getNumberFromTextField())) {
+        final String number = PhoneNumberUtils.convertAndStrip(getNumberFromTextField());
+
+        if (!isValidNumber(number)) {
             handleResult(false, true);
             return;
         }
@@ -80,7 +83,7 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
 
         ContentValues bundle = new ContentValues(4);
         bundle.put("tag", getNameFromTextField());
-        bundle.put("number", getNumberFromTextField());
+        bundle.put("number", number);
         bundle.put("pin2", mPin2);
         bundle.put(SUBSCRIPTION_KEY, mSubscription);
 
@@ -94,7 +97,10 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
     protected void updateContact() {
         if (DBG) log("updateContact");
 
-        if (!isValidNumber(getNumberFromTextField())) {
+        final String name = getNameFromTextField();
+        final String number = PhoneNumberUtils.convertAndStrip(getNumberFromTextField());
+
+        if (!isValidNumber(number)) {
             handleResult(false, true);
             return;
         }
@@ -103,8 +109,8 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
         ContentValues bundle = new ContentValues();
         bundle.put("tag", mName);
         bundle.put("number", mNumber);
-        bundle.put("newTag", getNameFromTextField());
-        bundle.put("newNumber", getNumberFromTextField());
+        bundle.put("newTag", name);
+        bundle.put("newNumber", number);
         bundle.put("pin2", mPin2);
         bundle.put(SUBSCRIPTION_KEY, mSubscription);
 
