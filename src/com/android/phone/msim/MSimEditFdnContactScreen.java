@@ -24,12 +24,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.telephony.MSimTelephonyManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
+
+import com.codeaurora.telephony.msim.MSimPhoneFactory;
 
 /**
  * Activity to let the user add or edit an FDN contact.
@@ -39,6 +42,8 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
     private static final boolean DBG = false;
 
     private static int mSubscription = 0;
+
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -135,6 +140,42 @@ public class MSimEditFdnContactScreen extends EditFdnContactScreen {
             startActivity(intent);
         }
         finish();
+    }
+
+    /**
+     * This method will handleResult for MSIM cases
+    */
+    @Override
+    protected void handleResult(boolean success, boolean invalidNumber) {
+        if (success) {
+            if (DBG) log("handleResult: success!");
+            showStatus(getResources().getText(mAddContact ?
+                    R.string.fdn_contact_added : R.string.fdn_contact_updated));
+        } else {
+            if (DBG) log("handleResult: failed!");
+            if (invalidNumber) {
+                showStatus(getResources().getText(R.string.fdn_invalid_number));
+            } else {
+                if (MSimPhoneFactory.getPhone(mSubscription).getIccCard().getIccPin2Blocked()) {
+                    showStatus(getResources().getText(R.string.fdn_enable_puk2_requested));
+                } else if (MSimPhoneFactory.getPhone(mSubscription).getIccCard()
+                        .getIccPuk2Blocked()) {
+                    showStatus(getResources().getText(R.string.puk2_blocked));
+                } else {
+                    // There's no way to know whether the failure is due to incorrect PIN2 or
+                    // an inappropriate phone number.
+                    showStatus(getResources().getText(R.string.pin2_or_fdn_invalid));
+                }
+            }
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 2000);
+
     }
 
     @Override
