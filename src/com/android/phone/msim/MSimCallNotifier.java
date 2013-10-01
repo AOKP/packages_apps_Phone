@@ -861,6 +861,12 @@ public class MSimCallNotifier extends CallNotifier {
     protected void resetAudioStateAfterDisconnect() {
         if (VDBG) log("resetAudioStateAfterDisconnect()...");
 
+        // If other subscription has active voice call, do not reset the audio.
+        if (PhoneUtils.isAnyOtherSubActive(PhoneUtils.getActiveSubscription())) {
+            if (DBG) log(" Other sub has active call, Do not reset audio ");
+            return;
+        }
+
         if (mBluetoothHeadset != null) {
             mBluetoothHeadset.disconnectAudio();
         }
@@ -869,12 +875,7 @@ public class MSimCallNotifier extends CallNotifier {
         // is already off to reset user requested speaker state.
         PhoneUtils.turnOnSpeaker(mApplication, false, true);
 
-        // setAudioMode will set the mode to IDLE, in this case since
-        // other sub is active, do not call setAudioMode().
-        // When sub switch happens, we will take care of calling setAudioMode()
-        if (!(PhoneUtils.isAnyOtherSubActive(PhoneUtils.getActiveSubscription()))) {
-            PhoneUtils.setAudioMode(mCM);
-        }
+        PhoneUtils.setAudioMode(mCM);
     }
 
     /**
