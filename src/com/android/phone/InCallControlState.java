@@ -221,6 +221,10 @@ public class InCallControlState {
             canHold = false;
         }
 
+        // Turn off call modify by default unless ImsService says supported
+        modifyCallVisible = false;
+        modifyCallEnabled = false;
+
         // VT upgrade downgrade
         if (TelephonyCapabilities.supportsCallModify(fgCall.getPhone())) {
             try {
@@ -231,10 +235,6 @@ public class InCallControlState {
             } catch (RemoteException ex) {
                 Log.d(LOG_TAG, "Ims Service isVTModifyAllowed exception", ex);
             }
-        } else {
-            // This device has no concept of VT upgrade downgrade .
-            modifyCallVisible = false;
-            modifyCallEnabled = false;
         }
 
         // IMS add participant
