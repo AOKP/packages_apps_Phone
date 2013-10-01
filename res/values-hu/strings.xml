@@ -336,6 +336,8 @@
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"TTY-mód beállítása"</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"Automatikus újrapróbálkozás"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"Automatikus újrapróbálkozás-mód bekapcsolása"</string>
+    <string name="exit_to_home_screen_title">Kezdőképernyőre lépés hívás végén</string>
+    <string name="exit_to_home_screen_summary">Kilép a kezdőképernyőre hívás végén, nem megy az Előzményekre</string>
     <string name="menu_add" msgid="1882023737425114762">"Névjegy hozzáadása"</string>
     <string name="menu_edit" msgid="7143003705504672374">"Névjegy szerkesztése"</string>
     <string name="menu_delete" msgid="3977150783449642851">"Névjegy törlése"</string>
@@ -631,4 +633,72 @@
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"Tárcsázó érintési hangjai"</string>
     <string name="dial_pad_autocomplete" msgid="494525952035761075">"Tárcsázó automatikus kiegészítés"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Csengőhang és rezgés"</string>
+    <string name="landscape_mode_title">Fekvőmód engedélyezése</string>
+    <string name="landscape_mode_summary">Engedélyezi a fekvőmódot (ha a szenzor engedi)</string>
+
+    <!-- Dialer UI Settings -->
+    <string name="dialer_ui_settings_title">Tárcsázó beállítás</string>
+    <string name="dialer_ui_settings_summary">Tárcsázó beállításai</string>
+    <string name="vibration_title">Telefon rezgés</string>
+
+    <!-- CYANOGENMOD ADDITIONS START -->
+
+    <!-- Mobile network settings screen, setting check box name -->
+    <string name="national_roaming">Nemzetközi adat barangolás</string>
+    <!-- Mobile network settings screen, setting summary text when check box is selected -->
+    <string name="national_roaming_enable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
+    <!-- Mobile network settings screen, setting summary text when check box is clear -->
+    <string name="national_roaming_disable">Kapcsolodik adat szolgáltatáshoz nemzetközi roamingnál</string>
+
+    <!-- CYANOGENMOD ADDITIONS END -->
+
+    <!-- Noise suppression -->
+    <string name="noise_suppression_title">Zaj elnyomás</string>
+    <string name="noise_suppression_summary">Zaj elnyomás engedélyezése hívás közben</string>
+    <!-- End Noise suppression -->
+
+    <string name="preference_category_ringtone">Csengés &amp; Rezgés</string>
+    <!-- Advanced Settings -->
+    <string name="advanced_setting">Haladó beállítások</string>
+    <string name="vibrate_outgoing">Rezgés válasznál</string>
+    <string name="vibrate_outgoing_sum">Rezeg, ha felveszed a bejövő hívást</string>
+    <string name="vibrate_60">60 mp-ként rezeg</string>
+    <string name="vibrate_60_sum">Kimenő hívásnál 60 mp-ként rezeg jelzésként</string>
+    <string name="vibrate_hangup">Rezgés a végén</string>
+    <string name="vibrate_hangup_sum">Rezeg a hívás végénél</string>
+    <string name="vibrate_call_waiting">Rezgés hívás várakoztatásnál</string>
+    <string name="vibrate_call_waiting_sum">Rezeg, ha hívás várakoztatás van</string>
+    <string name="ring_delay_title">Csöngés késleltetés</string>
+    <string name="ring_delay_summary">Válasz csengés késleltetést</string>
+
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Feketelista</string>
+    <string name="enable_blacklist_title">Feketelista engedélyezése</string>
+    <string name="blacklist_summary_disabled">Tiltás</string>
+    <string name="blacklist_summary">Bejövő hívások a feketelistán blokkolva lesznek</string>
+    <string name="blacklist_notify">Értesítés mutatása</string>
+    <string name="blacklist_private_numbers_title">Magán számok</string>
+    <string name="blacklist_private_numbers_summary">Magán számok blokkolása</string>
+    <string name="blacklist_unknown_numbers_title">Ismeretlen számok</string>
+    <string name="blacklist_unknown_numbers_summary">Kontakt listán nem szereplő számok blokkolása</string>
+    <string name="blacklist_regex_title">Helyettesítő karakterek használata</string>
+    <string name="blacklist_regex_summary">Használj .-ot és *-ot, Például 123.* blokkolja az 123-mal kezdödő számokat. *123.* blokkolja az 123-t tartalmazóakat.</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">Szám hozzáadása</string>
+    <string name="add_to_blacklist">Feketelistához adja</string>
+    <string name="add_to_blacklist_message">Hívások innen %s blokkolva lesznek</string>
+    <string name="remove_blacklist_number_title">Szám eltávolítása</string>
+    <string name="remove_blacklist_number">El akarod távolítani %s a fekete listáról?</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">Blokkolja innen a hívásokat %s</string>
+    <string name="blacklist_notification_private_number">Blokkolja a hívást magánszámról</string>
+    <string name="blacklist_notification_list_private">Magán</string>
+    <string name="blacklist_notification_unknown_number">Blokkolja ismeretlen számról %s</string>
+    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> hívások blokkolva</string>
+    <string name="unblock_number">Feloldás</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">Feketelista</string>
 </resources>
