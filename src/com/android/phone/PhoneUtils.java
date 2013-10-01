@@ -451,6 +451,11 @@ public class PhoneUtils {
         private static SharedPreferences getPrefs(Context context) {
             return PreferenceManager.getDefaultSharedPreferences(context);
         }
+        static int flipAction(Context context) {
+            String s = PreferenceManager.getDefaultSharedPreferences(context)
+                      .getString("flip_action", "0");
+            return Integer.parseInt(s);
+        }
     }
 
     static boolean hangupRingingCall(Call ringing) {

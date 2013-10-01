@@ -204,6 +204,8 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String SIP_SETTINGS_CATEGORY_KEY =
             "sip_settings_category_key";
 
+    private static final String FLIP_ACTION_KEY = "flip_action";
+
     private Intent mContactListIntent;
 
     /** Event for Async voicemail change call */
@@ -312,6 +314,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private CheckBoxPreference mVoicemailNotificationVibrate;
     private SipSharedPreferences mSipSharedPreferences;
     private PreferenceScreen mButtonBlacklist;
+    private ListPreference mFlipAction;
 
     private class VoiceMailProvider {
         public VoiceMailProvider(String name, Intent intent) {
@@ -658,6 +661,8 @@ public class CallFeaturesSetting extends PreferenceActivity
             if (mButtonVoiceQuality != null) {
                 updateVoiceQualitySummary((String) objValue);
             }
+        } else if (preference == mFlipAction) {
+            updateFlipActionSummary((String) objValue);
         }
         // always let the preference setting proceed.
         return true;
@@ -668,6 +673,14 @@ public class CallFeaturesSetting extends PreferenceActivity
         if (mButtonVoiceQuality != null) {
             String[] entries = getResources().getStringArray(R.array.voice_quality_entries);
             mButtonVoiceQuality.setSummary(getString(R.string.voice_quality_summary, entries[i]));
+        }
+    }
+
+    private void updateFlipActionSummary(String action) {
+        int i = Integer.parseInt(action);
+        if (mFlipAction != null) {
+            String[] summaries = getResources().getStringArray(R.array.flip_action_summary_entries);
+            mFlipAction.setSummary(getString(R.string.flip_action_summary, summaries[i]));
         }
     }
 
@@ -1615,6 +1628,7 @@ public class CallFeaturesSetting extends PreferenceActivity
         mButtonNoiseSuppression = (CheckBoxPreference) findPreference(BUTTON_NOISE_SUPPRESSION_KEY);
         mVoicemailProviders = (ListPreference) findPreference(BUTTON_VOICEMAIL_PROVIDER_KEY);
         mButtonVoiceQuality = (ListPreference) findPreference(BUTTON_VOICE_QUALITY_KEY);
+        mFlipAction = (ListPreference) findPreference(FLIP_ACTION_KEY);
 
         if (mVoicemailProviders != null) {
             mVoicemailProviders.setOnPreferenceChangeListener(this);
@@ -1705,6 +1719,10 @@ public class CallFeaturesSetting extends PreferenceActivity
 
         if (mButtonVoiceQuality != null) {
             mButtonVoiceQuality.setOnPreferenceChangeListener(this);
+        }
+
+        if (mFlipAction != null) {
+            mFlipAction.setOnPreferenceChangeListener(this);
         }
 
         if (!getResources().getBoolean(R.bool.world_phone)) {
@@ -1951,6 +1969,10 @@ public class CallFeaturesSetting extends PreferenceActivity
         if (migrateVoicemailVibrationSettingsIfNeeded(prefs)) {
             mVoicemailNotificationVibrate.setChecked(prefs.getBoolean(
                     BUTTON_VOICEMAIL_NOTIFICATION_VIBRATE_KEY, false));
+        }
+
+        if (mFlipAction != null) {
+            updateFlipActionSummary(mFlipAction.getValue());
         }
 
         lookupRingtoneName();

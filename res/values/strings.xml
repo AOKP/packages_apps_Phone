@@ -1620,4 +1620,35 @@
     <!-- Text for the onscreen "Blacklist" button -->
     <string name="onscreenBlacklistText">Blacklist</string>
 
+    <!-- Setting title for the flip action setting. -->
+    <string name="flip_action_title">Flip action</string>
+
+    <!-- Dialog title of the flip action setting. -->
+    <string name="flip_action_dialog_title">Flip device to\u2026</string>
+
+    <!-- Setting summary for the flip action setting. -->
+    <string name="flip_action_summary">Flipping the phone down will <xliff:g id="action">%s</xliff:g></string>
+
+    <!-- Values for the flip action settings. -->
+    <string-array name="flip_action_setting_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Entries listed in the setting for the flip action. -->
+    <string-array name="flip_action_setting_entries">
+        <item>Do nothing</item>
+        <item>Mute ringer</item>
+        <item>Dismiss call</item>
+    </string-array>
+
+    <!-- Summary texts for flip action. Must be ordered by numerical
+         value (do nothing = 0, mute = 1, dismiss = 2) -->
+    <string-array name="flip_action_summary_entries">
+        <item>do nothing</item>
+        <item>mute the ringer</item>
+        <item>dismiss the call</item>
+    </string-array>
+
 </resources>
