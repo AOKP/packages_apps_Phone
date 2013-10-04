@@ -213,13 +213,6 @@ class BluetoothDsdaState {
     public void SwitchSub() {
         log("SwitchSub");
         PhoneUtils.switchToOtherActiveSub(PhoneUtils.getActiveSubscription());
-        if (isSwitchSubAllowed() == true) {
-            Log.d(TAG, "Update headset about switch sub");
-            if (mBluetoothHeadset != null) {
-                mBluetoothHeadset.phoneStateChanged(mNumActive, mNumHeld,
-                    CALL_STATE_IDLE, null, 0);
-            }
-        }
     }
 
     /* Get the active or held call on other Sub. */
