@@ -77,6 +77,8 @@
     <string name="apn_settings" msgid="9043423184895642077">"接入点名称 (APN)"</string>
     <string name="settings_label" msgid="3876743539816984008">"网络设置"</string>
     <string name="voicemail" msgid="8693759337917898954">"语音信箱"</string>
+    <string name="mwi_notification_title">信息等待指示器</string>
+    <string name="mwi_notification_summary">显示语音信箱通知信息的等待指示器</string>
     <string name="voicemail_abbreviated" msgid="2215592488517217448">"语音信箱："</string>
     <string name="networks" msgid="8873030692174541976">"网络运营商"</string>
     <string name="call_settings" msgid="6112441768261754562">"通话设置"</string>
@@ -334,8 +336,14 @@
     <string name="voice_privacy_summary" msgid="3159383389833516214">"启用增强型隐秘模式"</string>
     <string name="tty_mode_option_title" msgid="9033098925144434669">"TTY 模式"</string>
     <string name="tty_mode_option_summary" msgid="1073835131534808732">"设置 TTY 模式"</string>
+    <string name="ring_delay_title">铃声延迟</string>
+    <string name="ring_delay_summary">选择铃声延迟时间</string>
     <string name="auto_retry_mode_title" msgid="4073265511427813322">"自动重拨"</string>
     <string name="auto_retry_mode_summary" msgid="4973886004067532288">"启用自动重拨模式"</string>
+    <string name="exit_to_home_screen_title">通话结束后返回主屏幕</string>
+    <string name="exit_to_home_screen_summary">通话结束后返回主屏幕而不是返回通话记录</string>
+    <string name="landscape_mode_title">启用旋转</string>
+    <string name="landscape_mode_summary">允许通话界面旋转（如果传感器启用）</string>
     <string name="menu_add" msgid="1882023737425114762">"添加联系人"</string>
     <string name="menu_edit" msgid="7143003705504672374">"编辑联系人"</string>
     <string name="menu_delete" msgid="3977150783449642851">"删除联系人"</string>
@@ -460,6 +468,12 @@
     <item msgid="1937509904407445684">"TTY HCO"</item>
     <item msgid="5644925873488772224">"TTY VCO"</item>
   </string-array>
+  <string-array name="ring_delay_entries">
+    <item>关闭</item>
+    <item>3 秒</item>
+    <item>6 秒</item>
+    <item>9 秒</item>
+  </string-array>
     <string name="dtmf_tones_title" msgid="5163153771291340803">"DTMF 音"</string>
     <string name="dtmf_tones_summary" msgid="3351820372864020331">"设置 DTMF 音长度"</string>
   <string-array name="dtmf_tone_entries">
@@ -510,6 +524,8 @@
     <string name="voicemail_settings" msgid="72448049107749316">"设置"</string>
     <string name="voicemail_number_not_set" msgid="6724904736891087856">"&lt;未设置&gt;"</string>
     <string name="other_settings" msgid="3672912580359716394">"其他通话设置"</string>
+    <string name="dialer_ui_settings_title">拨号器设置</string>
+    <string name="dialer_ui_settings_summary">是否开启传感器，是否开启T9搜索</string>
     <string name="calling_via_template" msgid="4839419581866928142">"通过<xliff:g id="PROVIDER_NAME">%s</xliff:g>进行通话"</string>
     <string name="contactPhoto" msgid="4713193418046639466">"联系人照片"</string>
     <string name="goPrivate" msgid="865837794424530980">"私聊"</string>
@@ -627,8 +643,67 @@
     <item msgid="1458182414036878616">"永不"</item>
   </string-array>
     <string name="ringtone_title" msgid="6374978286202084684">"手机铃声"</string>
+    <string name="vibration_title">振动效果</string>
     <string name="vibrate_on_ring_title" msgid="9197564612065258960">"响铃时振动"</string>
     <string name="dtmf_tone_enable_title" msgid="827601042915852989">"拨号键盘触摸音效"</string>
+    <string name="national_roaming">全国漫游</string>
+    <string name="national_roaming_enable">当全国漫游时允许连接移动数据网络</string>
+    <string name="national_roaming_disable">当全国漫游时禁止连接移动数据网络</string>
+    <string name="perm_change_mobile_network">2G／3G移动网络切换</string>
+    <string name="perm_change_mobile_network_desc">获得该权限的应用程序可以在任何时候在2G/3G移动网络之间切换。使用3G网络数据存取速度较快，但相应的会消耗较多的电量和资费。</string>
+    <string name="noise_suppression_title">噪音抑制</string>
+    <string name="noise_suppression_summary">可在通话时抑制噪音</string>
     <string name="dial_pad_autocomplete" msgid="494525952035761075">"拨号键盘自动补全"</string>
     <string name="preference_category_ringtone" msgid="5197960752529332721">"铃声和振动"</string>
+
+    <!-- Voice quality filter -->
+    <string name="voice_quality_preferences_title">语音质量</string>
+    <string name="voice_quality_summary">当前语音质量配置为：<xliff:g id="action">%s</xliff:g></string>
+    <string name="voice_quality_entry_normal">普通</string>
+    <string name="voice_quality_entry_clear">清晰</string>
+    <string name="voice_quality_entry_crisp">清脆</string>
+    <string name="voice_quality_entry_bright">鲜明</string>
+
+    <!-- Advanced Settings -->
+    <string name="advanced_setting">高级设置</string>
+    <string name="vibrate_outgoing">接通时振动</string>
+    <string name="vibrate_outgoing_sum">当拨出电话被接听时振动提示</string>
+    <string name="vibrate_60">分钟提示振动</string>
+    <string name="vibrate_60_sum">当拨出电话时每分钟振动提示</string>
+    <string name="vibrate_hangup">挂断时振动</string>
+    <string name="vibrate_hangup_sum">当结束通话时振动提示</string>
+    <string name="vibrate_call_waiting">等待时振动</string>
+    <string name="vibrate_call_waiting_sum">当通话等待时振动提示</string>
+
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">黑名单</string>
+    <string name="enable_blacklist_title">启用黑名单</string>
+    <string name="blacklist_summary_disabled">已禁用</string>
+    <string name="blacklist_summary">黑名单中号码的来电将被阻止。</string>
+    <string name="blacklist_notify">显示通知</string>
+    <string name="blacklist_private_numbers_title">私有号码</string>
+    <string name="blacklist_private_numbers_summary">阻止不显示号码的私有号码的来电</string>
+    <string name="blacklist_unknown_numbers_title">未知号码</string>
+    <string name="blacklist_unknown_numbers_summary">阻止不在联系人列表中号码的来电</string>
+    <string name="blacklist_regex_title">使用通配符</string>
+    <string name="blacklist_regex_summary">使用 . 表示通配符 * 表示多个字符。例： 123.* 表示123开头的号码； .*123.* 表示含有123的号码</string>
+
+    <!-- Blacklist management -->
+    <string name="add_blacklist_number">添加电话号码</string>
+    <string name="add_to_blacklist">添加到黑名单</string>
+    <string name="add_to_blacklist_message">来自 %s 的来电将被阻止。</string>
+    <string name="remove_blacklist_number_title">移除号码</string>
+    <string name="remove_blacklist_number">你想要将 %s 从黑名单中移除？</string>
+
+    <!-- Blacklist notifications -->
+    <string name="blacklist_notification">阻止了 %s 的来电</string>
+    <string name="blacklist_notification_private_number">一个私有号码被阻止</string>
+    <string name="blacklist_notification_list_private">私有</string>
+    <string name="blacklist_notification_unknown_number">阻止了未知号码 %s 的来电</string>
+    <string name="blacklist_notification_multiple"><xliff:g id="count">%d</xliff:g> 来电被阻止</string>
+    <string name="unblock_number">不阻止</string>
+
+    <!-- Text for the onscreen "Blacklist" button -->
+    <string name="onscreenBlacklistText">黑名单</string>
+
 </resources>
