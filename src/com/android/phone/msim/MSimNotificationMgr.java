@@ -273,7 +273,7 @@ public class MSimNotificationMgr extends NotificationMgr {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setClassName("com.android.phone",
-                        "com.android.phone.CallFeaturesSetting");
+                        "com.android.phone.MSimCallFeaturesSetting");
 
                 notification = new Notification(
                         resId,  // icon
