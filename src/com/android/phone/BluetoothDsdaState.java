@@ -1433,7 +1433,7 @@ class BluetoothDsdaState {
                         log("Update the values properly");
                         if ((numActive + numHeld + otherSubActive +
                              otherSubHeld) < 2)
-                            mNumHeld = 0;
+                            mNumHeld = ((numHeld + otherSubHeld) > 0)? 1:0;
                     } else {
                         //There is no held call
                         log("There was no held call previously");
