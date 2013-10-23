@@ -290,6 +290,8 @@ public class InCallScreen extends Activity
     protected boolean mIsDestroyed = false;
     protected boolean mIsForegroundActivity = false;
     private boolean mIsForegroundActivityForProximity = false;
+    public boolean Exit_To_Home_Screen = false;
+    private boolean Enable_Landscape_In_Call = false;
     protected PowerManager mPowerManager;
 
     // For use with Pause/Wait dialogs
