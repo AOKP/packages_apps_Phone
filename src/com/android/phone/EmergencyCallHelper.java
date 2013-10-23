@@ -155,7 +155,7 @@ public class EmergencyCallHelper extends Handler {
         mNumRetriesSoFar = 0;
 
         // Reset mPhone to whatever the current default phone is right now.
-        mPhone = mApp.mCM.getDefaultPhone();
+        mPhone = mApp.getPhone();
 
         // Wake lock to make sure the processor doesn't go to sleep midway
         // through the emergency call sequence.
@@ -386,10 +386,12 @@ public class EmergencyCallHelper extends Handler {
         // airplane mode" sequence from the beginning again!)
 
         registerForDisconnect();  // Get notified when this call disconnects
+        int sub = mApp.getVoiceSubscriptionInService();
+        Phone phone = mApp.getPhone(sub);
 
         if (DBG) log("- placing call to '" + mNumber + "'...");
         int callStatus = PhoneUtils.placeCall(mApp,
-                                              mPhone,
+                                              phone,
                                               mNumber,
                                               null,  // contactUri
                                               true,  // isEmergencyCall

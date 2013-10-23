@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ *
+ * Not a Contribution.
+ *
  * Copyright (C) 2008 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +19,8 @@
  */
 
 package com.android.phone;
+
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.ActivityManagerNative;
@@ -34,6 +40,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.telephony.MSimTelephonyManager;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -43,6 +50,13 @@ import android.widget.ProgressBar;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.TelephonyCapabilities;
+import com.codeaurora.telephony.msim.MSimPhoneFactory;
+import com.codeaurora.telephony.msim.SubscriptionManager;
+import com.android.internal.telephony.CallStateException;
+import com.android.internal.telephony.CommandsInterface;
+import com.google.android.collect.Maps;
+
+import static com.android.internal.telephony.MSimConstants.SUBSCRIPTION_KEY;
 
 /**
  * OutgoingCallBroadcaster receives CALL and CALL_PRIVILEGED Intents, and
@@ -76,6 +90,11 @@ public class OutgoingCallBroadcaster extends Activity
     public static final String EXTRA_SIP_PHONE_URI = "android.phone.extra.SIP_PHONE_URI";
     public static final String EXTRA_ACTUAL_NUMBER_TO_DIAL =
             "android.phone.extra.ACTUAL_NUMBER_TO_DIAL";
+    public static final String EXTRA_CALL_TYPE = "android.phone.extra.CALL_TYPE";
+    public static final String EXTRA_CALL_DOMAIN = "android.phone.extra.CALL_DOMAIN";
+
+    /** the key used to specify subscription to be used for emergency calls */
+    private static final String BLUETOOTH = "Bluetooth";
 
     /**
      * Identifier for intent extra for sending an empty Flash message for
@@ -90,12 +109,20 @@ public class OutgoingCallBroadcaster extends Activity
     public static final String EXTRA_SEND_EMPTY_FLASH =
             "com.android.phone.extra.SEND_EMPTY_FLASH";
 
+    public static final String EXTRA_DIAL_CONFERENCE_URI =
+            "com.android.phone.extra.DIAL_CONFERENCE_URI";
+
+    public static final String ADD_PARTICIPANT_KEY = "add_participant";
     // Dialog IDs
     private static final int DIALOG_NOT_VOICE_CAPABLE = 1;
 
     /** Note message codes < 100 are reserved for the PhoneApp. */
     private static final int EVENT_OUTGOING_CALL_TIMEOUT = 101;
     private static final int OUTGOING_CALL_TIMEOUT_THRESHOLD = 2000; // msec
+
+    private int mSubscription;
+    private PhoneGlobals mApp;
+
     /**
      * ProgressBar object with "spinner" style, which will be shown if we take more than
      * {@link #EVENT_OUTGOING_CALL_TIMEOUT} msec to handle the incoming Intent.
@@ -135,6 +162,7 @@ public class OutgoingCallBroadcaster extends Activity
             boolean alreadyCalled;
             String number;
             String originalUri;
+            boolean isConferenceUri = intent.getBooleanExtra(EXTRA_DIAL_CONFERENCE_URI, false);
 
             alreadyCalled = intent.getBooleanExtra(
                     OutgoingCallBroadcaster.EXTRA_ALREADY_CALLED, false);
@@ -152,46 +180,10 @@ public class OutgoingCallBroadcaster extends Activity
 
             final PhoneGlobals app = PhoneGlobals.getInstance();
 
-            // OTASP-specific checks.
-            // TODO: This should probably all happen in
-            // OutgoingCallBroadcaster.onCreate(), since there's no reason to
-            // even bother with the NEW_OUTGOING_CALL broadcast if we're going
-            // to disallow the outgoing call anyway...
-            if (TelephonyCapabilities.supportsOtasp(app.phone)) {
-                boolean activateState = (app.cdmaOtaScreenState.otaScreenState
-                        == OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_ACTIVATION);
-                boolean dialogState = (app.cdmaOtaScreenState.otaScreenState
-                        == OtaUtils.CdmaOtaScreenState.OtaScreenState
-                        .OTA_STATUS_SUCCESS_FAILURE_DLG);
-                boolean isOtaCallActive = false;
-
-                // TODO: Need cleaner way to check if OTA is active.
-                // Also, this check seems to be broken in one obscure case: if
-                // you interrupt an OTASP call by pressing Back then Skip,
-                // otaScreenState somehow gets left in either PROGRESS or
-                // LISTENING.
-                if ((app.cdmaOtaScreenState.otaScreenState
-                        == OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_PROGRESS)
-                        || (app.cdmaOtaScreenState.otaScreenState
-                        == OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_LISTENING)) {
-                    isOtaCallActive = true;
-                }
-
-                if (activateState || dialogState) {
-                    // The OTASP sequence is active, but either (1) the call
-                    // hasn't started yet, or (2) the call has ended and we're
-                    // showing the success/failure screen.  In either of these
-                    // cases it's OK to make a new outgoing call, but we need
-                    // to take down any OTASP-related UI first.
-                    if (dialogState) app.dismissOtaDialogs();
-                    app.clearOtaState();
-                    app.clearInCallScreenMode();
-                } else if (isOtaCallActive) {
-                    // The actual OTASP call is active.  Don't allow new
-                    // outgoing calls at all from this state.
-                    Log.w(TAG, "OTASP call is active: disallowing a new outgoing call.");
-                    return;
-                }
+            if (isOtaActive()) {
+                // OTASP call is active. Don't allow new outgoing calls at all
+                Log.w(TAG, "OTASP call is active: disallowing a new outgoing call.");
+                return;
             }
 
             if (number == null) {
@@ -225,15 +217,76 @@ public class OutgoingCallBroadcaster extends Activity
             // NEW_OUTGOING_CALL broadcast.  But we need to do it again here
             // too, since the number might have been modified/rewritten during
             // the broadcast (and may now contain letters or separators again.)
-            number = PhoneNumberUtils.convertKeypadLettersToDigits(number);
-            number = PhoneNumberUtils.stripSeparators(number);
-
+            if (!isConferenceUri) {
+                number = PhoneNumberUtils.convertKeypadLettersToDigits(number);
+                number = PhoneNumberUtils.stripSeparators(number);
+            }
             if (DBG) Log.v(TAG, "doReceive: proceeding with call...");
             if (VDBG) Log.v(TAG, "- uri: " + uri);
             if (VDBG) Log.v(TAG, "- actual number to dial: '" + number + "'");
 
             startSipCallOptionHandler(context, intent, uri, number);
         }
+    }
+
+    /**
+     * cleanup any undismissed ota dialogs so the InCallScreen UI can be shown
+     * @return void
+     */
+    private void otaCleanup() {
+
+        PhoneGlobals globals = PhoneGlobals.getInstance();
+        boolean isOtaCallActive = false;
+
+        if (TelephonyCapabilities.supportsOtasp(globals.phone)) {
+            boolean activateState = (globals.cdmaOtaScreenState.otaScreenState ==
+                    OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_ACTIVATION);
+            boolean dialogState = (globals.cdmaOtaScreenState.otaScreenState ==
+                    OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_SUCCESS_FAILURE_DLG);
+
+            if (activateState || dialogState) {
+                // The OTASP sequence is active, but either (1) the call
+                // hasn't started yet, or (2) the call has ended and we're
+                // showing the success/failure screen. In either of these
+                // cases it's OK to make a new outgoing call, but we need
+                // to take down any OTASP-related UI first.
+                if (dialogState)
+                    globals.dismissOtaDialogs();
+                globals.clearOtaState();
+                globals.clearInCallScreenMode();
+            }
+        }
+    }
+
+    /**
+     * Check if ota call is active
+     * @return
+     * True if ota call is still active
+     * False if ota call is not active
+     */
+    private boolean isOtaActive() {
+
+        PhoneGlobals globals = PhoneGlobals.getInstance();
+        boolean isOtaCallActive = false;
+
+        if (TelephonyCapabilities.supportsOtasp(globals.phone)) {
+
+            // TODO: Need cleaner way to check if OTA is active.
+            // Also, this check seems to be broken in one obscure case: if
+            // you interrupt an OTASP call by pressing Back then Skip,
+            // otaScreenState somehow gets left in either PROGRESS or
+            // LISTENING.
+            if ((globals.cdmaOtaScreenState.otaScreenState ==
+                    OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_PROGRESS)
+                    || (globals.cdmaOtaScreenState.otaScreenState ==
+                    OtaUtils.CdmaOtaScreenState.OtaScreenState.OTA_STATUS_LISTENING)) {
+                isOtaCallActive = true;
+                // The actual OTASP call is active. Don't allow new
+                // outgoing calls at all from this state.
+                Log.w(TAG, "OTASP call is active");
+            }
+        }
+        return isOtaCallActive;
     }
 
     /**
@@ -282,7 +335,9 @@ public class OutgoingCallBroadcaster extends Activity
 
         Intent newIntent = new Intent(Intent.ACTION_CALL, uri);
         newIntent.putExtra(EXTRA_ACTUAL_NUMBER_TO_DIAL, number);
+        newIntent.putExtra(SUBSCRIPTION_KEY, mSubscription);
         PhoneUtils.checkAndCopyPhoneProviderExtras(intent, newIntent);
+        PhoneUtils.copyImsExtras(intent, newIntent);
 
         // Finally, launch the SipCallOptionHandler, with the copy of the
         // original CALL intent stashed away in the EXTRA_NEW_CALL_INTENT
@@ -311,6 +366,7 @@ public class OutgoingCallBroadcaster extends Activity
         super.onCreate(icicle);
         setContentView(R.layout.outgoing_call_broadcaster);
         mWaitingSpinner = (ProgressBar) findViewById(R.id.spinner);
+        mApp = PhoneGlobals.getInstance();
 
         Intent intent = getIntent();
         if (DBG) {
@@ -401,12 +457,42 @@ public class OutgoingCallBroadcaster extends Activity
             return;
         }
 
+        /*
+         * Clean up any undismissed ota dialogs. If ota call is active outgoing
+         * calls will be blocked in OutgoingCallReceiver
+         */
+        otaCleanup();
+
+        boolean promptEnabled = MSimPhoneFactory.isPromptEnabled();
+        String number = PhoneNumberUtils.getNumberFromIntent(intent, this);
+        boolean isEmergency = PhoneNumberUtils.isEmergencyNumber(number);
+        if (MSimTelephonyManager.getDefault().isMultiSimEnabled() && promptEnabled &&
+               (activeSubCount() > 1) && (!isIntentFromBluetooth(intent)) &&
+                       (!isSIPCall(number, intent)) && (!isEmergency)) {
+            Log.d(TAG, "Start multisimdialer activity and get the sub selected by user");
+            Intent intentMSim = new Intent(this, MSimDialerActivity.class);
+            intentMSim.setData(intent.getData());
+            intentMSim.setAction(intent.getAction());
+            int requestCode = 1;
+            startActivityForResult(intentMSim, requestCode);
+        } else {
+            mSubscription = intent.getIntExtra(SUBSCRIPTION_KEY,
+                    PhoneGlobals.getInstance().getVoiceSubscription());
+            PhoneUtils.setActiveSubscription(mSubscription);
+            Log.d(TAG, "subscription when there is (from Extra):" + mSubscription);
+            processMSimIntent(intent);
+        }
+    }
+
+    private void processMSimIntent(Intent intent) {
         String action = intent.getAction();
         String number = PhoneNumberUtils.getNumberFromIntent(intent, this);
+        boolean isConferenceUri = intent.getBooleanExtra(EXTRA_DIAL_CONFERENCE_URI, false);
+        Log.d(TAG, "outGoingcallBroadCaster action is "+ action + " number = " + number);
         // Check the number, don't convert for sip uri
         // TODO put uriNumber under PhoneNumberUtils
         if (number != null) {
-            if (!PhoneNumberUtils.isUriNumber(number)) {
+            if (!PhoneNumberUtils.isUriNumber(number) && !isConferenceUri) {
                 number = PhoneNumberUtils.convertKeypadLettersToDigits(number);
                 number = PhoneNumberUtils.stripSeparators(number);
             }
@@ -439,6 +525,10 @@ public class OutgoingCallBroadcaster extends Activity
         // to intercept or affect in any way.  (In that case, we start the call
         // immediately rather than going through the NEW_OUTGOING_CALL sequence.)
         boolean callNow;
+
+        // If true, then emergency call has been initiated on IMS.
+        // Use this flag to avoid call being processed as Sip.
+        boolean emergencyOnIms = false;
 
         if (getClass().getName().equals(intent.getComponent().getClassName())) {
             // If we were launched directly from the OutgoingCallBroadcaster,
@@ -514,6 +604,8 @@ public class OutgoingCallBroadcaster extends Activity
                 finish();
                 return;
             }
+            intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
+            Log.d(TAG, "for non emergency call,sub is  :" + mSubscription);
             callNow = false;
         } else if (Intent.ACTION_CALL_EMERGENCY.equals(action)) {
             // ACTION_CALL_EMERGENCY case: this is either a CALL_PRIVILEGED
@@ -560,6 +652,7 @@ public class OutgoingCallBroadcaster extends Activity
             } else {
                 Log.i(TAG, "onCreate: null or empty number, setting callNow=true...");
                 callNow = true;
+                intent.putExtra(SUBSCRIPTION_KEY, mSubscription);
             }
         }
 
@@ -569,6 +662,17 @@ public class OutgoingCallBroadcaster extends Activity
             // So initiate the outgoing call immediately.
 
             Log.i(TAG, "onCreate(): callNow case! Calling placeCall(): " + intent);
+
+            /*
+             * Convert the emergency call intent to the IMS intent if IMS is enabled
+             * emergency calls should go in auto domain not PS domain
+             * TODO: Pass Calltype from UI for OEMs that support video emergency calls
+             */
+            if (PhoneUtils.isCallOnImsEnabled()) {
+                Log.d(TAG, "IMS is enabled , place IMS emergency call");
+                PhoneUtils.convertCallToIMS(intent, Phone.CALL_TYPE_VOICE);
+                emergencyOnIms = true;
+            }
 
             // Initiate the outgoing call, and simultaneously launch the
             // InCallScreen to display the in-call UI:
@@ -605,7 +709,8 @@ public class OutgoingCallBroadcaster extends Activity
         // a plain address, whether it could be a tel: URI, etc.)
         Uri uri = intent.getData();
         String scheme = uri.getScheme();
-        if (Constants.SCHEME_SIP.equals(scheme) || PhoneNumberUtils.isUriNumber(number)) {
+        if ((Constants.SCHEME_SIP.equals(scheme) || PhoneNumberUtils.isUriNumber(number)) &&
+                !emergencyOnIms) {
             Log.i(TAG, "The requested number was detected as SIP call.");
             startSipCallOptionHandler(this, intent, uri, number);
             finish();
@@ -616,30 +721,67 @@ public class OutgoingCallBroadcaster extends Activity
             // case here too (most likely by just doing nothing at all.)
         }
 
-        Intent broadcastIntent = new Intent(Intent.ACTION_NEW_OUTGOING_CALL);
-        if (number != null) {
-            broadcastIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, number);
-        }
-        PhoneUtils.checkAndCopyPhoneProviderExtras(intent, broadcastIntent);
-        broadcastIntent.putExtra(EXTRA_ALREADY_CALLED, callNow);
-        broadcastIntent.putExtra(EXTRA_ORIGINAL_URI, uri.toString());
-        // Need to raise foreground in-call UI as soon as possible while allowing 3rd party app
-        // to intercept the outgoing call.
-        broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        if (DBG) Log.v(TAG, " - Broadcasting intent: " + broadcastIntent + ".");
+        if (!processAddParticipant(intent, number)) {
+            Intent broadcastIntent = new Intent(Intent.ACTION_NEW_OUTGOING_CALL);
+            if (number != null) {
+                broadcastIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, number);
+            }
+            PhoneUtils.checkAndCopyPhoneProviderExtras(intent, broadcastIntent);
+            broadcastIntent.putExtra(EXTRA_ALREADY_CALLED, callNow);
+            broadcastIntent.putExtra(EXTRA_ORIGINAL_URI, uri.toString());
+            broadcastIntent.putExtra(EXTRA_DIAL_CONFERENCE_URI,
+                    intent.getBooleanExtra((EXTRA_DIAL_CONFERENCE_URI), false));
 
-        // Set a timer so that we can prepare for unexpected delay introduced by the broadcast.
-        // If it takes too much time, the timer will show "waiting" spinner.
-        // This message will be removed when OutgoingCallReceiver#onReceive() is called before the
-        // timeout.
-        mHandler.sendEmptyMessageDelayed(EVENT_OUTGOING_CALL_TIMEOUT,
-                OUTGOING_CALL_TIMEOUT_THRESHOLD);
-        sendOrderedBroadcastAsUser(broadcastIntent, UserHandle.OWNER,
-                PERMISSION, new OutgoingCallReceiver(),
-                null,  // scheduler
-                Activity.RESULT_OK,  // initialCode
-                number,  // initialData: initial value for the result data
-                null);  // initialExtras
+            // Need to raise foreground in-call UI as soon as possible while allowing 3rd party app
+            // to intercept the outgoing call.
+            broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+            if (DBG) Log.v(TAG, " - Broadcasting intent: " + broadcastIntent + ".");
+
+            // Set a timer so that we can prepare for unexpected delay introduced by the broadcast.
+            // If it takes too much time, the timer will show "waiting" spinner.
+            // This message will be removed when OutgoingCallReceiver#onReceive() is called before the
+            // timeout.
+            mHandler.sendEmptyMessageDelayed(EVENT_OUTGOING_CALL_TIMEOUT,
+                    OUTGOING_CALL_TIMEOUT_THRESHOLD);
+            sendOrderedBroadcastAsUser(broadcastIntent, UserHandle.OWNER,
+                    PERMISSION, new OutgoingCallReceiver(),
+                    null,  // scheduler
+                    Activity.RESULT_OK,  // initialCode
+                    number,  // initialData: initial value for the result data
+                    null);  // initialExtras
+        }
+    }
+
+    private boolean processAddParticipant(Intent intent, String number) {
+        String[] extras = null;
+        boolean isConferenceUri = false;
+        boolean ret = false;
+        // For IMS add participant functionality, invoke api using ImsService
+        // and return.
+        if (intent.getBooleanExtra(ADD_PARTICIPANT_KEY, false)) {
+            isConferenceUri = intent.getBooleanExtra(
+                    OutgoingCallBroadcaster.EXTRA_DIAL_CONFERENCE_URI, false);
+            if (isConferenceUri) {
+                final Map<String, String> extrasMap = Maps.newHashMap();
+                extrasMap.put(Phone.EXTRAS_IS_CONFERENCE_URI,
+                        Boolean.toString(isConferenceUri));
+                extras = PhoneUtils.getExtrasFromMap(extrasMap);
+            }
+            try {
+                if (PhoneGlobals.getInstance().mImsService != null) {
+                    PhoneGlobals.getInstance().mImsService.addParticipant(number,
+                            CommandsInterface.CLIR_DEFAULT,
+                            Phone.CALL_TYPE_UNKNOWN,
+                            extras);
+                }
+            } catch (RemoteException ex) {
+                Log.d(TAG, "Ims Service addParticipant exception", ex);
+            }
+            ret = true;
+            finish();
+        }
+        Log.d(TAG, "processAddParticipant return = " + ret);
+        return ret;
     }
 
     @Override
@@ -735,6 +877,54 @@ public class OutgoingCallBroadcaster extends Activity
         // DIALOG_NOT_VOICE_CAPABLE is the only dialog we ever use (so far
         // at least), and canceling it is just like hitting "OK".
         finish();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Collect subscription data from the intent and use it
+        if (resultCode == RESULT_CANCELED) {
+            Log.d(TAG, "activity cancelled or backkey pressed ");
+            finish();
+        } else if (resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            mSubscription = extras.getInt(SUBSCRIPTION_KEY);
+            Log.d(TAG, "subscription selected from multiSimDialer" + mSubscription);
+            processMSimIntent(data);
+        }
+    }
+
+    private int activeSubCount() {
+        SubscriptionManager subManager = SubscriptionManager.getInstance();
+        int count = subManager.getActiveSubscriptionsCount();
+        if (DBG) Log.v(TAG, "count of subs activated " + count);
+        return count;
+    }
+
+    private boolean  isIntentFromBluetooth(Intent intent) {
+        boolean btIntent = false;
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if ((extras.getString(BLUETOOTH) != null) && (extras.getString(BLUETOOTH).
+                    equals("true"))) {
+                btIntent = true;
+                Log.d(TAG, "isIntentFromBluetooth " + btIntent + "intent :"
+                    + extras.getString(BLUETOOTH));
+            }
+        }
+        return btIntent;
+    }
+
+    private boolean isSIPCall(String number, Intent intent) {
+        boolean sipCall = false;
+        String scheme = "";
+        if (intent.getData() != null) {
+            scheme =  intent.getData().getScheme();
+            if ((scheme != null) && ("sip".equals(scheme) ||
+                    PhoneNumberUtils.isUriNumber(number))) {
+                sipCall = true;
+            }
+        }
+        Log.d(TAG, "isSIPCall : " + sipCall);
+        return sipCall;
     }
 
     /**

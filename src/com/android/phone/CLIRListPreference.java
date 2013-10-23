@@ -23,7 +23,7 @@ public class CLIRListPreference extends ListPreference {
     private final boolean DBG = (PhoneGlobals.DBG_LEVEL >= 2);
 
     private final MyHandler mHandler = new MyHandler();
-    private final Phone mPhone;
+    private Phone mPhone;
     private TimeConsumingPreferenceListener mTcpListener;
 
     int clirArray[];
@@ -49,7 +49,12 @@ public class CLIRListPreference extends ListPreference {
         }
     }
 
-    /* package */ void init(TimeConsumingPreferenceListener listener, boolean skipReading) {
+    /*package*/ void init(TimeConsumingPreferenceListener listener, boolean skipReading,
+            int subscription) {
+        // Get the selected subscription
+        Log.d(LOG_TAG, "CLIRListPreference init, subscription :" + subscription);
+        mPhone = PhoneGlobals.getInstance().getPhone(subscription);
+
         mTcpListener = listener;
         if (!skipReading) {
             mPhone.getOutgoingCallerIdDisplay(mHandler.obtainMessage(MyHandler.MESSAGE_GET_CLIR,

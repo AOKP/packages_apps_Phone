@@ -189,6 +189,24 @@
                     style="@style/InCallButton"
                     android:src="@drawable/ic_merge_holo_dark"
                     android:contentDescription="@string/onscreenMergeCallsText" />
+                <!-- "For IMS VT call" -->
+                <Button
+                    android:id="@+id/modifyCallButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/InCallButton"
+                    android:src="@drawable/ic_merge_holo_dark"
+                    android:background="@drawable/btn_compound_vt"
+                    android:contentDescription="@string/onscreenModifyCallText" />
+                <Button android:id="@+id/addParticipant"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/InCallButton"
+                    android:src="@drawable/ic_merge_holo_dark"
+                    android:background="@drawable/btn_compound_addparticipant"
+                    android:contentDescription="@string/onscreenAddParticipant" />
             </LinearLayout>
 
             <!-- This spacer is not used in GSM, so it has 0 width and height. The CDMA

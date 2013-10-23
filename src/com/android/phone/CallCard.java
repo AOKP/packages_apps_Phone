@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+ * Not a Contribution.
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.provider.ContactsContract.Contacts;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -44,6 +48,7 @@ import android.widget.TextView;
 
 import com.android.internal.telephony.Call;
 import com.android.internal.telephony.CallManager;
+import com.android.internal.telephony.CallStateException;
 import com.android.internal.telephony.CallerInfo;
 import com.android.internal.telephony.CallerInfoAsyncQuery;
 import com.android.internal.telephony.Connection;
@@ -96,7 +101,7 @@ public class CallCard extends LinearLayout
     /** Container for info about the current call(s) */
     private ViewGroup mCallInfoContainer;
     /** Primary "call info" block (the foreground or ringing call) */
-    private ViewGroup mPrimaryCallInfo;
+    protected ViewGroup mPrimaryCallInfo;
     /** "Call banner" for the primary call */
     private ViewGroup mPrimaryCallBanner;
     /** Secondary "call info" block (the background "on hold" call) */
@@ -123,6 +128,7 @@ public class CallCard extends LinearLayout
     private ImageView mPhoto;
     private View mPhotoDimEffect;
 
+    private VideoCallPanel mVideoCallPanel;
     private TextView mName;
     private TextView mPhoneNumber;
     private TextView mLabel;
@@ -152,6 +158,24 @@ public class CallCard extends LinearLayout
 
     // Cached DisplayMetrics density.
     private float mDensity;
+
+    private boolean mAudioDeviceInitialized = false;
+
+    // Constants for TelephonyProperties.PROPERTY_IMS_AUDIO_OUTPUT property.
+    // Currently, the default audio output is headset if connected, bluetooth
+    // if connected, speaker/earpiece for video/voice call.
+    private static final int IMS_AUDIO_OUTPUT_DEFAULT = 0;
+    private static final int IMS_AUDIO_OUTPUT_DISABLE_SPEAKER = 1;
+    /**
+     * Controls audio route for VT calls.
+     * 0 - Use the default audio routing strategy.
+     * 1 - Disable the speaker. Route the audio to Headset or Bloutooth
+     *     or Earpiece, based on the default audio routing strategy.
+     * This property is for testing purpose only.
+     */
+    static final String PROPERTY_IMS_AUDIO_OUTPUT =
+                                "persist.radio.ims.audio.output";
+
 
     /**
      * Sent when it takes too long (MESSAGE_DELAY msec) to load a contact photo for the given
@@ -197,6 +221,15 @@ public class CallCard extends LinearLayout
         mInCallScreen = inCallScreen;
     }
 
+    /**
+     * Called when the InCallScreen activity is being paused
+     */
+    void onPause() {
+        if ((mVideoCallPanel != null) && (mVideoCallPanel.getVisibility() == View.VISIBLE)) {
+            mVideoCallPanel.onPause();
+        }
+    }
+
     @Override
     public void onTickForCallTimeElapsed(long timeElapsed) {
         // While a call is in progress, update the elapsed time shown
@@ -240,6 +273,9 @@ public class CallCard extends LinearLayout
 
         // Secondary info area, for the background ("on hold") call
         mSecondaryCallInfo = (ViewStub) findViewById(R.id.secondary_call_info);
+
+        // VideoCallPanel for Video Telephony calls
+        mVideoCallPanel = (VideoCallPanel) findViewById(R.id.videoCallPanel);
     }
 
     /**
@@ -344,7 +380,7 @@ public class CallCard extends LinearLayout
     /**
      * Updates the UI for the state where the phone is in use, but not ringing.
      */
-    private void updateForegroundCall(CallManager cm) {
+    protected void updateForegroundCall(CallManager cm) {
         if (DBG) log("updateForegroundCall()...");
         // if (DBG) PhoneUtils.dumpCallManager();
 
@@ -381,7 +417,8 @@ public class CallCard extends LinearLayout
                 displaySecondaryCallStatus(cm, bgCall);
             }
         } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
             displaySecondaryCallStatus(cm, bgCall);
         }
     }
@@ -390,7 +427,7 @@ public class CallCard extends LinearLayout
      * Updates the UI for the state where an incoming call is ringing (or
      * call waiting), regardless of whether the phone's already offhook.
      */
-    private void updateRingingCall(CallManager cm) {
+    protected void updateRingingCall(CallManager cm) {
         if (DBG) log("updateRingingCall()...");
 
         Call ringingCall = cm.getFirstActiveRingingCall();
@@ -524,6 +561,15 @@ public class CallCard extends LinearLayout
 
         updateCallStateWidgets(call);
 
+        // If this is a video call then update the state of the VideoCallPanel
+        if (isVideoCall(call)) {
+            updateVideoCallState(call);
+        } else {
+            // This will hide the VideoCallPanel for any non VT/ non VS call or
+            // downgrade scenarios
+            hideVideoCallWidgets();
+        }
+
         if (PhoneUtils.isConferenceCall(call)) {
             // Update onscreen info for a conference call.
             updateDisplayForConference(call);
@@ -535,7 +581,8 @@ public class CallCard extends LinearLayout
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                 conn = call.getLatestConnection();
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                  || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 conn = call.getEarliestConnection();
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -605,13 +652,28 @@ public class CallCard extends LinearLayout
                     if (DBG) log("- displayMainCallStatus: using data we already have...");
                     if (o instanceof CallerInfo) {
                         CallerInfo ci = (CallerInfo) o;
+                        // In case of emergency and voice mail numbers, ci.phoneNumber is
+                        // updated with "Emergency Number" text and voice mail tag respectively.
+                        // So, ci.phoneNumber will not match connection address.
+                        String connAddress = conn.getAddress();
+                        String number = PhoneNumberUtils.stripSeparators(ci.phoneNumber);
+                        if (!(ci.isEmergencyNumber() || ci.isVoiceMailNumber()) &&
+                            (connAddress != null && !connAddress.equals(number))) {
+                            log("- displayMainCallStatus: Phone number modified!!");
+                            CallerInfo newCi = CallerInfo.getCallerInfo(getContext(), connAddress);
+                            if (newCi != null) {
+                                ci = newCi;
+                                conn.setUserData(ci);
+                            }
+                        }
                         // Update CNAP information if Phone state change occurred
                         ci.cnapName = conn.getCnapName();
                         ci.numberPresentation = conn.getNumberPresentation();
                         ci.namePresentation = conn.getCnapNamePresentation();
                         if (DBG) log("- displayMainCallStatus: CNAP data from Connection: "
                                 + "CNAP name=" + ci.cnapName
-                                + ", Number/Name Presentation=" + ci.numberPresentation);
+                                + ", Number/Name Presentation=" + ci.numberPresentation
+                                + ", Number=" + ci.phoneNumber);
                         if (DBG) log("   ==> Got CallerInfo; updating display: ci = " + ci);
                         updateDisplayForPerson(ci, presentation, false, call, conn);
                     } else if (o instanceof PhoneUtils.CallerInfoToken){
@@ -655,6 +717,173 @@ public class CallCard extends LinearLayout
     }
 
     /**
+     * Check to see if the call is a video call
+     *
+     * @param call
+     * @return true if the call is a video call
+     */
+    private boolean isVideoCall(Call call) {
+        return PhoneUtils.isImsVideoCall(call);
+    }
+
+    private int getVideoCallType(Call call) {
+        int callType = Phone.CALL_TYPE_UNKNOWN;
+        Phone phone = call.getPhone();
+        try {
+            callType = phone.getCallType(call);
+        } catch (CallStateException ex) {
+            Log.e(LOG_TAG, "getVideoCallType: caught " + ex);
+        }
+        return callType;
+    }
+
+    /**
+     * Updates the VideoCallPanel based on the current state of the call
+     *
+     * @param call
+     */
+    private void updateVideoCallState(Call call) {
+        Call.State state = call.getState();
+        if (DBG) log("  - Videocall.state: " + state);
+
+        // Null check
+        if (mVideoCallPanel == null) {
+            loge("VideocallPanel is null");
+            return;
+        }
+        int callType = getVideoCallType(call);
+        switch (state) {
+            case INCOMING:
+                break;
+
+            case DIALING: // These are an intentional fall through(s)
+                          // showVideoCallWidgets is added for DIALING to
+                          // support early media
+            case ALERTING:
+            case ACTIVE:
+                initVideoCall(callType);
+
+                // Show video call widget
+                showVideoCallWidgets(callType);
+                break;
+
+            case DISCONNECTING: // These are an intentional fall through(s)
+            case DISCONNECTED:
+                hideVideoCallWidgets();
+                break;
+
+            case HOLDING: // These are an intentional fall through(s)
+            case IDLE:
+            case WAITING:
+                hideVideoCallWidgets();
+                break;
+
+            default:
+                Log.e(LOG_TAG, "videocall: updateVideoCallState in bad state:" + state);
+                hideVideoCallWidgets();
+                break;
+        }
+    }
+
+    /**
+     * If this is a video call then hide the photo widget and show the
+     * video call panel
+     */
+    private void showVideoCallWidgets(int callType) {
+
+        if (isPhotoVisible()) {
+            if (DBG) log("show videocall widget");
+            mPhoto.setVisibility(View.GONE);
+        }
+
+        mVideoCallPanel.setVisibility(View.VISIBLE);
+        mVideoCallPanel.setPanelElementsVisibility(callType);
+        mVideoCallPanel.startOrientationListener(true);
+    }
+
+    /**
+     * Hide the video call widget and restore the photo widget and
+     * reset mAudioDeviceInitialized
+     */
+    private void hideVideoCallWidgets() {
+        mAudioDeviceInitialized = false;
+
+        if ((mVideoCallPanel != null) && (mVideoCallPanel.getVisibility() == View.VISIBLE)) {
+            if (DBG) log("Hide videocall widget");
+
+            mPhoto.setVisibility(View.VISIBLE);
+            mVideoCallPanel.setVisibility(View.GONE);
+            mVideoCallPanel.setCameraNeeded(false);
+            mVideoCallPanel.startOrientationListener(false);
+        }
+    }
+
+    /**
+     * Initializes the video call widgets if not already initialized
+     */
+    private void initVideoCall(int callType) {
+        /*
+         * 1. Speaker state is updated only at the beginning of a video call
+         * 2. For MO video call, speaker update happens in dialing state
+         * 3. For MT video call, it happens in active state
+         * 4. Speaker state not changed during a call when VOLTE<->VT
+         *    call type change happens.
+         */
+        if (DBG) log("initVideoCall mAudioDeviceInitialized: " + mAudioDeviceInitialized);
+        if (!mAudioDeviceInitialized) {
+            switchInVideoCallAudio(); // Set audio to speaker by default
+            mAudioDeviceInitialized = true;
+        }
+        //Choose camera direction based on call type
+        mVideoCallPanel.onCallInitiating(callType);
+    }
+
+    /**
+     * Return true if mPhoto is available and is visible
+     *
+     * @return
+     */
+    private boolean isPhotoVisible() {
+        return ((mPhoto != null) && (mPhoto.getVisibility() == View.VISIBLE));
+    }
+
+    /**
+     * Switches the current routing of in-call audio for the video call
+     */
+    private void switchInVideoCallAudio() {
+        if (DBG) log("In switchInVideoCallAudio");
+
+        // If the wired headset is connected then the AudioService takes care of
+        // routing audio to the headset
+        if (mApplication.isHeadsetPlugged()) {
+            if (DBG) log("Wired headset connected, not routing audio to speaker");
+            return;
+        }
+
+        // If the bluetooth is available then BluetoothHandsfree class takes
+        // care of making sure that the audio is routed to Bluetooth by default.
+        // However if the audio is not connected to Bluetooth because user wanted
+        // audio off then continue to turn on the speaker
+        if (mInCallScreen.isBluetoothAvailable()
+                && mInCallScreen.isBluetoothAudioConnectedOrPending()) {
+            if (DBG) log("Bluetooth connected, not routing audio to speaker");
+            return;
+        }
+
+        // If the speaker is explicitly disabled then do not enable it.
+        if (SystemProperties.getInt(PROPERTY_IMS_AUDIO_OUTPUT,
+                IMS_AUDIO_OUTPUT_DEFAULT) == IMS_AUDIO_OUTPUT_DISABLE_SPEAKER) {
+            if (DBG) log("Speaker disabled, not routing audio to speaker");
+            return;
+        }
+
+        // If the bluetooth headset or the wired headset is not connected and
+        // the speaker is not disabled then turn on speaker by default
+        // for the VT call
+        mInCallScreen.switchInCallAudio(InCallScreen.InCallAudioMode.SPEAKER);
+    }
+
+    /**
      * Implemented for CallerInfoAsyncQuery.OnQueryCompleteListener interface.
      * refreshes the CallCard data when it called.
      */
@@ -673,7 +902,8 @@ public class CallCard extends LinearLayout
             if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                 conn = call.getLatestConnection();
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                  || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                  || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 conn = call.getEarliestConnection();
             } else {
                 throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -963,6 +1193,7 @@ public class CallCard extends LinearLayout
             return;
         }
 
+        Phone phone = call.getPhone();
         Call.State state = call.getState();
         switch (state) {
             case HOLDING:
@@ -1009,7 +1240,7 @@ public class CallCard extends LinearLayout
                 // CDMA: This is because in CDMA when the user originates the second call,
                 // although the Foreground call state is still ACTIVE in reality the network
                 // put the first call on hold.
-                if (mApplication.phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA) {
+                if (phone.getPhoneType() == PhoneConstants.PHONE_TYPE_CDMA) {
                     showSecondaryCallInfo();
 
                     List<Connection> connections = call.getConnections();
@@ -1435,7 +1666,8 @@ public class CallCard extends LinearLayout
             showImage(mPhoto, R.drawable.picture_dialing);
             mName.setText(R.string.card_title_in_call);
         } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
             // Normal GSM (or possibly SIP?) conference call.
             // Display the "conference call" image as the contact photo.
             // TODO: Better visual treatment for contact photos in a
@@ -1534,7 +1766,8 @@ public class CallCard extends LinearLayout
                     if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
                         conn = call.getLatestConnection();
                     } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                            || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                            || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                            || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                         conn = call.getEarliestConnection();
                     } else {
                         throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -1606,7 +1839,7 @@ public class CallCard extends LinearLayout
      *
      *  @return true if we were able to find the image in the cache, false otherwise.
      */
-    private static final boolean showCachedImage(ImageView view, CallerInfo ci) {
+    private boolean showCachedImage(ImageView view, CallerInfo ci) {
         if ((ci != null) && ci.isCachedPhotoCurrent) {
             if (ci.cachedPhoto != null) {
                 showImage(view, ci.cachedPhoto);
@@ -1619,27 +1852,36 @@ public class CallCard extends LinearLayout
     }
 
     /** Helper function to display the resource in the imageview AND ensure its visibility.*/
-    private static final void showImage(ImageView view, int resource) {
+    private final void showImage(ImageView view, int resource) {
         showImage(view, view.getContext().getResources().getDrawable(resource));
     }
 
-    private static final void showImage(ImageView view, Bitmap bitmap) {
+    private final void showImage(ImageView view, Bitmap bitmap) {
         showImage(view, new BitmapDrawable(view.getContext().getResources(), bitmap));
     }
 
-    /** Helper function to display the drawable in the imageview AND ensure its visibility.*/
-    private static final void showImage(ImageView view, Drawable drawable) {
-        Resources res = view.getContext().getResources();
-        Drawable current = (Drawable) view.getTag();
-
-        if (current == null) {
-            if (DBG) log("Start fade-in animation for " + view);
-            view.setImageDrawable(drawable);
-            AnimationUtils.Fade.show(view);
-            view.setTag(drawable);
+    /**
+     * Helper function to display the drawable in the imageview AND ensure its
+     * visibility. The InCallContactPhoto and VideoCallPanel are mutually
+     * exclusive. Show InCallContactPhoto view only if VideoCallPanel is not
+     * visible.
+     */
+    private final void showImage(ImageView view, Drawable drawable) {
+        if ((mVideoCallPanel != null) && (mVideoCallPanel.getVisibility() == View.VISIBLE)) {
+            view.setVisibility(View.INVISIBLE);
         } else {
-            AnimationUtils.startCrossFade(view, current, drawable);
-            view.setVisibility(View.VISIBLE);
+            Resources res = view.getContext().getResources();
+            Drawable current = (Drawable) view.getTag();
+
+            if (current == null) {
+                if (DBG) log("Start fade-in animation for " + view);
+                view.setImageDrawable(drawable);
+                AnimationUtils.Fade.show(view);
+                view.setTag(drawable);
+            } else {
+                AnimationUtils.startCrossFade(view, current, drawable);
+                view.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -1762,7 +2004,7 @@ public class CallCard extends LinearLayout
         return true;
     }
 
-    private void dispatchPopulateAccessibilityEvent(AccessibilityEvent event, View view) {
+    protected void dispatchPopulateAccessibilityEvent(AccessibilityEvent event, View view) {
         List<CharSequence> eventText = event.getText();
         int size = eventText.size();
         view.dispatchPopulateAccessibilityEvent(event);
@@ -1787,5 +2029,9 @@ public class CallCard extends LinearLayout
 
     private static void log(String msg) {
         Log.d(LOG_TAG, msg);
+    }
+
+    private static void loge(String msg) {
+        Log.e(LOG_TAG, msg);
     }
 }

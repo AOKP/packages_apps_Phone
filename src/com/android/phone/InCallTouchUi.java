@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+ * Not a Contribution.
+ *
  * Copyright (C) 2009 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,14 +42,16 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.internal.telephony.Call;
-import com.android.internal.telephony.CallManager;
+import com.android.internal.telephony.CallStateException;
 import com.android.internal.telephony.Connection;
+import com.android.internal.telephony.CallManager;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.widget.multiwaveview.GlowPadView;
@@ -64,21 +69,25 @@ public class InCallTouchUi extends FrameLayout
         PopupMenu.OnMenuItemClickListener, PopupMenu.OnDismissListener {
     private static final String LOG_TAG = "InCallTouchUi";
     private static final boolean DBG = (PhoneGlobals.DBG_LEVEL >= 2);
+    private static final boolean IMS_DBG = Log.isLoggable("IMS", Log.DEBUG);
 
     // Incoming call widget targets
     private static final int ANSWER_CALL_ID = 0;  // drag right
     private static final int SEND_SMS_ID = 1;  // drag up
     private static final int DECLINE_CALL_ID = 2;  // drag left
+    private static final int ANSWER_VIDEO_CALL_ID = 3;
+    private static final int ANSWER_TX_VIDEO_CALL_ID = 4;
+    private static final int ANSWER_RX_VIDEO_CALL_ID = 5;
 
     /**
      * Reference to the InCallScreen activity that owns us.  This may be
      * null if we haven't been initialized yet *or* after the InCallScreen
      * activity has been destroyed.
      */
-    private InCallScreen mInCallScreen;
+    protected InCallScreen mInCallScreen;
 
     // Phone app instance
-    private PhoneGlobals mApp;
+    protected PhoneGlobals mApp;
 
     // UI containers / elements
     private GlowPadView mIncomingCallWidget;  // UI used for an incoming call
@@ -86,13 +95,15 @@ public class InCallTouchUi extends FrameLayout
     private boolean mIncomingCallWidgetShouldBeReset = true;
 
     /** UI elements while on a regular call (bottom buttons, DTMF dialpad) */
-    private View mInCallControls;
+    protected View mInCallControls;
     private boolean mShowInCallControlsDuringHidingAnimation;
 
     //
     private ImageButton mAddButton;
     private ImageButton mMergeButton;
     private ImageButton mEndButton;
+    private Button mAddParticipant;
+    private Button mModifyCallButton;
     private CompoundButton mDialpadButton;
     private CompoundButton mMuteButton;
     private CompoundButton mAudioButton;
@@ -111,6 +122,10 @@ public class InCallTouchUi extends FrameLayout
     // "Audio mode" PopupMenu
     private PopupMenu mAudioModePopup;
     private boolean mAudioModePopupVisible = false;
+
+    int mIncomingCWBottomMargin;// Bottom margin for incoming call widget
+    int mIncomingCWHeight;      // Original height of incoming call widget
+    int mIncomingCWVideoHeight; // New height of incoming call widget with video
 
     // Time of the most recent "answer" or "reject" action (see updateState())
     private long mLastIncomingCallActionTime;  // in SystemClock.uptimeMillis() time base
@@ -164,6 +179,16 @@ public class InCallTouchUi extends FrameLayout
         mIncomingCallWidget = (GlowPadView) findViewById(R.id.incomingCallWidget);
         mIncomingCallWidget.setOnTriggerListener(this);
 
+        // Store the bottom margin of the incoming call widget from the XML
+        // resource file
+        ViewGroup.MarginLayoutParams callWidgetLp =
+                (ViewGroup.MarginLayoutParams) mIncomingCallWidget.getLayoutParams();
+        mIncomingCWBottomMargin = callWidgetLp.bottomMargin;
+        mIncomingCWHeight = callWidgetLp.height;
+        mIncomingCWVideoHeight = 0;
+        if (IMS_DBG) log("callWidgetLp.bottomMargin: " + mIncomingCWBottomMargin);
+        if (IMS_DBG) log("callWidgetLp.height: " + mIncomingCWHeight);
+
         // Container for the UI elements shown while on a regular call.
         mInCallControls = findViewById(R.id.inCallControls);
 
@@ -177,6 +202,8 @@ public class InCallTouchUi extends FrameLayout
         mMergeButton.setOnLongClickListener(this);
         mEndButton = (ImageButton) mInCallControls.findViewById(R.id.endButton);
         mEndButton.setOnClickListener(this);
+        mModifyCallButton = (Button) mInCallControls.findViewById(R.id.modifyCallButton);
+        mModifyCallButton.setOnClickListener(this);
         mDialpadButton = (CompoundButton) mInCallControls.findViewById(R.id.dialpadButton);
         mDialpadButton.setOnClickListener(this);
         mDialpadButton.setOnLongClickListener(this);
@@ -199,6 +226,14 @@ public class InCallTouchUi extends FrameLayout
         mAddBlacklistButton = (ImageButton) mInCallControls.findViewById(R.id.addBlacklistButton);
         if (mAddBlacklistButton != null) {
             mAddBlacklistButton.setOnClickListener(this);
+        }
+        mAddParticipant = (Button) mInCallControls.findViewById(R.id.addParticipant);
+        if (mAddParticipant != null) {
+            mAddParticipant.setVisibility(View.GONE);
+            if (PhoneUtils.shouldShowAddParticipant()) {
+                mAddParticipant.setOnClickListener(this);
+                mAddParticipant.setOnLongClickListener(this);
+            }
         }
 
         // TODO: Back when these buttons had text labels, we changed
@@ -223,6 +258,20 @@ public class InCallTouchUi extends FrameLayout
             mEndButton.setOnTouchListener(new SmallerHitTargetTouchListener());
         }
 
+    }
+
+    /**
+     * Set the time of the most recent incoming call action.
+     */
+    protected void setLastIncomingCallActionTime(long time) {
+        mLastIncomingCallActionTime = time;
+    }
+
+    /**
+     * Retrieve the time of the most recent incoming call action.
+     */
+    protected long getLastIncomingCallActionTime() {
+        return mLastIncomingCallActionTime;
     }
 
     /**
@@ -276,7 +325,7 @@ public class InCallTouchUi extends FrameLayout
             // Watch out: we should *not* rely on this behavior when "instant text response" action
             // has been chosen. See also onTrigger() for why.
             long now = SystemClock.uptimeMillis();
-            if (now < mLastIncomingCallActionTime + 500) {
+            if (now < getLastIncomingCallActionTime() + 500) {
                 log("updateState: Too soon after last action; not drawing!");
                 showIncomingCallControls = false;
             }
@@ -403,12 +452,14 @@ public class InCallTouchUi extends FrameLayout
             case R.id.addButton:
             case R.id.mergeButton:
             case R.id.endButton:
+            case R.id.modifyCallButton:
             case R.id.dialpadButton:
             case R.id.muteButton:
             case R.id.holdButton:
             case R.id.swapButton:
             case R.id.cdmaMergeButton:
             case R.id.manageConferenceButton:
+            case R.id.addParticipant:
             case R.id.addBlacklistButton:
                 // Clicks on the regular onscreen buttons get forwarded
                 // straight to the InCallScreen.
@@ -461,7 +512,7 @@ public class InCallTouchUi extends FrameLayout
      * Updates the enabledness and "checked" state of the buttons on the
      * "inCallControls" panel, based on the current telephony state.
      */
-    private void updateInCallControls(CallManager cm) {
+    protected void updateInCallControls(CallManager cm) {
         int phoneType = cm.getActiveFgCall().getPhone().getPhoneType();
 
         // Note we do NOT need to worry here about cases where the entire
@@ -498,7 +549,8 @@ public class InCallTouchUi extends FrameLayout
                 // we always set the mMergeButton to GONE
                 mMergeButton.setVisibility(View.GONE);
             } else if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                    || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 mMergeButton.setVisibility(View.VISIBLE);
                 mMergeButton.setEnabled(true);
                 mAddButton.setVisibility(View.GONE);
@@ -519,7 +571,8 @@ public class InCallTouchUi extends FrameLayout
         }
         if (inCallControlState.canAddCall && inCallControlState.canMerge) {
             if ((phoneType == PhoneConstants.PHONE_TYPE_GSM)
-                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)) {
+                    || (phoneType == PhoneConstants.PHONE_TYPE_SIP)
+                    || (phoneType == PhoneConstants.PHONE_TYPE_IMS)) {
                 // Uh oh, the InCallControlState thinks that "Add" *and* "Merge"
                 // should both be available right now.  This *should* never
                 // happen with GSM, but if it's possible on any
@@ -538,6 +591,19 @@ public class InCallTouchUi extends FrameLayout
 
         // "End call"
         mEndButton.setEnabled(inCallControlState.canEndCall);
+
+        if (inCallControlState.modifyCallVisible) {
+            mModifyCallButton.setVisibility(View.VISIBLE);
+            mModifyCallButton.setEnabled(inCallControlState.modifyCallEnabled);
+        } else {
+            mModifyCallButton.setVisibility(View.GONE);
+        }
+
+        // "Add Participant"
+        if (inCallControlState.addParticipantVisible) {
+            mAddParticipant.setVisibility(View.VISIBLE);
+            mAddParticipant.setEnabled(inCallControlState.addParticipantEnabled);
+        }
 
         // "Dialpad": Enabled only when it's OK to use the dialpad in the
         // first place.
@@ -1060,7 +1126,7 @@ public class InCallTouchUi extends FrameLayout
                 // ...and also prevent it from reappearing right away.
                 // (This covers up a slow response from the radio for some
                 // actions; see updateState().)
-                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                setLastIncomingCallActionTime(SystemClock.uptimeMillis());
                 break;
 
             case SEND_SMS_ID:
@@ -1097,7 +1163,22 @@ public class InCallTouchUi extends FrameLayout
                 mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallReject);
 
                 // Same as "answer" case.
-                mLastIncomingCallActionTime = SystemClock.uptimeMillis();
+                setLastIncomingCallActionTime(SystemClock.uptimeMillis());
+                break;
+
+            case ANSWER_VIDEO_CALL_ID:
+                if (DBG) log("ANSWER_VIDEO_CALL_ID: answer!");
+                mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallAnswerVideo);
+                break;
+
+            case ANSWER_TX_VIDEO_CALL_ID:
+                if (DBG) log("ANSWER_TX_VIDEO_CALL_ID: answer!");
+                mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallAnswerTxVideo);
+                break;
+
+            case ANSWER_RX_VIDEO_CALL_ID:
+                if (DBG) log("ANSWER_RX_VIDEO_CALL_ID: answer!");
+                mInCallScreen.handleOnscreenButtonClick(R.id.incomingCallAnswerRxVideo);
                 break;
 
             default:
@@ -1201,33 +1282,50 @@ public class InCallTouchUi extends FrameLayout
         // addresses or numbers with blocked caller-id.)
         final boolean allowRespondViaSms =
                 RespondViaSmsManager.allowRespondViaSmsForCall(mInCallScreen, ringingCall);
-        final int targetResourceId = allowRespondViaSms
-                ? R.array.incoming_call_widget_3way_targets
-                : R.array.incoming_call_widget_2way_targets;
+
         // The widget should be updated only when appropriate; if the previous choice can be reused
         // for this incoming call, we'll just keep using it. Otherwise we'll see UI glitch
         // everytime when this method is called during a single incoming call.
-        if (targetResourceId != mIncomingCallWidget.getTargetResourceId()) {
-            if (allowRespondViaSms) {
+            int targetResourceId;
+            if (PhoneUtils.isImsVideoCall(ringingCall)) {
+               log("ims video ");
+               targetResourceId =
+                        R.array.incoming_call_widget_6way_ims_targets;
+               if (targetResourceId != mIncomingCallWidget.getTargetResourceId()) {
+                // You get 6 choices: Answer as VT,VoLTE,VT-TX,VT-RX, SMS or Decline.
+                mIncomingCallWidget.setTargetResources(targetResourceId);
+                mIncomingCallWidget.setTargetDescriptionsResourceId(
+                        R.array.incoming_call_widget_6way_ims_target_descriptions);
+                mIncomingCallWidget.setDirectionDescriptionsResourceId(
+                        R.array.incoming_call_widget_6way_ims_direction_descriptions);
+               }
+            } else if (allowRespondViaSms) {
+                targetResourceId = R.array.incoming_call_widget_3way_targets;
+
                 // The GlowPadView widget is allowed to have all 3 choices:
                 // Answer, Decline, and Respond via SMS.
+                if (targetResourceId != mIncomingCallWidget.getTargetResourceId()) {
                 mIncomingCallWidget.setTargetResources(targetResourceId);
                 mIncomingCallWidget.setTargetDescriptionsResourceId(
                         R.array.incoming_call_widget_3way_target_descriptions);
                 mIncomingCallWidget.setDirectionDescriptionsResourceId(
                         R.array.incoming_call_widget_3way_direction_descriptions);
+                }
             } else {
+                targetResourceId = R.array.incoming_call_widget_2way_targets;
                 // You only get two choices: Answer or Decline.
+                if (targetResourceId != mIncomingCallWidget.getTargetResourceId()) {
                 mIncomingCallWidget.setTargetResources(targetResourceId);
                 mIncomingCallWidget.setTargetDescriptionsResourceId(
                         R.array.incoming_call_widget_2way_target_descriptions);
                 mIncomingCallWidget.setDirectionDescriptionsResourceId(
                         R.array.incoming_call_widget_2way_direction_descriptions);
+                }
             }
 
             // This will be used right after this block.
             mIncomingCallWidgetShouldBeReset = true;
-        }
+
         if (mIncomingCallWidgetShouldBeReset) {
             // Watch out: be sure to call reset() and setVisibility() *after*
             // updating the target resources, since otherwise the GlowPadView
@@ -1249,6 +1347,9 @@ public class InCallTouchUi extends FrameLayout
 
         mIncomingCallWidget.setVisibility(View.VISIBLE);
 
+        // Update the layout of the wave view widget
+        updateIncomingCallWidgetLayout(ringingCall);
+
         // Finally, manually trigger a "ping" animation.
         //
         // Normally, the ping animation is triggered by RING events from
@@ -1267,6 +1368,50 @@ public class InCallTouchUi extends FrameLayout
                 // *before* starting the ping animation.
                 // This value doesn't need to be very precise.
                 250 /* msec */);
+    }
+
+    /**
+     * Adjust the bottom margin of the incoming call widget to accommodate the
+     * bottom icon for the incoming video call screen. If the call is not a
+     * video call then re-adjust the size to the original size
+     *
+     * @param ringingCall
+     */
+    private void updateIncomingCallWidgetLayout(Call ringingCall) {
+        boolean isVideoCall = PhoneUtils.isImsVideoCall(ringingCall);
+        ViewGroup.MarginLayoutParams callWidgetLp =
+                (ViewGroup.MarginLayoutParams) mIncomingCallWidget.getLayoutParams();
+
+        if (isVideoCall) {
+            // Add extra space to accommodate the bottom icon.
+            callWidgetLp.bottomMargin = 20;
+
+            // Adjust the height to accommodate the bottom icon. This needs to
+            // be done due to the bug in the implementation of MultiWaveView
+            // widget that assumes that there would not be a bottom icon while
+            // calculating the height even though the MultiWaveView widget supports
+            // bottom icon
+            if (mIncomingCWVideoHeight > 0) {
+                callWidgetLp.height = mIncomingCWVideoHeight;
+            } else if ((mIncomingCallWidget.getHeight() > 0)) {
+                int bottomIconHeight = getContext().getResources()
+                        .getDrawable(R.drawable.ic_lockscreen_answer_normal)
+                        .getIntrinsicHeight() / 2;
+                mIncomingCWVideoHeight = mIncomingCallWidget.getHeight() + bottomIconHeight;
+                callWidgetLp.height = mIncomingCWVideoHeight;
+                if (IMS_DBG) log("icon height: " + bottomIconHeight);
+                if (IMS_DBG) log("mIncomingCW.getHeight(): " + mIncomingCallWidget.getHeight());
+            }
+        } else {
+            // Reset the bottom margin and the height if the bottom icon need not be shown
+            callWidgetLp.bottomMargin = mIncomingCWBottomMargin;
+            callWidgetLp.height = mIncomingCWHeight;
+        }
+
+        // Equivalent to setting android:layout_marginBottom and layout_height in XML
+        if (IMS_DBG) log("callWidgetLp.bottomMargin: " + callWidgetLp.bottomMargin);
+        if (IMS_DBG) log("callWidgetLp.height:" + callWidgetLp.height);
+        mIncomingCallWidget.setLayoutParams(callWidgetLp);
     }
 
     /**

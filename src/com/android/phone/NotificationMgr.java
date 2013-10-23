@@ -73,12 +73,12 @@ import java.util.ArrayList;
  */
 public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteListener{
     private static final String LOG_TAG = "NotificationMgr";
-    private static final boolean DBG =
+    protected static final boolean DBG =
             (PhoneGlobals.DBG_LEVEL >= 1) && (SystemProperties.getInt("ro.debuggable", 0) == 1);
     // Do not check in with VDBG = true, since that may write PII to the system log.
-    private static final boolean VDBG = false;
+    protected static final boolean VDBG = false;
 
-    private static final String[] CALL_LOG_PROJECTION = new String[] {
+    protected static final String[] CALL_LOG_PROJECTION = new String[] {
         Calls._ID,
         Calls.NUMBER,
         Calls.DATE,
@@ -98,14 +98,14 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
     static final int BLACKLISTED_CALL_NOTIFICATION = 9;
 
     /** The singleton NotificationMgr instance. */
-    private static NotificationMgr sInstance;
+    protected static NotificationMgr sInstance;
 
-    private PhoneGlobals mApp;
+    protected PhoneGlobals mApp;
     private Phone mPhone;
-    private CallManager mCM;
+    protected CallManager mCM;
 
-    private Context mContext;
-    private NotificationManager mNotificationManager;
+    protected Context mContext;
+    protected NotificationManager mNotificationManager;
     private StatusBarManager mStatusBarManager;
     private PowerManager mPowerManager;
     private Toast mToast;
@@ -145,26 +145,26 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
 
     // Currently-displayed resource IDs for some status bar icons (or zero
     // if no notification is active):
-    private int mInCallResId;
+    protected int mInCallResId;
 
     // used to track the notification of selected network unavailable
     private boolean mSelectedUnavailableNotify = false;
 
     // Retry params for the getVoiceMailNumber() call; see updateMwi().
-    private static final int MAX_VM_NUMBER_RETRIES = 5;
-    private static final int VM_NUMBER_RETRY_DELAY_MILLIS = 10000;
-    private int mVmNumberRetriesRemaining = MAX_VM_NUMBER_RETRIES;
+    protected static final int MAX_VM_NUMBER_RETRIES = 5;
+    protected static final int VM_NUMBER_RETRY_DELAY_MILLIS = 10000;
+    protected int mVmNumberRetriesRemaining = MAX_VM_NUMBER_RETRIES;
 
     // Query used to look up caller-id info for the "call log" notification.
-    private QueryHandler mQueryHandler = null;
-    private static final int CALL_LOG_TOKEN = -1;
+    protected QueryHandler mQueryHandler = null;
+    protected static final int CALL_LOG_TOKEN = -1;
     private static final int CONTACT_TOKEN = -2;
 
     /**
      * Private constructor (this is a singleton).
      * @see init()
      */
-    private NotificationMgr(PhoneGlobals app) {
+    protected NotificationMgr(PhoneGlobals app) {
         mApp = app;
         mContext = app;
         mNotificationManager =
@@ -297,7 +297,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      * Makes sure phone-related notifications are up to date on a
      * freshly-booted device.
      */
-    private void updateNotificationsAtStartup() {
+    protected void updateNotificationsAtStartup() {
         if (DBG) log("updateNotificationsAtStartup()...");
 
         // instantiate query handler
@@ -336,7 +336,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      *  2. For each call, run a query to retrieve the caller's name.
      *  3. For each caller, try obtaining photo.
      */
-    private class QueryHandler extends AsyncQueryHandler
+    protected class QueryHandler extends AsyncQueryHandler
             implements ContactsAsyncHelper.OnImageLoadCompleteListener {
 
         /**
@@ -487,7 +487,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      * Configures a Notification to emit the blinky green message-waiting/
      * missed-call signal.
      */
-    private static void configureLedNotification(Notification note) {
+    protected static void configureLedNotification(Notification note) {
         note.flags |= Notification.FLAG_SHOW_LIGHTS;
         note.defaults |= Notification.DEFAULT_LIGHTS;
     }
@@ -755,7 +755,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         }
     }
 
-    private void cancelSpeakerphone() {
+    protected void cancelSpeakerphone() {
         if (mShowingSpeakerphoneIcon) {
             mStatusBarManager.removeIcon("speakerphone");
             mShowingSpeakerphoneIcon = false;
@@ -773,10 +773,10 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      * (But note that the status bar icon is *never* shown while the in-call UI
      * is active; it only appears if you bail out to some other activity.)
      */
-    private void updateSpeakerNotification() {
+    protected void updateSpeakerNotification() {
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         boolean showNotification =
-                (mPhone.getState() == PhoneConstants.State.OFFHOOK) && audioManager.isSpeakerphoneOn();
+                (mCM.getState() == PhoneConstants.State.OFFHOOK) && audioManager.isSpeakerphoneOn();
 
         if (DBG) log(showNotification
                      ? "updateSpeakerNotification: speaker ON"
@@ -817,7 +817,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         }
     }
 
-    private void notifyMute() {
+    protected void notifyMute() {
         if (!mShowingMuteIcon) {
             mStatusBarManager.setIcon("mute", android.R.drawable.stat_notify_call_mute, 0,
                     mContext.getString(R.string.accessibility_call_muted));
@@ -825,7 +825,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         }
     }
 
-    private void cancelMute() {
+    protected void cancelMute() {
         if (mShowingMuteIcon) {
             mStatusBarManager.removeIcon("mute");
             mShowingMuteIcon = false;
@@ -923,7 +923,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      *   handling the "new ringing connection" event from the telephony
      *   layer (see updateNotificationAndLaunchIncomingCallUi().)
      */
-    private void updateInCallNotification(boolean allowFullScreenIntent) {
+    protected void updateInCallNotification(boolean allowFullScreenIntent) {
         int resId;
         if (DBG) log("updateInCallNotification(allowFullScreenIntent = "
                      + allowFullScreenIntent + ")...");
@@ -959,7 +959,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         // call.  (The status bar icon is needed only if you navigate *away*
         // from the in-call UI.)
         boolean suppressNotification = mApp.isShowingCallScreen();
-        // if (DBG) log("- suppressNotification: initial value: " + suppressNotification);
+        if (DBG) log("- suppressNotification: initial value: " + suppressNotification);
 
         // ...except for a couple of cases where we *never* suppress the
         // notification:
@@ -975,7 +975,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         //   - If "voice privacy" mode is active: always show the notification,
         //     since that's the only "voice privacy" indication we have.
         boolean enhancedVoicePrivacy = mApp.notifier.getVoicePrivacyState();
-        // if (DBG) log("updateInCallNotification: enhancedVoicePrivacy = " + enhancedVoicePrivacy);
+        if (DBG) log("updateInCallNotification: enhancedVoicePrivacy = " + enhancedVoicePrivacy);
         if (enhancedVoicePrivacy) suppressNotification = false;
 
         if (suppressNotification) {
@@ -1046,7 +1046,8 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
         // call (see the "fullScreenIntent" field below).
         PendingIntent inCallPendingIntent =
                 PendingIntent.getActivity(mContext, 0,
-                                          PhoneGlobals.createInCallIntent(), 0);
+                                          PhoneGlobals.getInstance().createInCallIntent(
+                                              currentCall.getPhone().getSubscription()), 0);
         builder.setContentIntent(inCallPendingIntent);
 
         // Update icon on the left of the notification.
@@ -1194,8 +1195,8 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
 
         // Activate a couple of special Notification features if an
         // incoming call is ringing:
-        if (hasRingingCall) {
-            if (DBG) log("- Using hi-pri notification for ringing call!");
+        if (hasRingingCall || hasActiveCall) {
+            if (DBG) log("- Using hi-pri notification for ringing/active call!");
 
             // This is a high-priority event that should be shown even if the
             // status bar is hidden or if an immersive activity is running.
@@ -1304,7 +1305,7 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      * Take down the in-call notification.
      * @see updateInCallNotification()
      */
-    private void cancelInCall() {
+    protected void cancelInCall() {
         if (DBG) log("cancelInCall()...");
         mNotificationManager.cancel(IN_CALL_NOTIFICATION);
         mInCallResId = 0;
@@ -1577,8 +1578,8 @@ public class NotificationMgr implements CallerInfoAsyncQuery.OnQueryCompleteList
      *
      * @param serviceState Phone service state
      */
-    void updateNetworkSelection(int serviceState) {
-        if (TelephonyCapabilities.supportsNetworkSelection(mPhone)) {
+    void updateNetworkSelection(int serviceState, Phone phone) {
+        if (TelephonyCapabilities.supportsNetworkSelection(phone)) {
             // get the shared preference of network_selection.
             // empty is auto mode, otherwise it is the operator alpha name
             // in case there is no operator name, check the operator numeric

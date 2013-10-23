@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+ * Not a Contribution, Apache license notifications and license are retained
+ * for attribution purposes only.
+ *
  * Copyright (C) 2009 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +20,7 @@
 
 package com.android.phone;
 
+import android.os.RemoteException;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,7 +52,7 @@ public class InCallControlState {
 
     private InCallScreen mInCallScreen;
     private CallManager mCM;
-
+    private PhoneGlobals mApp;
     //
     // Our "public API": Boolean flags to indicate the state and/or
     // enabledness of all possible in-call user operations:
@@ -55,6 +60,14 @@ public class InCallControlState {
 
     public boolean manageConferenceVisible;
     public boolean manageConferenceEnabled;
+
+    /**
+     * Visible IMS VoLTE/VT calls and if upgrade/downgrade is supported
+     * Enabled only for IMS calls, disabled for CS calls
+     */
+    public boolean modifyCallVisible;
+    public boolean modifyCallEnabled;
+
     //
     public boolean canAddCall;
     //
@@ -88,11 +101,15 @@ public class InCallControlState {
     // should be visible.
     public boolean canHold;
 
+    // IMS add participant
+    public boolean addParticipantEnabled;
+    public boolean addParticipantVisible;
 
     public InCallControlState(InCallScreen inCallScreen, CallManager cm) {
         if (DBG) log("InCallControlState constructor...");
         mInCallScreen = inCallScreen;
         mCM = cm;
+        mApp = PhoneGlobals.getInstance();
     }
 
     /**
@@ -183,7 +200,7 @@ public class InCallControlState {
         dialpadVisible = mInCallScreen.isDialerOpened();
 
         // "Hold:
-        if (TelephonyCapabilities.supportsHoldAndUnhold(fgCall.getPhone())) {
+        if (TelephonyCapabilities.supportsHoldAndUnhold(mCM.getPhoneInCall())) {
             // This phone has the concept of explicit "Hold" and "Unhold" actions.
             supportsHold = true;
             // "On hold" means that there's a holding call and
@@ -214,6 +231,31 @@ public class InCallControlState {
             canHold = false;
         }
 
+        // Turn off call modify by default unless ImsService says supported
+        modifyCallVisible = false;
+        modifyCallEnabled = false;
+
+        // VT upgrade downgrade
+        if (TelephonyCapabilities.supportsCallModify(fgCall.getPhone())) {
+            try {
+                if ((mApp.mImsService != null) && (mApp.mImsService.isVTModifyAllowed())) {
+                    modifyCallVisible = true;
+                    modifyCallEnabled = true;
+                }
+            } catch (RemoteException ex) {
+                Log.d(LOG_TAG, "Ims Service isVTModifyAllowed exception", ex);
+            }
+        }
+
+        // IMS add participant
+        if (PhoneUtils.shouldShowAddParticipant() && canAddCall) {
+            addParticipantVisible = true;
+            addParticipantEnabled = true;
+        } else {
+            addParticipantVisible = false;
+            addParticipantEnabled = false;
+        }
+
         if (DBG) dumpState();
     }
 
@@ -221,6 +263,8 @@ public class InCallControlState {
         log("InCallControlState:");
         log("  manageConferenceVisible: " + manageConferenceVisible);
         log("  manageConferenceEnabled: " + manageConferenceEnabled);
+        log("  modifyCallVisible: " + modifyCallVisible);
+        log("  modifyCallEnabled: " + modifyCallEnabled);
         log("  canAddCall: " + canAddCall);
         log("  canEndCall: " + canEndCall);
         log("  canSwap: " + canSwap);
@@ -235,6 +279,8 @@ public class InCallControlState {
         log("  dialpadVisible: " + dialpadVisible);
         log("  onHold: " + onHold);
         log("  canHold: " + canHold);
+        log("  addParticipantVisible: " + addParticipantVisible);
+        log("  addParticipantEnabled: " + addParticipantEnabled);
     }
 
     private void log(String msg) {

@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+ * Not a Contribution.
+ *
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +49,7 @@ import com.android.internal.telephony.IccCard;
 import com.android.internal.telephony.ITelephony;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.CallManager;
+import com.android.internal.telephony.CommandException;
 import com.android.internal.telephony.PhoneConstants;
 
 import java.util.List;
@@ -161,8 +165,9 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
                         // CDMA: If the user presses the Power button we treat it as
                         // ending the complete call session
                         hungUp = PhoneUtils.hangupRingingAndActive(mPhone);
-                    } else if (phoneType == PhoneConstants.PHONE_TYPE_GSM) {
-                        // GSM: End the call as per the Phone state
+                    } else if (phoneType == PhoneConstants.PHONE_TYPE_GSM ||
+                            phoneType == PhoneConstants.PHONE_TYPE_IMS) {
+                        // GSM/IMS: End the call as per the Phone state
                         hungUp = PhoneUtils.hangup(mCM);
                     } else {
                         throw new IllegalStateException("Unexpected phone type: " + phoneType);
@@ -484,6 +489,10 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
 
     public boolean supplyPin(String pin) {
+        return (supplyPinReportResult(pin) == PhoneConstants.PIN_RESULT_SUCCESS) ? true : false;
+    }
+
+    public int supplyPinReportResult(String pin) {
         enforceModifyPermission();
         final UnlockSim checkSimPin = new UnlockSim(mPhone.getIccCard());
         checkSimPin.start();
@@ -491,6 +500,11 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
 
     public boolean supplyPuk(String puk, String pin) {
+        return (supplyPukReportResult(puk, pin) ==
+                PhoneConstants.PIN_RESULT_SUCCESS) ? true : false;
+    }
+
+    public int supplyPukReportResult(String puk, String pin) {
         enforceModifyPermission();
         final UnlockSim checkSimPuk = new UnlockSim(mPhone.getIccCard());
         checkSimPuk.start();
@@ -506,7 +520,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
         private final IccCard mSimCard;
 
         private boolean mDone = false;
-        private boolean mResult = false;
+        private int mResult = PhoneConstants.PIN_GENERAL_FAILURE;
 
         // For replies from SimCard interface
         private Handler mHandler;
@@ -530,7 +544,17 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
                             case SUPPLY_PIN_COMPLETE:
                                 Log.d(LOG_TAG, "SUPPLY_PIN_COMPLETE");
                                 synchronized (UnlockSim.this) {
-                                    mResult = (ar.exception == null);
+                                    if (ar.exception != null) {
+                                        if (ar.exception instanceof CommandException &&
+                                                ((CommandException)(ar.exception)).getCommandError()
+                                                == CommandException.Error.PASSWORD_INCORRECT) {
+                                            mResult = PhoneConstants.PIN_PASSWORD_INCORRECT;
+                                        } else {
+                                            mResult = PhoneConstants.PIN_GENERAL_FAILURE;
+                                        }
+                                    } else {
+                                        mResult = PhoneConstants.PIN_RESULT_SUCCESS;
+                                    }
                                     mDone = true;
                                     UnlockSim.this.notifyAll();
                                 }
@@ -550,7 +574,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
          *
          * If PUK is not null, unlock SIM card with PUK and set PIN code
          */
-        synchronized boolean unlockSim(String puk, String pin) {
+        synchronized int unlockSim(String puk, String pin) {
 
             while (mHandler == null) {
                 try {
@@ -589,7 +613,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
 
     public boolean isRadioOn() {
-        return mPhone.getServiceState().getVoiceRegState() != ServiceState.STATE_POWER_OFF;
+        return mPhone.isRadioOn();
     }
 
     public void toggleRadioOnOff() {
@@ -598,7 +622,7 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
     public boolean setRadio(boolean turnOn) {
         enforceModifyPermission();
-        if ((mPhone.getServiceState().getVoiceRegState() != ServiceState.STATE_POWER_OFF) != turnOn) {
+        if (mPhone.isRadioOn() != turnOn) {
             toggleRadioOnOff();
         }
         return true;
@@ -654,11 +678,13 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
     }
 
     public int getDataState() {
-        return DefaultPhoneNotifier.convertDataState(mPhone.getDataConnectionState());
+        Phone phone = mApp.getPhone(mApp.getDataSubscription());
+        return DefaultPhoneNotifier.convertDataState(phone.getDataConnectionState());
     }
 
     public int getDataActivity() {
-        return DefaultPhoneNotifier.convertDataActivityState(mPhone.getDataActivityState());
+        Phone phone = mApp.getPhone(mApp.getDataSubscription());
+        return DefaultPhoneNotifier.convertDataActivityState(phone.getDataActivityState());
     }
 
     @Override
@@ -933,5 +959,14 @@ public class PhoneInterfaceManager extends ITelephony.Stub {
 
     public int getLteOnGsmMode() {
         return mPhone.getLteOnGsmMode();
+    }
+
+    // Gets the retry count during PIN1/PUK1 verification.
+    public int getIccPin1RetryCount() {
+        return mPhone.getIccCard().getIccPin1RetryCount();
+    }
+
+    public void setPhone(Phone phone) {
+        mPhone = phone;
     }
 }
