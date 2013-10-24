@@ -69,8 +69,6 @@
     <string name="label_ndp" msgid="780479633159517250">"Kód PIN odblokování sítě pro SIM kartu"</string>
     <string name="sim_ndp_unlock_text" msgid="683628237760543009">"Odemknout"</string>
     <string name="sim_ndp_dismiss_text" msgid="1604823375752456947">"Zavřít"</string>
-    <string name="requesting_unlock" msgid="6412629401033249351">"Žádost o odblokování sítě..."</string>
-    <string name="unlock_failed" msgid="6490531697031504225">"Požadavek na odblokování sítě se nezdařil."</string>
     <string name="unlock_success" msgid="6770085622238180152">"Síť byla úspěšně odblokována."</string>
     <string name="labelGSMMore" msgid="5930842194056092106">"Nastavení hovorů GSM"</string>
     <string name="labelCDMAMore" msgid="1630676740428229339">"Nastavení hovorů CDMA"</string>
@@ -171,9 +169,19 @@
     <string name="preferred_network_mode_lte_summary" msgid="574752287596469136">"Preferovaný režim sítě: LTE"</string>
     <string name="preferred_network_mode_lte_gsm_wcdma_summary" msgid="8455358514068283935">"Preferovaný režim sítě: GSM/WCDMA/LTE"</string>
     <string name="preferred_network_mode_lte_cdma_evdo_summary" msgid="228702246343742853">"Preferovaný režim sítě: CDMA+LTE/EVDO"</string>
-    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Preferovaný režim sítě: Globální"</string>
+    <string name="preferred_network_mode_global_summary" msgid="1633134285545730364">"Preferovaný režim sítě: Globální (CDMA/EVDO/LTE/GSM/WCDMA)"</string>
     <string name="preferred_network_mode_lte_wcdma_summary" msgid="9180775701594742750">"Preferovaný režim sítě: LTE/WCDMA"</string>
   <string-array name="preferred_network_mode_choices">
+    <item>TD-SCDMA/LTE/GSM/WCDMA/CDMA/EvDo</item>
+    <item>TD-SCDMA/GSM/WCDMA/CDMA/EvDo</item>
+    <item>TD-SCDMA/GSM/WCDMA/LTE</item>
+    <item>TD-SCDMA/WCDMA/LTE</item>
+    <item>TD-SCDMA/GSM/WCDMA</item>
+    <item>TD-SCDMA/GSM/LTE</item>
+    <item>TD-SCDMA/GSM</item>
+    <item>TD-SCDMA/LTE</item>
+    <item>TD-SCDMA/WCDMA</item>
+    <item>Pouze TD-SCDMA</item>
     <item msgid="7886739962255042385">"LTE/WCDMA"</item>
     <item msgid="577652050447385699">"LTE"</item>
     <item msgid="6813597571293773656">"Globální"</item>
@@ -357,7 +365,7 @@
     <string name="pin2_or_fdn_invalid" msgid="6025144083384701197">"Povolená telefonní čísla (FDN) nebyla aktualizována. Kód PIN2 byl nesprávný nebo bylo telefonní číslo odmítnuto."</string>
     <string name="simContacts_emptyLoading" msgid="2203331234764498011">"Čtení ze SIM karty..."</string>
     <string name="simContacts_empty" msgid="5270660846489561932">"Na SIM kartě nejsou žádné kontakty."</string>
-    <string name="simContacts_title" msgid="1861472842524839921">"Vybrat kontakty pro import"</string>
+    <string name="simContacts_title" msgid="1861472842524839921">"Spravovat kontakty na SIM kartě"</string>
     <string name="simContacts_airplaneMode" msgid="1846161429087789936">"Chcete-li importovat kontakty ze SIM karty, vypněte nejprve režim V letadle."</string>
     <string name="enable_pin" msgid="5422767284133234860">"Povolit nebo zakázat PIN SIM karty"</string>
     <string name="change_pin" msgid="9174186126330785343">"Změnit PIN SIM karty"</string>
@@ -375,7 +383,7 @@
     <string name="disable_pin_ok" msgid="5596999379593924850">"PIN SIM karty je zakázán."</string>
     <string name="pin_failed" msgid="2298841192582192277">"Zadaný kód PIN není správný."</string>
     <string name="pin_changed" msgid="4365538014588501049">"PIN SIM karty byl úspěšně změněn."</string>
-    <string name="puk_requested" msgid="3898394204193202803">"Neplatné heslo, SIM karta je zablokována. Zadejte kód PUK2."</string>
+    <string name="puk_requested" msgid="3898394204193202803">"Neplatné heslo, PIN je zablokován. Zadejte kód PUK."</string>
     <string name="enter_pin2_text" msgid="8339444124477720345">"PIN2"</string>
     <string name="oldPin2Label" msgid="8559146795026261502">"Původní kód PIN2"</string>
     <string name="newPin2Label" msgid="4573956902204349054">"Nový kód PIN2"</string>
@@ -387,7 +395,7 @@
     <string name="invalidPuk2" msgid="1290977391033057871">"Zadejte 8místný kód PUK2."</string>
     <string name="pin2_changed" msgid="1639666438836544393">"Kód PIN2 byl úspěšně změněn."</string>
     <string name="label_puk2_code" msgid="302845876240219560">"Zadejte kód PUK2"</string>
-    <string name="fdn_enable_puk2_requested" msgid="4262894949634885773">"Heslo není správné. Změňte kód PIN2 a zkuste to znovu."</string>
+    <string name="fdn_enable_puk2_requested" msgid="4262894949634885773">"Heslo není správné. PIN2 zablokován. Změňte kód PIN2 a zkuste to znovu."</string>
     <string name="puk2_requested" msgid="8909278021238716877">"Neplatné heslo, SIM karta je zablokována. Je požadován kód PUK2."</string>
     <string name="doneButton" msgid="2859593360997984240">"Hotovo"</string>
     <string name="caller_manage_header" msgid="3231519674734638786">"Konferenční hovor <xliff:g id="CONF_CALL_TIME">%s</xliff:g>"</string>
@@ -516,7 +524,7 @@
     <string name="selectContact" msgid="781975788478987237">"vybrat kontakt"</string>
     <string name="sip_settings" msgid="6699045718560859691">"Nastavení internetových hovorů"</string>
     <string name="sip_accounts" msgid="2097054001288457163">"Účty pro internetové hovory (SIP)"</string>
-    <string name="sip_accounts_title" msgid="1212889069281054570">"Účty"</string>
+    <string name="sip_accounts_title" msgid="1212889069281054570">"SIP Účty"</string>
     <string name="sip_receive_calls" msgid="5635685570889971559">"Přijímat příchozí hovory"</string>
     <string name="sip_receive_calls_summary" msgid="8403613238633679184">"Snižuje výdrž baterie"</string>
     <string name="sip_call_options_title" msgid="27433718808839672">"Používat internetové volání"</string>
@@ -696,4 +704,226 @@
     <string name="unblock_number">Odblokovat</string>
     <!-- Text for the onscreen "Blacklist" button -->
     <string name="onscreenBlacklistText">Blacklist</string>
+    <string name="callFailed_dialToUssd">Požadavek DIAL upraven na USSD požadavek.</string>
+    <string name="callFailed_dialToSs">Požadavek DIAL upraven na SS požadavek.</string>
+    <string name="callFailed_dialToDial">Požadavek DIAL upraven na DIAL s jiným číslem.</string>
+    <string name="callFailed_incoming_cb_enabled">Párty režim promlčel všechny příchozí hovory.</string>
+    <string name="retry">Opakovat</string>
+    <string name="call_lost_title">Hovor ztracen</string>
+    <string name="modify_call_prompt_yes">Ano</string>
+    <string name="modify_call_prompt_no">Ne</string>
+    <string name="modify_call_failure_str">Úprava požadavku na hovor selhala\n</string>
+    <string name="modify_call_option_title">Jaký typ hovoru?</string>
+    <string name="modify_call_option_vt">VH</string>
+    <string name="modify_call_option_vt_tx">Vysílání videa</string>
+    <string name="modify_call_option_vt_rx">Přijímání videa</string>
+    <string name="modify_call_option_voice">Pouze hlas</string>
+    <string name="accept_modify_call_request_prompt">Přijmout úpravu poždavku na hovor?</string>
+    <string name="upgrade_vt_prompt">Chcete upravit tento hovor na videohovor?</string>
+    <string name="upgrade_vt_tx_prompt">Chcete upravit tento hovor na videohovor pouze s vysíláním?</string>
+    <string name="upgrade_vt_rx_prompt">Chcete upravit tento hovor na videohovor pouze s přijímáním?</string>
+    <string name="vt_init_fail_str">Inicializace VH se nezdařila. Upravuji hovor na VoLTE\n</string>
+    <string name="label_nsdp">Odblokovat PIN síťového subsetu SIM</string>
+    <string name="label_cdp">Odblokovat PIN korporátní SIM</string>
+    <string name="label_spdp">Odblokovat PIN poskytovatele služby SIM</string>
+    <string name="label_sdp">Odblokovat PIN SIM</string>
+    <string name="label_rn1dp">Odblokovat PIN RUIM sítě1</string>
+    <string name="label_rn2dp">Odblokovat PIN RUIM sítě2</string>
+    <string name="label_rhrpd">Odblokovat PIN RUIM hrpd</string>
+    <string name="label_rcdp">Odblokovat korporátní PIN RUIM</string>
+    <string name="label_rspdp">Odblokovat PIN RUIM u poskytovatele</string>
+    <string name="label_rdp">Odblokvoat PIN RUIM</string>
+    <string name="label_puk">Vložit PUK</string>
+    <string name="requesting_nw_unlock">Žádost o odblokování SIM ze sítě\u2026</string>
+    <string name="requesting_nw_subset_unlock">Žádost o odblokování SIM subsetu ze sítě\u2026</string>
+    <string name="requesting_sp_unlock">Žádost o odblokování SIM u poskytovatele\u2026</string>
+    <string name="requesting_corporate_unlock">Žádost o odblokování korporátní SIM\u2026</string>
+    <string name="requesting_sim_unlock">Žádost o odblokování SIM\u2026</string>
+    <string name="requesting_rnw1_unlock">Žádost o odblokování RUIM sítě1\u2026</string>
+    <string name="requesting_rnw2_unlock">Žádost o odblokování RUIM sítě2\u2026</string>
+    <string name="requesting_rhrpd_unlock">Žádost o odblokování RUIM hrpd\u2026</string>
+    <string name="requesting_rsp_unlock">Žádost o odblokování RUIM u poskytovatele\u2026</string>
+    <string name="requesting_rc_unlock">Žádost o odblokování korporátního RUIM\u2026</string>
+    <string name="requesting_ruim_unlock">Žádost o odblokování RUIM\u2026</string>
+    <string name="requesting_puk_unlock">Žádost o odblokování  PUK\u2026</string>
+    <string name="nw_unlock_failed">Požadavek na odblokování SIM ze sítě se nezdařil.</string>
+    <string name="nw_subset_unlock_failed">Požadavek na odblokování SIM subsetu se nezdařil.</string>
+    <string name="sp_unlock_failed">Požadavek na odblokování SIM u poskytovatele se nezdařil.</string>
+    <string name="corporate_unlock_failed">Požadavek na odblokování korporátní SIM se nezdařil.</string>
+    <string name="sim_unlock_failed">Požadavek na odblokování SIM se nezdařil.</string>
+    <string name="rnw1_unlock_failed">Požadavek na odblokování RUIM sítě1 se nezdařil.</string>
+    <string name="rnw2_unlock_failed">Požadavek na odblokování RUIM sítě2 se nezdařil.</string>
+    <string name="rhrpd_unlock_failed">Požadavek na odblokování RUIM Hrpd se nezdařil.</string>
+    <string name="rsp_unlock_failed">Požadavek na odblokování RUIM u poskytovatele se nezdařil.</string>
+    <string name="rc_unlock_failed">Požadavek na odblokování korporátního RUIM se nezdařil.</string>
+    <string name="ruim_unlock_failed">Požadavek na odblokování RUIM byl úspěšný.</string>
+    <string name="puk_unlock_failed">Požadavek na odblokování PUK se nezdařil.</string>
+    <string name="nw_unlock_success">Požadavek na odblokování SIM ze sítě byl úspěšný.</string>
+    <string name="nw_subset_unlock_success">Požadavek na odblokování SIM subsetu ze sítě byl úspěšný.</string>
+    <string name="sp_unlock_success">Požadavek na odblokování SIM u poskytovatele byl úspěšný.</string>
+    <string name="corporate_unlock_success">Požadavek na odblokování korporátní SIM byl úspěšný.</string>
+    <string name="sim_unlock_success">Požadavek na odblokování SIM byl úspěšný.</string>
+    <string name="rnw1_unlock_success">Požadavek na odblokování RUIM sítě1 byl úspěšný.</string>
+    <string name="rnw2_unlock_success">Požadavek na odblokování RUIM sítě2 byl úspěšný.</string>
+    <string name="rhrpd_unlock_success">Požadavek na odblokování RUIM Hrpd byl úspěšný.</string>
+    <string name="rsp_unlock_success">Požadavek na odblokování RUIM u poskytovatele byl úspěšný.</string>
+    <string name="rc_unlock_success">Požadavek na odblokování korporátní RUIM byl úspěšný.</string>
+    <string name="ruim_unlock_success">Požadavek na odblokování RUIM byl úspěšný.</string>
+    <string name="puk_unlock_success">Požadavek na odblokování PUK byl úspěšný.</string>
+    <string name="unlock_failed">Požadavek na odblokování sítě se nezdažil.</string>
+    <string name="requesting_unlock">Žádost o odblokování sítě…</string>
+    <string name="stk_cc_ss_to_dial_error">Požadavek SS byl upraven na DIAL požadavek.</string>
+    <string name="stk_cc_ss_to_ussd_error">Požadavek SS byl upraven na USSD požadavek.</string>
+    <string name="stk_cc_ss_to_ss_error">Požadavek SS byl upraven na nový SS požadavek.</string>
+    <string name="preferred_network_mode_td_scdma_only_summary">Preferovaný režim sítě: pouze TD-SCDMA</string>
+    <string name="preferred_network_mode_td_scdma_wcdma_summary">Preferovaný režim sítě: TD-SCDMA / WCDMA</string>
+    <string name="preferred_network_mode_td_scdma_lte_summary">Preferovaný režim sítě: TD-SCDMA / LTE</string>
+    <string name="preferred_network_mode_td_scdma_gsm_summary">Preferovaný režim sítě: TD-SCDMA / GSM</string>
+    <string name="preferred_network_mode_td_scdma_gsm_lte_summary">Preferovaný režim sítě: TD-SCDMA/GSM/LTE</string>
+    <string name="preferred_network_mode_td_scdma_gsm_wcdma_summary">Preferovaný režim sítě: TD-SCDMA/GSM/WCDMA</string>
+    <string name="preferred_network_mode_td_scdma_wcdma_lte_summary">Preferovaný režim sítě: TD-SCDMA/WCDMA/LTE</string>
+    <string name="preferred_network_mode_td_scdma_gsm_wcdma_lte_summary">Preferovaný režim sítě: TD-SCDMA/GSM/WCDMA/LTE</string>
+    <string name="preferred_network_mode_td_scdma_lte_cdma_evdo_gsm_wcdma_summary">Preferovaný režim sítě: TD-SCDMA/LTE/CDMA/EvDo/GSM/WCDMA</string>
+    <string name="preferred_network_mode_td_scdma_cdma_evdo_gsm_wcdma_summary">Preferovaný režim sítě: TD-SCDMA/CDMA/EvDo/GSM/WCDMA</string>
+    <string name="mobile_network_setting">Nastavení mobilní sítě</string>
+    <string name="network_settings_sel_sub">Nastavení předplatného</string>
+    <string name="network_manage_settings">Nastavení sítě</string>
+    <string name="title_data_settings">Nastavení dat</string>
+    <string name="summary_manage_subscriptions">Spravovat nastavení sítě pro každé předplatné</string>
+    <string name="call_ind_services">Hovorově nezávislé služby</string>
+    <string name="callind_multi_sim">Nastavení předplatného</string>
+    <string name="callind">Nastavení vlastností hovorů</string>
+    <string name="sub1">Předplatné 1</string>
+    <string name="sub1_summary">Spravovat předplatné 1</string>
+    <string name="sub2">Předplatné 2</string>
+    <string name="sub2_summary">Spravovat předplatné 2</string>
+    <string name="sub3">Předplatné 3</string>
+    <string name="sub3_summary">Spravovat předplatné 3</string>
+    <string name="prompt">Upozornit</string>
+    <string name="prompt_user">Upozornit uživatele</string>
+    <string name="fdn_failed">Operace FDN selhala.</string>
+    <string name="exportContacts">Exportuji kontakty na SIM kartu\u2026</string>
+    <string name="puk2_blocked">PUK2 je trvale zablokován.</string>
+    <string name="pin2_attempts">\nZbývajících pokusů :</string>
+    <string name="pin2_unblocked">PIN2 odblokován!</string>
+    <string name="card_title_unconditionalCF">Přesměrování hovoru bez podmínky aktivní</string>
+    <string name="card_title_conditionalCF">Přesměrování hovoru s podmínku aktivní</string>
+    <string name="card_title_MOcall_forwarding">Odchozí přesměrovaný hovor</string>
+    <string name="card_title_calliswaiting">Čekající hovor</string>
+    <string name="card_title_cugcall">Hovor CUG</string>
+    <string name="card_title_outgoing_barred">Odchozí hovory zakázány</string>
+    <string name="card_title_incoming_barred">Příchozí hovory zakázány</string>
+    <string name="card_title_clir_suppression_rejected">Potlačení CLIR odmítnuto</string>
+    <string name="card_title_call_deflected">Hovor odkloněn</string>
+    <string name="card_title_MTcall_forwarding">Příchozí hovor je přesměrován</string>
+    <string name="card_title_forwarded_MTcall">Přesměrovaný příchozí hovor</string>
+    <string name="card_title_callonhold">Přidržen</string>
+    <string name="card_title_callretrieved">Hovor obnoven</string>
+    <string name="card_title_multipartycall">MultiParty hovor</string>
+    <string name="card_title_callonhold_released">Hovor uvolněn</string>
+    <string name="card_title_forwardcheckreceived">Přijata kontrola přesměrování</string>
+    <string name="card_title_callconnectingect">Hovor připojuje ECT</string>
+    <string name="card_title_callconnectedect">Hovor připojen k ECT</string>
+    <string name="card_title_deflectedcall">Odklonit hovor</string>
+    <string name="card_title_in_progress">Aktuální hovor</string>
+    <string name="onscreenModifyCallText">Upravit hovor</string>
+    <string name="onscreenSwitchText">Změnit předplatné</string>
+    <string name="onscreenAddParticipant">Přidat účastníka</string>
+    <string name="xdivert_title">X-Divert</string>
+    <string name="xdivert_summary">Nastavení CFNRc</string>
+    <string name="phone_numbers">Vložit telefonní čísla</string>
+    <string name="sub1LineNumber">Číslo Sub1 :</string>
+    <string name="sub2LineNumber">Číslo Sub2 :</string>
+    <string name="proceed">Pokračovat</string>
+    <string name="xdivert_button">Nastavení X-Divert</string>
+    <string name="xdivert_setting">Nastavení X-Divert</string>
+    <string name="sum_xdivert_enabled">X-Divert zapnut</string>
+    <string name="sum_xdivert_disabled">X-Divert vypnut</string>
+    <string name="xdivert_not_supported">X-Divert není podporován na CDMA</string>
+    <string name="xdivert_enternumber_error">Vložit telefonní čísla pro obě předplatné</string>
+    <string name="xdivert_partial_set">XDivert byl nastaven pouze pro první předplatné</string>
+    <string name="xdivert_sub_absent">Obě předplatné mohou být aktivována pro X-Divert</string>
+    <string name="xdivert_status">Stav X-Divert</string>
+    <string name="xdivert_active">Aktivní</string>
+    <string name="xdivert_not_active">Neaktivní</string>
+    <string name="xdivert_imsi_not_read">Probíhá inicializace SIM. Zkuste znovu po nějakém čase.</string>
+    <string name="managed_roaming_title">Spravovaný roaming</string>
+    <string name="managed_roaming_title_sub1">Spravovaný roaming (SUB1)</string>
+    <string name="managed_roaming_title_sub2">Spravovaný roaming (SUB2)</string>
+    <string name="managed_roaming_title_sub3">Spravovaný roaming (SUB3)</string>
+    <string name="managed_roaming_dialog_content">Nalezena síť s omezenými službami. Spustit vyhledávání sítí?</string>
+    <string name="managed_roaming_dialog_ok_button">Ano</string>
+    <string name="managed_roaming_dialog_cancel_button">Ne</string>
+    <string name="no_volte">Není možné uskutečnit IMS hovor</string>
+    <string name="ims_edit_title">Detaily IMS účtu</string>
+    <string name="ims_accounts_title">IMS účet</string>
+    <string name="ims_domain_address_title">IMS server</string>
+    <string name="call_type_title">Typ IMS hovoru</string>
+    <string name="use_ims_default_title">Vždy použít IMS</string>
+    <string name="use_ims_default_summary">Použít IMS pro všechny hlasové hovory</string>
+    <string name="ims_menu_save">Uložit</string>
+    <string name="ims_menu_discard">Zahodit</string>
+    <string name="remove_ims_account">Odstranit účet</string>
+    <string name="description_target_answer_video">Odpovědět s videem</string>
+    <string name="description_target_answer_tx_video">Odpovědět s odesíláním videa</string>
+    <string name="description_target_answer_rx_video">Odpovědět s přijímáním videa</string>
+    <string name="description_direction_up_right">Nahoře vpravo</string>
+    <string name="description_direction_up_left">Nahoře vlevo</string>
+    <string name="description_direction_down_left">Dole vlevo</string>
+    <string name="description_direction_down_right">Dole vpravo</string>
+    <string name="set_subscription">Vybrat předplatné</string>
+    <string name="card_01">Karta 1 / SUB 1</string>
+    <string name="card_02">Karta 2 / SUB 2</string>
+    <string name="card_03">Karta 3 / SUB 3</string>
+    <string name="place_a_call1">Předplatné 1</string>
+    <string name="place_a_call2">Předplatné 2</string>
+    <string name="place_a_call3">Předplatné 3</string>
+    <string name="count_down">Sekund: </string>
+    <string name="call_number">Komu: </string>
+    <string name="cancel_call">Zrušit</string>
+    <string name="set_subscription_error_atleast_one">Vybrat alespoň jedno předplatné</string>
+    <string name="sub_1">SUB 1</string>
+    <string name="sub_2">SUB 2</string>
+    <string name="sub_3">SUB 3</string>
+    <string name="set_uicc_subscription_progress">Nastavování předplatného probíhá...</string>
+    <string name="set_sub_success">Nastavení předplatného úspěšné</string>
+    <string name="set_sub_failed">Nastavení předplatného selhalo</string>
+    <string name="set_sub_1">Předplatné 1: </string>
+    <string name="set_sub_2">Předplatné 2: </string>
+    <string name="set_sub_3">Předplatné 3: </string>
+    <string name="set_sub_activate_success">Aktivace úspěšná</string>
+    <string name="set_sub_deactivate_success">Deaktivace úspěšná</string>
+    <string name="set_sub_activate_failed">Aktivace selhala</string>
+    <string name="set_sub_global_activate_failed">Globální aktivace selhala</string>
+    <string name="set_sub_global_deactivate_failed">Globální deaktivace selhala</string>
+    <string name="set_sub_deactivate_failed">Deaktivace selhala</string>
+    <string name="set_sub_activate_not_supported">Aktivace není podporována</string>
+    <string name="set_sub_deactivate_not_supported">Deaktivace není podporována</string>
+    <string name="set_sub_no_change">V předplatném není žádná změna</string>
+    <string name="new_cards_available">K dispozici je nová karta. Nakonfigurujte prosím předplatné.</string>
+    <string name="config_sub_title">Konfigurovat předplatné</string>
+    <string name="deact_all_sub_not_supported">Deaktivace všech předplatných není podporována.</string>
+    <string name="set_sub_not_supported_phone_in_call">Aktivace nebo deaktivace předplatného není možná během hovoru.</string>
+    <string name="ContactScreen"> Přidat/upravit kontakt na SIM</string>
+    <string name="ExportContactScreen"> Exportovat kontakty z telefonu na SIM </string>
+    <string name="addSimEntries"> Přidat kontakt na SIM</string>
+    <string name="deleteAllSimEntries"> Vymazat všechny kontakty na SIM</string>
+    <string name="deleteSimContacts">Mazání kontaktů ze SIM</string>
+    <string name="editContact"> Upravit</string>
+    <string name="sendSms"> Poslat SMS</string>
+    <string name="delete"> Vymazat</string>
+    <string name="dial"> Vytočit</string>
+    <string name="enterName"> Vložit jméno:</string>
+    <string name="enterNumber"> Vložit telefonní číslo:</string>
+    <string name="contactAddSuccess"> Kontakt úspěšně přidán na SIM </string>
+    <string name="contactAddFailed"> Chyba při ukládání kontaktu na SIM !!!</string>
+    <string name="contactUpdateSuccess"> Kontakt na SIM úspěšně aktualizován </string>
+    <string name="contactUpdateFailed"> Chyba při aktualizaci kontaktu na SIM !!!</string>
+    <string name="contactdeleteSuccess"> Kontakt úspěšně vymazán ze SIM </string>
+    <string name="contactdeleteFailed"> Chyba při mazání kontaktu ze SIM !!!</string>
+    <string name="allContactdeleteSuccess"> Všechny kontakty úspěšně vymazány ze SIM </string>
+    <string name="allContactdeleteFailed"> Chyba při mazání všech kontaktů ze SIM !!!</string>
+    <string name="exportAllcontatsSuccess">Všechny kontakty úspěšně exportovány z telefonu na SIM </string>
+    <string name="exportAllcontatsFailed"> Chyba při exportu všech kontaktů z telefonu na SIM !!!</string>
+    <string name="cursorError"> Kurzor neobsahuje správná data !!! </string>
 </resources>
