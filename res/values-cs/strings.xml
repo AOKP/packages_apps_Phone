@@ -806,8 +806,8 @@
     <string name="puk2_blocked">PUK2 je trvale zablokován.</string>
     <string name="pin2_attempts">\nZbývajících pokusů :</string>
     <string name="pin2_unblocked">PIN2 odblokován!</string>
-    <string name="card_title_unconditionalCF">Přesměrování hovoru bez podmínky aktivní</string>
-    <string name="card_title_conditionalCF">Přesměrování hovoru s podmínku aktivní</string>
+    <string name="card_title_unconditionalCF">Nepodmíněné přesměrování hovoru povoleno</string>
+    <string name="card_title_conditionalCF">Podmíněné přesměrování hovoru povoleno</string>
     <string name="card_title_MOcall_forwarding">Odchozí přesměrovaný hovor</string>
     <string name="card_title_calliswaiting">Čekající hovor</string>
     <string name="card_title_cugcall">Hovor CUG</string>
