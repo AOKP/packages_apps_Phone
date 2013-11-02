@@ -93,8 +93,16 @@ class CallLogger {
         final int callLogType;
 
         if (c.isIncoming()) {
-            callLogType = (cause == Connection.DisconnectCause.INCOMING_MISSED ?
-                           Calls.MISSED_TYPE : Calls.INCOMING_TYPE);
+            // Classify as missed not only the genuinely missed calls, but also the rejected ones
+            // if the respective option has been enabled in the settings.
+            if (cause == Connection.DisconnectCause.INCOMING_MISSED) {
+                callLogType = Calls.MISSED_TYPE;
+            } else if ((cause == Connection.DisconnectCause.INCOMING_REJECTED)
+                    && PhoneUtils.PhoneSettings.markRejectedCallsAsMissed(mApplication)) {
+                callLogType = Calls.MISSED_TYPE;
+            } else {
+                callLogType = Calls.INCOMING_TYPE;
+            }
         } else {
             callLogType = Calls.OUTGOING_TYPE;
         }
